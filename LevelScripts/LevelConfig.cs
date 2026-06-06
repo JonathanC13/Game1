@@ -14,19 +14,34 @@ public class ObjectOverride
 {
     public string objectId;
 
-    [Header("Position")]
+    [Header("GameObject")]
+    public bool overrideActive;
+    public bool active = true;
+
+    [Header("Transform")]
     public bool overridePosition;
-    public Vector3 position;
+    public Vector3 localPosition;
 
-    [Header("Rotation")]
     public bool overrideRotation;
-    public Vector3 rotation;
+    public Vector3 localRotation;
 
-    [Header("Scale")]
     public bool overrideScale;
-    public Vector3 scale = Vector3.one;
+    public Vector3 localScale = Vector3.one;
 
     [Header("Visual")]
     public bool overrideMaterial;
     public Material material;
+
+    [Header("Light")]
+    public bool overrideLightEnabled;
+    public bool lightEnabled;
+
+    public bool overrideLightIntensity;
+    public float lightIntensity = 1f;
+
+    public bool overrideLightTemperature;
+    public float lightTemperature = 6570f;
+
+    public bool overrideLightColor;
+    public Color lightColor = Color.white;
 }

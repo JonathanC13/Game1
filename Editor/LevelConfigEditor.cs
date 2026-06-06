@@ -25,7 +25,10 @@ public class LevelConfigEditor : Editor
 
     void Apply(LevelConfig config)
     {
-        var objects = FindObjectsByType<LevelObject>();
+        // to also locate disabled objects.
+        var objects = Resources.FindObjectsOfTypeAll<LevelObject>() 
+            .Where(o => o.gameObject.scene.IsValid())
+            .ToArray();
 
         foreach (var obj in objects)
         {
@@ -38,43 +41,91 @@ public class LevelConfigEditor : Editor
             Undo.RecordObject(obj.transform, "Apply Level");
 
             if (match.overridePosition)
-                obj.transform.position = match.position;
+            {
+                obj.transform.localPosition = match.localPosition;
+            }
 
             if (match.overrideRotation)
-                obj.transform.eulerAngles = match.rotation;
+            {
+                obj.transform.localEulerAngles = match.localRotation;
+            }
 
             if (match.overrideScale)
-                obj.transform.localScale = match.scale;
+            {
+                obj.transform.localScale = match.localScale;
+            }
+
+            if (obj.TryGetComponent<Light>(out Light light))
+            {
+                if (match.overrideLightEnabled)
+                    light.enabled = match.lightEnabled;
+
+                if (match.overrideLightIntensity)
+                    light.intensity = match.lightIntensity;
+
+                if (match.overrideLightTemperature)
+                {
+                    light.useColorTemperature = true;
+                    light.colorTemperature = match.lightTemperature;
+                }
+
+                if (match.overrideLightColor)
+                    light.color = match.lightColor;
+            }
 
             var renderer = obj.GetComponent<Renderer>();
             if (renderer != null && match.overrideMaterial && match.material != null)
                 renderer.sharedMaterial = match.material;
+
+            // Set active state after changes because could cause error when trying to apply to disabled object.
+            if (match.overrideActive)
+            {
+                obj.gameObject.SetActive(match.active);
+            }
         }
     }
 
     void Capture(LevelConfig config)
     {
-        var objects = FindObjectsByType<LevelObject>();
+        var objects = Resources.FindObjectsOfTypeAll<LevelObject>()
+            .Where(o => o.gameObject.scene.IsValid())
+            .ToArray();
 
         config.overrides = objects.Select(o =>
         {
             var renderer = o.GetComponent<Renderer>();
+            Light light = o.GetComponent<Light>();
 
             return new ObjectOverride
             {
                 objectId = o.ObjectId,
 
+                overrideActive = true,
+                active = o.gameObject.activeSelf,
+
                 overridePosition = true,
-                position = o.transform.position,
+                localPosition = o.transform.localPosition,
 
                 overrideRotation = true,
-                rotation = o.transform.eulerAngles,
+                localRotation = o.transform.localEulerAngles,
 
                 overrideScale = true,
-                scale = o.transform.localScale,
+                localScale = o.transform.localScale,
 
                 overrideMaterial = renderer != null,
-                material = renderer ? renderer.sharedMaterial : null
+                material = renderer ? renderer.sharedMaterial : null,
+
+                overrideLightEnabled = light != null,
+                lightEnabled = light ? light.enabled : true,
+
+                overrideLightIntensity = light != null,
+                lightIntensity = light ? light.intensity : 1f,
+
+                overrideLightTemperature = light != null,
+                lightTemperature = light ? light.colorTemperature : 5000f,
+
+                overrideLightColor = light != null,
+                lightColor = light ? light.color : Color.white
             };
         }).ToArray();
 
@@ -84,7 +135,9 @@ public class LevelConfigEditor : Editor
 
     void BuildMissing(LevelConfig config)
     {
-        var objects = FindObjectsByType<LevelObject>();
+        var objects = Resources.FindObjectsOfTypeAll<LevelObject>()
+            .Where(o => o.gameObject.scene.IsValid())
+            .ToArray();
 
         var list = config.overrides.ToList();
 
@@ -104,7 +157,11 @@ public class LevelConfigEditor : Editor
                 overridePosition = false,
                 overrideRotation = false,
                 overrideScale = false,
-                overrideMaterial = false
+                overrideMaterial = false,
+                overrideLightEnabled = false,
+                overrideLightIntensity = false,
+                overrideLightTemperature = false,
+                overrideLightColor = false
             });
         }
 

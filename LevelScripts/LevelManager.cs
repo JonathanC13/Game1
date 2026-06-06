@@ -13,8 +13,10 @@ public class LevelManager : MonoBehaviour
 
     public void ApplyLevel()
     {
-        Debug.Log("ApplyLevel CALLED");
-        var objects = FindObjectsByType<LevelObject>();
+        //Debug.Log("ApplyLevel CALLED");
+        var objects = Resources.FindObjectsOfTypeAll<LevelObject>()
+            .Where(o => o.gameObject.scene.IsValid())
+            .ToArray();
 
         foreach (var obj in objects)
         {
@@ -23,26 +25,55 @@ public class LevelManager : MonoBehaviour
 
             if (match == null)
             {
-                Debug.Log("Cont");
                 continue;
             }
 
             Transform t = obj.transform;
 
             if (match.overridePosition)
-                t.position = match.position;
+            {
+                obj.transform.localPosition = match.localPosition;
+            }
 
             if (match.overrideRotation)
-                t.eulerAngles = match.rotation;
+            {
+                obj.transform.localEulerAngles = match.localRotation;
+            }
 
             if (match.overrideScale)
-                t.localScale = match.scale;
+            {
+                obj.transform.localScale = match.localScale;
+            }
 
             if (match.overrideMaterial)
             {
                 var renderer = obj.GetComponent<Renderer>();
                 if (renderer != null && match.material != null)
                     renderer.sharedMaterial = match.material;
+            }
+
+            if (obj.TryGetComponent<Light>(out Light light))
+            {
+                if (match.overrideLightEnabled)
+                    light.enabled = match.lightEnabled;
+
+                if (match.overrideLightIntensity)
+                    light.intensity = match.lightIntensity;
+
+                if (match.overrideLightTemperature)
+                {
+                    light.useColorTemperature = true;
+                    light.colorTemperature = match.lightTemperature;
+                }
+
+                if (match.overrideLightColor)
+                    light.color = match.lightColor;
+            }
+
+            // Set active state after changes because could cause error when trying to apply to disabled object.
+            if (match.overrideActive)
+            {
+                obj.gameObject.SetActive(match.active);
             }
         }
     }
