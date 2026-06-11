@@ -5,9 +5,13 @@ public class Employee
 {
     public string Id;
 
-    public string Name;
+    public string EmployeeId;
 
-    public EmployeeStatus Status;
+    public string EmployeePay;
+
+    public EmployeeStatus EmployeeStatus;
+
+    public PaymentStatus PaymentStatus;
 }
 
 public static class EmployeeGenerator
@@ -17,8 +21,10 @@ public static class EmployeeGenerator
         return new Employee
         {
             Id = Guid.NewGuid().ToString(),
-            Name = GenerateDisplayId.generate(EntityType.EMP),
-            Status = EnumExtensions.GetRandomValue<EmployeeStatus>()
+            EmployeeId = GenerateDisplayId.generate(EntityType.EMP),
+            EmployeePay = GenerateRandom.Money(1000, 10000).ToString(),
+            EmployeeStatus = EnumExtensions.GetRandomValue<EmployeeStatus>(),
+            PaymentStatus = EnumExtensions.GetRandomValue<PaymentStatus>()
         };
     }
 }

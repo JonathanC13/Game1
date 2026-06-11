@@ -11,8 +11,9 @@ public class CaseBuilder
 
         int caseAttempts = 0;
         // try to generate valid Case
-        while (true)
+        while (caseAttempts < 100)
         {
+            caseAttempts += 1;
             // Generate the scenario with the number of Frauds
             FraudScenario fraudScenario;
             int attempts = 0;
@@ -74,7 +75,7 @@ public class CaseBuilder
             }
 
             // Check if all Facts for contradictions created.
-            if (!EvidenceFactValidator.Validate(factsInvolved, contradictions))
+            if (!EvidenceFactValidator.Validate(evidence, factsInvolved, contradictions))
             {
                 continue;
             }
@@ -89,6 +90,10 @@ public class CaseBuilder
             evidence = evidence.OrderBy(x => System.Guid.NewGuid())
                 .ToList();
 
+            // Build the contradiction index
+            ContradictionIndex index = new ContradictionIndex();
+            index.Build(contradictions);
+
             return new CaseData
             {
                 Id = caseId,
@@ -98,9 +103,13 @@ public class CaseBuilder
 
                 Evidence = evidence,
 
-                Contradictions = contradictions
+                Contradictions = contradictions,
+
+                ContradictionIndex = index
             };
         }
+
+        throw new System.Exception("Unable to create valid fraud plan");
     }
 
     private void GenerateEvidence(List<Evidence> evidence, CaseTruth truth, string caseId, EvidencePurpose purpose)

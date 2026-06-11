@@ -7,47 +7,47 @@ public static class EvidenceGenerationValidator
         List<Evidence> evidence,
         List<Contradiction> contradictions)
     {
-        foreach (var contradiction in contradictions)
-        {
-            Evidence a = evidence.FirstOrDefault(x => x.Id == contradiction.EvidenceAId);
+        //foreach (var contradiction in contradictions)
+        //{
+        //    Evidence a = evidence.FirstOrDefault(x => x.Id == contradiction.EvidenceAId);
 
-            Evidence b = evidence.FirstOrDefault(x =>x.Id == contradiction.EvidenceBId);
+        //    Evidence b = evidence.FirstOrDefault(x =>x.Id == contradiction.EvidenceBId);
 
-            if (a == null ||
-               b == null)
-            {
-                return false;
-            }
+        //    if (a == null ||
+        //       b == null)
+        //    {
+        //        return false;
+        //    }
 
-            if (a.Id == b.Id)
-            {
-                return false;
-            }
-
-
-            bool factAExists =
-                a.Facts.Any(
-                    x =>
-                    x.Type ==
-                    contradiction.FactA);
+        //    if (a.Id == b.Id)
+        //    {
+        //        return false;
+        //    }
 
 
-
-            bool factBExists =
-                b.Facts.Any(
-                    x =>
-                    x.Type ==
-                    contradiction.FactB);
+        //    bool factAExists =
+        //        a.Facts.Any(
+        //            x =>
+        //            x.Type ==
+        //            contradiction.FactA);
 
 
 
-            if (!factAExists ||
-               !factBExists)
-            {
-                return false;
-            }
+        //    bool factBExists =
+        //        b.Facts.Any(
+        //            x =>
+        //            x.Type ==
+        //            contradiction.FactB);
 
-        }
+
+
+        //    if (!factAExists ||
+        //       !factBExists)
+        //    {
+        //        return false;
+        //    }
+
+        //}
 
 
         return true;

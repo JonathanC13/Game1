@@ -5,7 +5,7 @@ public class Fact
 {
     public string Id;
 
-    // The associated Evidence to this Fact
+    // The associated Evidence to this Fact, save the object reference so can directly access when showing solution. Contradiction has FactObj has EvidenceObj that is attached to GameObject
     public Evidence Evidence;
 
     public FactType FactType;

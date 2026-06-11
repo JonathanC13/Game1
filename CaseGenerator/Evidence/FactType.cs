@@ -1,19 +1,20 @@
 // Constants for FactType.
 public enum FactType
 {
-    Vendor,
-    AmountDue,
-
-    ShipmentDate,
-    ShipmentQuantity,
-    ShipmentStatus,
-
+    EmployeeId,
+    EmpPayAmount,
+    EmpPaymentStatus,
     EmployeeStatus,
 
-    InventoryQuantity,
+    Contractor,
+    ContractAmount,
+    ContractPaymentStatus,
 
-    PaymentStatus,
-    PaymentAmount
+    Buyer,
+    Amount,
+    ShipmnetDate,
+    ShipmentQuantity,
+    PaymentStatus
 }
 
 public enum ShipmentStatus
@@ -21,6 +22,7 @@ public enum ShipmentStatus
     Scheduled,
     InTransit,
     Delivered,
+    Lost,
     Delayed,
     Cancelled
 }

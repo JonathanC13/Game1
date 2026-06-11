@@ -5,6 +5,8 @@ public class Shipment
 {
     public string Id;
 
+    public string ShipmentId;
+
     public DateTime Date;
 
     public int Quantity;
@@ -14,13 +16,14 @@ public class Shipment
 
 public static class ShipmentGenerator
 {
-    public static Shipment Generate()
+    public static Shipment Generate(PurchaseOrder purchase)
     {
         return new Shipment
         {
             Id = Guid.NewGuid().ToString(),
+            ShipmentId = GenerateDisplayId.generate(EntityType.SHPMNT),
             Date = DateTime.Now,
-            Quantity = UnityEngine.Random.Range(100, 10000),
+            Quantity = purchase.Quantity,
             Status = EnumExtensions.GetRandomValue<ShipmentStatus>()
         };
     }

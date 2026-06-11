@@ -46,6 +46,8 @@ public class ShipmentDateMismatchInjector : IFraudInjector
             Id = contraId,
             DisplayId = contraDisplayId,
             CaseId = caseId,
+            EvidenceAId = invoice.Id,
+            EvidenceBId = shipping.Id,
             FactA = invoiceDate,
             FactB = shippingDate,
             Type = FraudType.ShipmentDateMismatch,

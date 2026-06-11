@@ -10,23 +10,14 @@ public static class EvidenceFactory
     {
         switch (e.Type)
         {
-            case EvidenceType.Invoice:
-                return EvidenceGenerator.CreateInvoice(e, truth, caseId);
+            case EvidenceType.Bank_statement_hr:
+                return EvidenceGenerator.CreateBankStatementHR(e, truth, caseId);
 
-            case EvidenceType.ShippingLog:
-                return EvidenceGenerator.CreateShippingLog(e, truth, caseId);
-
-            case EvidenceType.InventoryReport:
-                return EvidenceGenerator.CreateInventoryReport(e, truth, caseId);
-
-            case EvidenceType.BankStatement:
-                return EvidenceGenerator.CreateBankStatement(e, truth, caseId);
-
-            case EvidenceType.PayrollRecord:
+            case EvidenceType.Payroll_Rec:
                 return EvidenceGenerator.CreatePayrollRecord(e, truth, caseId);
 
-            case EvidenceType.Email:
-                return EvidenceGenerator.CreateEmail(e, truth, caseId);
+            case EvidenceType.HR_rec:
+                return EvidenceGenerator.CreateHRRecord(e, truth, caseId);
 
             default:
                 throw new Exception($"No generator for {e.Type}");

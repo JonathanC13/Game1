@@ -1,26 +1,29 @@
 public enum EntityType
 {
     CASE,
-    PROF,
     CONTRA,
 
-    INV,
-    SHIP,
-    INVEN,
-    PROD,
-    BANK,
-    PAYROLL,
-    EMAIL,
-
     EMP,
+    BNK_HR,
+    PAYREC,
+    HRREC,
 
-    VEN,
-    AMTDUE,
-    SHIPDATE,
-    SHIPQUAN,
-    SHIPSTAT,
-    EMPSTAT,
-    INVENQUANT,
-    PAYSTAT,
-    PAYAMT
+    CNTRTR,
+    EML_CNT,
+    CNTRCT,
+    BNK_CNT,
+    EML_BNK_C,
+
+    BUYER,
+    EML_INV,
+    INV_SAL,
+    PRCORD,
+    INVENT,
+    BNK_SAL,
+    SHPMNT,
+    SHPLOG,
+    EML_BNK_SAL,
+    EML_SHP,
+
+    PROD
 }

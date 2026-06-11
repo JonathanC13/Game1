@@ -6,6 +6,10 @@ public class Contradiction
 
     public string CaseId;
 
+    public string EvidenceAId;
+
+    public string EvidenceBId;
+
     public Fact FactA;
 
     public Fact FactB;

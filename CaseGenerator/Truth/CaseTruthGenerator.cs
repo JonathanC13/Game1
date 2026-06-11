@@ -4,15 +4,17 @@ public static class CaseTruthGenerator
     {
         return new CaseTruth
         {
-            Vendor = VendorGenerator.Generate(),
+            Employee = EmployeeGenerator.Generate(),
 
-            Shipment = ShipmentGenerator.Generate(),
+            Contractor = ContractorGenerator.Generate(),
 
-            Payment = PaymentGenerator.Generate(),
+            Contract = ContractGenerator.Generate(),
 
-            Inventory = InventoryRecordGenerator.Generate(),
+            PurchaseOrder = PurchaseOrder.Generate(),
 
-            Employee = EmployeeGenerator.Generate()
+            Shipment = ShipmentGenerator.Generate(PurchaseOrder),
+
+            Payment = PaymentGenerator.Generate(PurchaseOrder)
         };
     }
 }

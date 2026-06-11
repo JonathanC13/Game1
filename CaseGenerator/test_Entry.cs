@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using UnityEditor.Overlays;
 using UnityEngine;
 
 public class test_Entry : MonoBehaviour
@@ -21,9 +23,25 @@ public class test_Entry : MonoBehaviour
 
         foreach (Contradiction item in cd.Contradictions)
         {
-            print(item.FactAId + "|" + item.FactBId + ". " + item.Type + ": " + item.Description);
+            print(item.FactA.Id + "|" + item.FactB.Id + ". " + item.Type + ": " + item.Description);
             //EvidenceGameObjectGenerator.Create(item, evidencePrefab);
         }
+
+
+        string selectedAId = "a"; // Will be GameObject -> Fact -> Fact.Id
+        string selectedBId = "b";
+        bool result =
+            cd.ContradictionIndex.TryFind(
+                selectedAId,
+                selectedBId,
+                out Contradiction contradiction);
+
+        HashSet<string> solved = new();
+        solved.Add(contradiction.Id);
+
+        bool solvedCase =
+            solved.Count ==
+            cd.Contradictions.Count;
     }
 
     // Update is called once per frame

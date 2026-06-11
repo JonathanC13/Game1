@@ -13,4 +13,6 @@ public class CaseData
     public List<Evidence> Evidence = new();
 
     public List<Contradiction> Contradictions = new();
+
+    public ContradictionIndex ContradictionIndex;
 }

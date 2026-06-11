@@ -5,20 +5,21 @@ public class Payment
 {
     public string Id;
 
-    public decimal Amount;
+    public string Amount;
 
     public PaymentStatus Status;
 }
 
 public static class PaymentGenerator
 {
-    public static Payment Generate()
+    public static Payment Generate(PurchaseOrder purchase)
     {
 
         return new Payment
         {
             Id = Guid.NewGuid().ToString(),
-            Amount = GenerateRandom.Money(100m, 10000m)
+            Amount = purchase.Amount,
+            Status = EnumExtensions.GetRandomValue<PaymentStatus>()
         };
     }
 }

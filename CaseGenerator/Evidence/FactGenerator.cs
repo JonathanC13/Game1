@@ -6,9 +6,10 @@ using System.Diagnostics;
 // Facts like Shipping Date and Shipping Quantity seperated because differenct pieces of Evidence combine different facts and may not need both.
 public static class FactGenerator
 {
-    public static Fact CreateVendorFact(
+    public static Fact CreateEmployeeIdFact(
         Evidence evidence,
-        string vendorName)
+        string employeeId
+        )
     {
         return new Fact
         {
@@ -16,18 +17,19 @@ public static class FactGenerator
 
             Evidence = evidence,
 
-            FactType = FactType.Vendor,
+            FactType = FactType.EmployeeId,
 
             Values =
             {
-                ["VendorName"] = vendorName
+                ["EmployeeId"] = employeeId
             }
         };
     }
 
-    public static Fact CreateAmountDueFact(
+    public static Fact CreateEmpPayAmountFact(
         Evidence evidence,
-        decimal amount)
+        string empPayAmount
+        )
     {
         return new Fact
         {
@@ -35,18 +37,19 @@ public static class FactGenerator
 
             Evidence = evidence,
 
-            FactType = FactType.AmountDue,
+            FactType = FactType.EmpPayAmount,
 
             Values =
             {
-                ["Amount"] = amount
+                ["EmpPayAmount"] =empPayAmount
             }
         };
     }
 
-    public static Fact CreateShipmentDateFact(
+    public static Fact CreateEmpPaymentStatusFact(
         Evidence evidence,
-        DateTime date)
+        PaymentStatus empPaymentStatus
+        )
     {
         return new Fact
         {
@@ -54,57 +57,19 @@ public static class FactGenerator
 
             Evidence = evidence,
 
-            FactType = FactType.ShipmentDate,
+            FactType = FactType.EmpPaymentStatus,
 
             Values =
             {
-                ["Date"] = date
-            }
-        };
-    }
-
-    public static Fact CreateShipmentQuantityFact(
-        Evidence evidence,
-        int quantity)
-    {
-        return new Fact
-        {
-            Id = Guid.NewGuid().ToString(),
-
-            Evidence = evidence,
-
-            FactType = FactType.ShipmentQuantity,
-
-            Values =
-            {
-                ["Quantity"] = quantity
-            }
-        };
-    }
-
-    public static Fact CreateShipmentStatusFact(
-        Evidence evidence,
-        ShipmentStatus status)
-    {
-        return new Fact
-        {
-            Id = Guid.NewGuid().ToString(),
-
-            Evidence = evidence,
-
-            FactType = FactType.ShipmentStatus,
-
-            Values =
-            {
-                ["Status"] = status.ToString()
+                ["EmpPaymentStatus"] = empPaymentStatus
             }
         };
     }
 
     public static Fact CreateEmployeeStatusFact(
         Evidence evidence,
-        string employeeName,
-        EmployeeStatus status)
+        EmployeeStatus employeeStatus
+        )
     {
         return new Fact
         {
@@ -116,15 +81,15 @@ public static class FactGenerator
 
             Values =
             {
-                ["EmployeeName"] = employeeName,
-                ["Status"] = status.ToString()
+                ["EmployeeStatus"] = employeeStatus
             }
         };
     }
 
-    public static Fact CreateInventoryQuantityFact(
+    public static Fact CreateContractorFact(
         Evidence evidence,
-        int quantity)
+        string contractor
+        )
     {
         return new Fact
         {
@@ -132,18 +97,139 @@ public static class FactGenerator
 
             Evidence = evidence,
 
-            FactType = FactType.InventoryQuantity,
+            FactType = FactType.Contractor,
 
             Values =
             {
-                ["Quantity"] = quantity
+                ["Contractor"] = contractor
+            }
+        };
+    }
+
+    public static Fact CreateContractAmountFact(
+        Evidence evidence,
+        string contractAmount
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.ContractAmount,
+
+            Values =
+            {
+                ["ContractAmount"] = contractAmount
+            }
+        };
+    }
+
+    public static Fact CreateContractPaymentStatusFact(
+        Evidence evidence,
+        PaymentStatus paymentStatus
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.ContractPaymentStatus,
+
+            Values =
+            {
+                ["ContractPaymentStatus"] = paymentStatus
+            }
+        };
+    }
+
+    public static Fact CreateBuyerFact(
+        Evidence evidence,
+        string buyer
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.Buyer,
+
+            Values =
+            {
+                ["Buyer"] = buyer
+            }
+        };
+    }
+
+    public static Fact CreateAmountFact(
+        Evidence evidence,
+        string amount
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.Amount,
+
+            Values =
+            {
+                ["Amout"] = amount
+            }
+        };
+    }
+
+    public static Fact CreateShipmentDateFact(
+        Evidence evidence,
+        DateTime date
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.ShipmnetDate,
+
+            Values =
+            {
+                ["ShipmentDate"] = date
+            }
+        };
+    }
+
+    public static Fact CreateShipmentQuantityFact(
+        Evidence evidence,
+        string quantity
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.ShipmentQuantity,
+
+            Values =
+            {
+                ["ShipmentQuantity"] = quantity
             }
         };
     }
 
     public static Fact CreatePaymentStatusFact(
         Evidence evidence,
-        PaymentStatus status)
+        PaymentStatus status
+        )
     {
         return new Fact
         {
@@ -155,26 +241,7 @@ public static class FactGenerator
 
             Values =
             {
-                ["Status"] = status.ToString()
-            }
-        };
-    }
-
-    public static Fact CreatePaymentAmountFact(
-        Evidence evidence,
-        decimal amount)
-    {
-        return new Fact
-        {
-            Id = Guid.NewGuid().ToString(),
-
-            Evidence = evidence,
-
-            FactType = FactType.PaymentAmount,
-
-            Values =
-            {
-                ["Amount"] = amount
+                ["PaymentStatus"] = status
             }
         };
     }

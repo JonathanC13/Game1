@@ -3,13 +3,15 @@ public class CaseTruth
 {
     public string TruthId;
 
-    public Vendor Vendor;
+    public Employee Employee;
+
+    public Contractor Contractor;
+
+    public Contract Contract;
+
+    public PurchaseOrder PurchaseOrder;
 
     public Shipment Shipment;
 
-    public Employee Employee;
-
     public Payment Payment;
-
-    public InventoryRecord Inventory;
 }
