@@ -6,6 +6,66 @@ using System.Diagnostics;
 // Facts like Shipping Date and Shipping Quantity seperated because differenct pieces of Evidence combine different facts and may not need both.
 public static class FactGenerator
 {
+    public static Fact CreateEmployeeRecordIdFact(
+        Evidence evidence,
+        string employeeRecordId
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.Employee_record_id,
+
+            Values =
+            {
+                ["EmployeeRecordId"] = employeeRecordId
+            }
+        };
+    }
+
+    public static Fact CreateContractRecordIdFact(
+        Evidence evidence,
+        string contractRecordId
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.Contract_record_id,
+
+            Values =
+            {
+                ["ContractRecordId"] = contractRecordId
+            }
+        };
+    }
+
+    public static Fact CreateSaleRecordIdFact(
+        Evidence evidence,
+        string saleRecordId
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.Sale_record_id,
+
+            Values =
+            {
+                ["SaleRecordId"] = saleRecordId
+            }
+        };
+    }
+
     public static Fact CreateEmployeeIdFact(
         Evidence evidence,
         string employeeId
@@ -208,7 +268,7 @@ public static class FactGenerator
 
     public static Fact CreateShipmentQuantityFact(
         Evidence evidence,
-        string quantity
+        int quantity
         )
     {
         return new Fact
@@ -222,6 +282,26 @@ public static class FactGenerator
             Values =
             {
                 ["ShipmentQuantity"] = quantity
+            }
+        };
+    }
+
+    public static Fact CreateShipmentStatusFact(
+        Evidence evidence,
+        ShipmentStatus status
+        )
+    {
+        return new Fact
+        {
+            Id = Guid.NewGuid().ToString(),
+
+            Evidence = evidence,
+
+            FactType = FactType.ShipmentStatus,
+
+            Values =
+            {
+                ["ShipmentStatus"] = status
             }
         };
     }

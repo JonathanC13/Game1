@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// Currently only select unique EvidenceTypes
 public static class EvidenceSelector
 {
     public static void Select(
@@ -11,31 +12,42 @@ public static class EvidenceSelector
         float optionalChance)
     {
         List<EvidenceToGenerate> result = new();
+        HashSet<EvidenceType> evidenceTypeHash = new HashSet<EvidenceType>(evidenceType);
 
         foreach (var required in template.RequiredEvidence)
         {
-            evidenceType.Add(required);
-            evidenceToGenerate.Add(new EvidenceToGenerate
+            if (!evidenceTypeHash.Contains(required))
+            {
+                evidenceTypeHash.Add(required);
+                evidenceType.Add(required);
+                evidenceToGenerate.Add(new EvidenceToGenerate
                 {
                     Type = required,
 
                     Purpose = EvidencePurpose.Required
                 });
+            }
         }
 
         foreach (var optional in template.OptionalEvidence)
         {
             if (UnityEngine.Random.value < optionalChance)
             {
-                evidenceType.Add(optional);
-                evidenceToGenerate.Add(new EvidenceToGenerate
+                if (!evidenceTypeHash.Contains(optional))
                 {
-                    Type = optional,
+                    evidenceTypeHash.Add(optional);
+                    evidenceType.Add(optional);
+                    evidenceToGenerate.Add(new EvidenceToGenerate
+                    {
+                        Type = optional,
 
-                    Purpose = EvidencePurpose.Optional
-                });
+                        Purpose = EvidencePurpose.Optional
+                    });
+                }
             }
         }
+
+        return new List<EvidenceType>(evidenceTypeHash);
     }
 
 }

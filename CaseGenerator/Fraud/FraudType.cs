@@ -1,11 +1,17 @@
 public enum FraudType
 {
-    AmountMismatch,
-    VendorMismatch,
-    ShipmentDateMismatch,
-    InventoryQuantityMismatch,
+    EmpPayAmountMismatch,
+    EmpPaymentStatusMismatch,
+    EmployeeStatusMismatch,
 
-    // to add more
-    UnauthorizedPayment,
-    GhostEmployee
+    ContractorMismatch,
+    ContractAmountMismatch,
+    ContractPaymentStatusMismatch,
+
+    BuyerMismatch,
+    AmountMismatch,
+    ShipmnetDateMismatch,
+    ShipmentQuantityMismatch,
+    ShipmentStatusMismatch,
+    PaymentStatusMismatch
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-// Generate evidence until minimum met, can choose from any EvidenceType that does not current exist.
+// Generate evidence until minimum met, can choose from any EvidenceType that does not currently exist.
 public static class EvidenceCountBalancer
 {
     public static void EnsureMinimum(
@@ -10,6 +10,8 @@ public static class EvidenceCountBalancer
         List<EvidenceToGenerate> evidence,
         DifficultySettings settings)
     {
+        HashSet<EvidenceType> evidenceHash = new HashSet<EvidenceType>(evidenceTypes);
+
         List<EvidenceType> filler = Enum.GetValues(typeof(EvidenceType)).Cast<EvidenceType>().ToList();
 
         Random random = new Random();
@@ -19,9 +21,10 @@ public static class EvidenceCountBalancer
         {
             EvidenceType extra = filler[random.Next(0, max)];
 
-            if (!evidenceTypes.Contains(extra))
-            {
+            if (!evidenceHash.Contains(extra))
+            {  
                 fails = 0;
+                evidenceHash.Add(extra);
                 evidenceTypes.Add(extra);
                 evidence.Add(
                     new EvidenceToGenerate

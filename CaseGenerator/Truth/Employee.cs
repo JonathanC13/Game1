@@ -5,6 +5,8 @@ public class Employee
 {
     public string Id;
 
+    public string EmployeeRecordId;
+
     public string EmployeeId;
 
     public string EmployeePay;
@@ -21,6 +23,7 @@ public static class EmployeeGenerator
         return new Employee
         {
             Id = Guid.NewGuid().ToString(),
+            EmployeeRecordId = GenerateDisplayId.generate(EntityType.EMP_REC),
             EmployeeId = GenerateDisplayId.generate(EntityType.EMP),
             EmployeePay = GenerateRandom.Money(1000, 10000).ToString(),
             EmployeeStatus = EnumExtensions.GetRandomValue<EmployeeStatus>(),

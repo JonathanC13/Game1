@@ -10,6 +10,9 @@ public static class DifficultyProfiles
         var evidenceArr = (EvidenceType[])Enum.GetValues(typeof(EvidenceType));
         int maxEvidenceCount = evidenceArr.Length;
 
+        var fraudTypeArr = (FraudType[])Enum.GetValues(typeof(FraudType));
+        int maxFraudCount = fraudTypeArr.Length;
+
         switch (level)
         {
             case DifficultyLevel.Easy:
@@ -50,6 +53,17 @@ public static class DifficultyProfiles
                     MinimumEvidenceCount = Math.Min(9, maxEvidenceCount)
                 };
 
+            case DifficultyLevel.test:
+                return new DifficultySettings
+                {
+                    FraudCount = maxFraudCount,
+
+                    OptionalEvidenceChance = 1f,
+
+                    RedHerringCount = 0,
+
+                    MinimumEvidenceCount = maxEvidenceCount
+                };
 
             default:
                 throw new System.Exception("Unknown difficulty");

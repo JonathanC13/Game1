@@ -17,7 +17,13 @@ public enum EvidenceType
     Shipping_log,
     Email_from_shipping,
     Bank_statement_sale,
-    Email_from_bank_sale
+    Email_from_bank_sale,
+
+    Gambling_ad,
+    FastFood_ad,
+    MoneyLending_ad,
+    FocusPills_ad,
+    Cult_ad
 }
 
 public enum EvidencePurpose

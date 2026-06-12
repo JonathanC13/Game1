@@ -5,6 +5,8 @@ public class PurchaseOrder
 {
     public string Id;
 
+    public string SaleRecordId;
+
     public string BuyerId;
 
     public string Amount;
@@ -19,6 +21,7 @@ public static class PurchaseOrderGenerator
         return new PurchaseOrder
         {
             Id = Guid.NewGuid().ToString(),
+            SaleRecordId = GenerateDisplayId.generate(EntityType.SALE_REC),
             BuyerId = GenerateDisplayId.generate(EntityType.BUYER),
             Amount = GenerateRandom.Money(1000, 10000).ToString(),
             Quantity = UnityEngine.Random.Range(100, 10000)

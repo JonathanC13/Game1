@@ -2,6 +2,8 @@ public static class CaseTruthGenerator
 {
     public static CaseTruth Generate()
     {
+        PurchaseOrder purchaseOrder = PurchaseOrderGenerator.Generate();
+
         return new CaseTruth
         {
             Employee = EmployeeGenerator.Generate(),
@@ -10,11 +12,11 @@ public static class CaseTruthGenerator
 
             Contract = ContractGenerator.Generate(),
 
-            PurchaseOrder = PurchaseOrder.Generate(),
+            PurchaseOrder = purchaseOrder,
 
-            Shipment = ShipmentGenerator.Generate(PurchaseOrder),
+            Shipment = ShipmentGenerator.Generate(purchaseOrder),
 
-            Payment = PaymentGenerator.Generate(PurchaseOrder)
+            Payment = PaymentGenerator.Generate(purchaseOrder)
         };
     }
 }

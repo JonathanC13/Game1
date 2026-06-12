@@ -11,48 +11,56 @@ public class ShipmentDateMismatchInjector : IFraudInjector
         string caseId, 
         List<Fact> factsInvolved)
     {
-        FactType factTypeMod = FactType.ShipmentDate;
+        FactType factTypeMod = FactType.ShipmnetDate;
         string contraId = Guid.NewGuid().ToString();
         string contraDisplayId = GenerateDisplayId.generate(EntityType.CONTRA);
 
-        // Get evidence
-        Evidence invoice =
-            evidence.First(
-                x =>
-                x.Type == EvidenceType.Invoice);
+        List<Evidence> shuffledEvidence = evidence.OrderBy(x => System.Guid.NewGuid())
+                .ToList();
 
-        Evidence shipping =
+        // Get evidence
+        Evidence firstEv =
             evidence.First(
                 x =>
-                x.Type == EvidenceType.ShippingLog);
+                EvidenceTypeFactTypeList.EF_LIST[x.Type].Contains(factTypeMod));
+
+        //Evidence secondEv =
+        //    evidence.First(
+        //        x =>
+        //        x.Type == EvidenceType.ShippingLog);
+        Evidence secondEv =
+            evidence.First(
+                x =>
+                { 
+                    return (x != firstEv && EvidenceTypeFactTypeList.EF_LIST[x.Type].Contains(factTypeMod)); 
+                });
 
         // Get the facts to modify
-        Fact invoiceDate =
-            invoice.Facts.First(x => x.FactType == factTypeMod);
+        Fact firstEvDate = firstEv.Facts.First(x => x.FactType == factTypeMod);
 
 
-        Fact shippingDate = shipping.Facts.First( x => x.FactType == factTypeMod);
+        Fact secondEvDate = secondEv.Facts.First(x => x.FactType == factTypeMod);
 
-        DateTime oldDate = (DateTime) shippingDate.Values["Date"];
+        DateTime currDate = (DateTime)firstEvDate.Values["ShipmentDate"];
 
         // Modify a fact
-        shippingDate.Values["Date"] = oldDate.AddDays(UnityEngine.Random.Range(1, 7));
+        secondEvDate.Values["ShipmentDate"] = currDate.AddDays(UnityEngine.Random.Range(1, 7));
 
-        factsInvolved.Add(invoiceDate);
-        factsInvolved.Add(shippingDate);
+        factsInvolved.Add(firstEvDate);
+        factsInvolved.Add(secondEvDate);
 
         return new Contradiction
         {
             Id = contraId,
             DisplayId = contraDisplayId,
             CaseId = caseId,
-            EvidenceAId = invoice.Id,
-            EvidenceBId = shipping.Id,
-            FactA = invoiceDate,
-            FactB = shippingDate,
-            Type = FraudType.ShipmentDateMismatch,
+            EvidenceA = firstEv,
+            EvidenceB = secondEv,
+            FactA = firstEvDate,
+            FactB = secondEvDate,
+            Type = FraudType.ShipmnetDateMismatch,
 
-            Description = "Invoice shipment date does not match shipping log"
+            Description = "Shipment date mismatch."
         };
     }
 }

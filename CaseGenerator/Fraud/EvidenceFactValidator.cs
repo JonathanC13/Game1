@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 
-// Validate the all the Facts and source Evidence required by the Contradictions exist.
+// Validate the all the Facts and source Evidence required by the Contradictions exist. This is for the pairs from the injections so the each injector has the initial link.
 public static class EvidenceFactValidator
 {
     public static bool Validate(
@@ -8,13 +9,16 @@ public static class EvidenceFactValidator
         List<Fact> facts,
         List<Contradiction> contradictions)
     {
+        HashSet<Evidence> ev = new HashSet<Evidence>(evidence);
+        HashSet<Fact> ft = new HashSet<Fact>(facts);
+
         foreach (var contradiction in contradictions)
         {
-            bool factAExists = facts.Contains(contradiction.FactA);
-            bool evidenceAExists = evidence.Contains(contradiction.FactA.Evidence);
+            bool factAExists = ft.Contains(contradiction.FactA);
+            bool evidenceAExists = ev.Contains(contradiction.EvidenceA);
 
-            bool factBExists = facts.Contains(contradiction.FactB);
-            bool evidenceBExists = evidence.Contains(contradiction.FactB.Evidence);
+            bool factBExists = ft.Contains(contradiction.FactB);
+            bool evidenceBExists = ev.Contains(contradiction.EvidenceB);
 
             if (!factAExists || !factBExists || !evidenceAExists || !evidenceBExists)
             {

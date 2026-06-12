@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
-using UnityEditor.Overlays;
 using UnityEngine;
+using System.Linq;
 
 public class test_Entry : MonoBehaviour
 {
@@ -61,4 +62,20 @@ public class test_Entry : MonoBehaviour
         string sb = $"Difficulty:\nFraudCount: {settings.FraudCount.ToString()}\nRedHerringCount: {settings.RedHerringCount}\nMinEvidenceCount: {settings.MinimumEvidenceCount}";
         print(sb);
     }
+
+    void TestAllEvidenceGeneration()
+    {
+        string caseId = Guid.NewGuid().ToString();
+        string displayId = GenerateDisplayId.generate(EntityType.CASE);
+        CaseTruth truth = new CaseTruth();
+
+        var values = (EvidenceType[])Enum.GetValues(typeof(EvidenceType));
+        foreach (EvidenceType et in values)
+        {
+            Evidence evidence = EvidenceFactory.Create(new EvidenceToGenerate { Purpose = EvidencePurpose.Required, Type = et }, truth, caseId);
+            //print evidence
+        }
+    }
+
+    
 }

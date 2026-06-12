@@ -11,7 +11,7 @@ public static class FraudInjectorFactory
 
         switch (type)
         {
-            case FraudType.ShipmentDateMismatch:
+            case FraudType.ShipmnetDateMismatch:
                 return new ShipmentDateMismatchInjector();
 
             default:

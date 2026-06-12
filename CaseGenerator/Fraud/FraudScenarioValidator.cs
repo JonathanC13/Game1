@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 
-
+// Ensure the FactType is only used once across all chosen FraudTypes in the scenario.
 public static class FraudScenarioValidator
 {
     public static bool Validate(
         FraudScenario scenario)
     {
-        List<FactType> usedFacts = new();
+        HashSet<FactType> usedFacts = new();
 
         foreach (var fraud in scenario.FraudTypes)
         {
