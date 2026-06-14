@@ -46,8 +46,6 @@ public static class EvidenceSelector
                 }
             }
         }
-
-        return new List<EvidenceType>(evidenceTypeHash);
     }
 
 }

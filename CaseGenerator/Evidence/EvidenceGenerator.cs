@@ -671,7 +671,7 @@ public static class EvidenceGenerator
         return evidence;
     }
 
-    public static Evidence CreatCultAd(
+    public static Evidence CreateCultAd(
         EvidenceToGenerate e,
         CaseTruth truth,
         string caseId)

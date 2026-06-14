@@ -7,10 +7,7 @@ public static class FactRenderer
 
         foreach (var value in fact.Values)
         {
-            template =
-                template.Replace(
-                    $"{{{value.Key}}}",
-                    value.Value.ToString());
+            template = template.Replace($"{{{value.Key}}}", value.Value.ToString());
         }
 
         return template;
