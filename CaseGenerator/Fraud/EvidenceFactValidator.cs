@@ -14,7 +14,7 @@ public static class EvidenceFactValidator
 
         foreach (var contradiction in contradictions)
         {
-            bool factAExists = ft.Contains(contradiction.FactA);
+            bool factAExists = ft.Contains(contradiction.FactAModded);
             bool evidenceAExists = ev.Contains(contradiction.EvidenceA);
 
             bool factBExists = ft.Contains(contradiction.FactB);
@@ -25,7 +25,7 @@ public static class EvidenceFactValidator
                 return false;
             }
 
-            if (contradiction.FactA.FactType != contradiction.FactB.FactType)
+            if (contradiction.FactAModded.FactType != contradiction.FactB.FactType)
             {
                 return false;
             }

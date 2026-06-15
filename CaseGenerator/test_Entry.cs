@@ -24,7 +24,13 @@ public class test_Entry : MonoBehaviour
 
         foreach (Contradiction item in cd.Contradictions)
         {
-            print(item.FactA.Id + "|" + item.FactB.Id + ". " + item.Type + ": " + item.Description);
+            print(item.FactType + ": " + item.FactAModded.Id + "|" + item.FactB.Id + ". " + item.FraudType + ": " + item.Description);
+            //EvidenceGameObjectGenerator.Create(item, evidencePrefab);
+        }
+
+        foreach (ContradictionGroup item in cd.ContradictionGroups)
+        {
+            print(item.FactType + ": " + item.OutlierFact.Id + "|" + string.Join(", ", item.TrueFacts.Keys) + ". " + item.FraudType);
             //EvidenceGameObjectGenerator.Create(item, evidencePrefab);
         }
 

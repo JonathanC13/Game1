@@ -46,6 +46,7 @@ public class CaseBuilder
             List<Evidence> evidence = new();
             List<Fact> factsInvolved = new();
             List<Contradiction> contradictions = new();
+            List<ContradictionGroup> contradictionGroups = new();
 
             // For the chosen FraudTypes to consolidate the requirements.
             foreach (var fraud in fraudScenario.FraudTypes)
@@ -72,7 +73,17 @@ public class CaseBuilder
             {
                 IFraudInjector injector = FraudInjectorFactory.Create(fraud);   // Get the object.
 
-                contradictions.Add(injector.Inject(evidence, truth, caseId, factsInvolved));   // Inject
+                Contradiction con = injector.Inject(evidence, truth, caseId, factsInvolved); // Inject Fraud
+
+                contradictions.Add(con);
+
+                contradictionGroups.Add(new()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    FactType = con.FactType,
+                    FraudType = con.FraudType,
+                    OutlierFact = con.FactAModded
+                });
             }
 
             // Check if all Facts for contradictions created.
@@ -80,6 +91,9 @@ public class CaseBuilder
             {
                 continue;
             }
+
+            // For each outlier Fact that was modified by the FraudInject, need to populate the Facts that are still True
+            PopulateTrueFacts.Populate(contradictionGroups, evidence);
 
             // Render display sentences from templates
             foreach (Evidence e in evidence)
@@ -91,9 +105,13 @@ public class CaseBuilder
             evidence = evidence.OrderBy(x => System.Guid.NewGuid())
                 .ToList();
 
-            // Build the contradiction index
+            // Build the contradiction index, since switched to Fact clusters this is used for debugging to see the orginal injected contradiction.
             ContradictionIndex index = new ContradictionIndex();
             index.Build(contradictions);
+
+            // Build the contradiction group index, this is used for scoring.
+            ContradictionGroupIndex conGroupIndex = new ContradictionGroupIndex();
+            conGroupIndex.Build(contradictionGroups);
 
             return new CaseData
             {
@@ -104,9 +122,15 @@ public class CaseBuilder
 
                 Evidence = evidence,
 
+                Facts = factsInvolved,
+
                 Contradictions = contradictions,
 
-                ContradictionIndex = index
+                ContradictionIndex = index,
+
+                ContradictionGroups = contradictionGroups,
+
+                ContradictionGroupIndex = conGroupIndex
             };
         }
 
@@ -125,6 +149,7 @@ public class CaseBuilder
         List<Evidence> evidence = new();
         List<Fact> factsInvolved = new();
         List<Contradiction> contradictions = new();
+        List<ContradictionGroup> contradictionGroups = new();
 
         // get all scenarios
         FraudScenario fraudScenario = FraudScenarioGenerator.GenerateFromAllFraud(settings);
@@ -159,11 +184,24 @@ public class CaseBuilder
         {
             IFraudInjector injector = FraudInjectorFactory.Create(fraud);   // Get the object.
 
-            contradictions.Add(injector.Inject(evidence, truth, caseId, factsInvolved));   // Inject
+            Contradiction con = injector.Inject(evidence, truth, caseId, factsInvolved); // Inject Fraud
+
+            contradictions.Add(con);
+
+            contradictionGroups.Add(new()
+            {
+                Id = Guid.NewGuid().ToString(),
+                FactType = con.FactType,
+                FraudType = con.FraudType,
+                OutlierFact = con.FactAModded
+            });
         }
 
         // Check if all Facts for contradictions created.
         Debug.Log($"EvidenceFactValidator: {!EvidenceFactValidator.Validate(evidence, factsInvolved, contradictions)}");
+
+        // For each outlier Fact that was modified by the FraudInject, need to populate the Facts that are still True
+        PopulateTrueFacts.Populate(contradictionGroups, evidence);
 
         // Render display sentences from templates
         foreach (Evidence e in evidence)
@@ -175,9 +213,13 @@ public class CaseBuilder
         evidence = evidence.OrderBy(x => System.Guid.NewGuid())
             .ToList();
 
-        // Build the contradiction index
+        // Build the contradiction index, since switched to Fact clusters this is used for debugging to see the orginal injected contradiction.
         ContradictionIndex index = new ContradictionIndex();
         index.Build(contradictions);
+
+        // Build the contradiction group index, this is used for scoring.
+        ContradictionGroupIndex conGroupIndex = new ContradictionGroupIndex();
+        conGroupIndex.Build(contradictionGroups);
 
         return new CaseData
         {
@@ -188,10 +230,15 @@ public class CaseBuilder
 
             Evidence = evidence,
 
+            Facts = factsInvolved,
+
             Contradictions = contradictions,
 
-            ContradictionIndex = index
+            ContradictionIndex = index,
+
+            ContradictionGroups = contradictionGroups,
+
+            ContradictionGroupIndex = conGroupIndex
         };
     }
-
 }

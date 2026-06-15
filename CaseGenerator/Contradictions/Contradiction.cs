@@ -10,11 +10,13 @@ public class Contradiction
 
     public Evidence EvidenceB;
 
-    public Fact FactA;
+    public Fact FactAModded;
 
     public Fact FactB;
 
-    public FraudType Type;
+    public FactType FactType;
+
+    public FraudType FraudType;
 
     public string Description;
 }

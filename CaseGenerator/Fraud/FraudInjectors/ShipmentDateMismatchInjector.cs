@@ -56,9 +56,10 @@ public class ShipmentDateMismatchInjector : IFraudInjector
             CaseId = caseId,
             EvidenceA = firstEv,
             EvidenceB = secondEv,
-            FactA = firstEvDate,
+            FactAModded = firstEvDate,
             FactB = secondEvDate,
-            Type = FraudType.ShipmnetDateMismatch,
+            FactType = factTypeMod,
+            FraudType = FraudType.ShipmnetDateMismatch,
 
             Description = "Shipment date mismatch."
         };

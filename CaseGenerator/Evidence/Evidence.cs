@@ -86,7 +86,7 @@ public static class EvidenceTypeFactTypeList
         if (need.Count != have.Count)
         {
             throw new System.Exception($"{evidence.Type}: Evidence missing facts; Have: {string.Join(", ", have)}, Need: {string.Join(", ", need)}");
-            return false;
+            //return false;
         }
 
         return need.Count == have.Count;

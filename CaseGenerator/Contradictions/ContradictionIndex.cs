@@ -10,7 +10,7 @@ public class ContradictionIndex
     {
         foreach (var contradiction in contradictions)
         {
-            string key = FactPairKey.Create(contradiction.FactA.Id, contradiction.FactB.Id);
+            string key = FactPairKey.Create(contradiction.FactAModded.Id, contradiction.FactB.Id);
 
             index[key] = contradiction;
         }
