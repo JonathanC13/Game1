@@ -1,5 +1,6 @@
 // The class contains the values that describe the Entity during the current Truth state.
 using System;
+using UnityEngine;
 
 public class PurchaseOrder
 {
@@ -12,6 +13,17 @@ public class PurchaseOrder
     public string Amount;
 
     public int Quantity;
+
+    public void PrintPurchaseOrder()
+    {
+        string sb = "Purchase Order \n";
+        sb += $"Id: {Id} \n";
+        sb += $"SaleRecordId: {SaleRecordId} \n";
+        sb += $"BuyerId: {BuyerId} \n";
+        sb += $"Amount: {Amount} \n";
+        sb += $"Quantity: {Quantity} \n";
+        Debug.Log(sb);
+    }
 }
 
 public static class PurchaseOrderGenerator

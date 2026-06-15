@@ -1,5 +1,6 @@
 // The class contains the values that describe the Entity during the current Truth state.
 using System;
+using UnityEngine;
 
 public class Contract
 {
@@ -12,6 +13,17 @@ public class Contract
     public string ContractAmount;
 
     public PaymentStatus PaymentStatus;
+
+    public void PrintContract()
+    {
+        string sb = "Contract \n";
+        sb += $"Id: {Id} \n";
+        sb += $"ContractRecordId: {ContractRecordId} \n";
+        sb += $"ContractId: {ContractId} \n";
+        sb += $"ContractAmount: {ContractAmount} \n";
+        sb += $"PaymentStatus: {PaymentStatus} \n";
+        Debug.Log(sb);
+    }
 }
 
 public static class ContractGenerator

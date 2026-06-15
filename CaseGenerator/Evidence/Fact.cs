@@ -12,4 +12,19 @@ public class Fact
 
     // The properties the Fact contains
     public Dictionary<string, object> Values = new();
+
+    public string GetFactInfo()
+    {
+        string sb = "Fact \n";
+        sb += $"EvidenceId: {Evidence.Id} \n";
+        sb += $"FactType: {FactType} \n";
+        sb += $"Properties: \n";
+
+        foreach (KeyValuePair<string, object> kvp in Values)
+        {
+            sb += $"{kvp.Key}: {kvp.Value} \n";
+        }
+
+        return sb;
+    }
 }

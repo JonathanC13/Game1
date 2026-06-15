@@ -101,7 +101,7 @@ public static class FactGenerator
 
             Values =
             {
-                ["EmpPayAmount"] =empPayAmount
+                ["EmpPayAmount"] = empPayAmount
             }
         };
     }

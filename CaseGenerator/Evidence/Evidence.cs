@@ -1,5 +1,5 @@
-using NUnit.Framework;
 using System.Collections.Generic;
+using UnityEngine;
 
 // Blueprint for Evidence. Contains all the information for an Evidence piece.
 public class Evidence
@@ -18,6 +18,26 @@ public class Evidence
     
     // The exact string that will be displayed to the user, built from Facts into templates.
     public string DisplayContent;
+
+    public void PrintEvidence()
+    {
+        string sb = "Evidence \n";
+        sb += $"Id: {Id} \n";
+        sb += $"DisplayName: {DisplayName} \n";
+        sb += $"DisplayId: {DisplayId} \n";
+        sb += $"Type: {Type} \n";
+        sb += $"Purpose: {Purpose} \n";
+        sb += $"CaseId: {CaseId} \n";
+        sb += $"DisplayContent: {DisplayContent} \n";
+        sb += "Facts: \n";
+
+        foreach (Fact fact in Facts)
+        {
+            sb += fact.GetFactInfo();
+        }
+
+        Debug.Log(sb);
+    }
 }
 
 public class EvidenceToGenerate

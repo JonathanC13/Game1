@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 // Precompute Contradiction Index so fast scoring.
 public class ContradictionIndex
@@ -26,4 +27,16 @@ public class ContradictionIndex
         return index.TryGetValue(key, out contradiction);
     }
 
+    public void PrintContradictionIndex()
+    {
+        string sb = "ContradictionIndex \n";
+
+        foreach (KeyValuePair<string, Contradiction> kvp in index)
+        {
+            sb += $"Key: {kvp.Key} \n";
+            sb += kvp.Value.GetContradictionInfo() + "\n";
+        }
+
+        Debug.Log(sb);
+    }
 }
