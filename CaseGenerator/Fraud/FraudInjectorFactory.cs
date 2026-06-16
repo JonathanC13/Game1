@@ -23,29 +23,29 @@ public static class FraudInjectorFactory
             case FraudType.ContractorMismatch:
                 return new ContractorMismatchInjector();
 
-            //case FraudType.ContractAmountMismatch:
-            //    return new ContractAmountMismatch();
+            case FraudType.ContractAmountMismatch:
+                return new ContractAmountMismatchInjector();
 
-            //case FraudType.ContractPaymentStatusMismatch:
-            //    return new ContractPaymentStatusMismatch();
+            case FraudType.ContractPaymentStatusMismatch:
+                return new ContractPaymentStatusMismatchInjector();
 
-            //case FraudType.BuyerMismatch:
-            //    return new BuyerMismatch();
+            case FraudType.BuyerMismatch:
+                return new BuyerMismatchInjector();
 
-            //case FraudType.AmountMismatch:
-            //    return new AmountMismatch();
+            case FraudType.AmountMismatch:
+                return new AmountMismatchInjector();
 
-            case FraudType.ShipmnetDateMismatch:
+            case FraudType.ShipmentDateMismatch:
                 return new ShipmentDateMismatchInjector();
 
-            //case FraudType.ShipmentQuantityMismatch:
-            //    return new ShipmentQuantityMismatch();
+            case FraudType.ShipmentQuantityMismatch:
+                return new ShipmentQuantityMismatchInjector();
 
-            //case FraudType.ShipmentStatusMismatch:
-            //    return new ShipmentStatusMismatch();
+            case FraudType.ShipmentStatusMismatch:
+                return new ShipmentStatusMismatchInjector();
 
-            //case FraudType.PaymentStatusMismatch:
-            //    return new PaymentStatusMismatch();
+            case FraudType.PaymentStatusMismatch:
+                return new PaymentStatusMismatchInjector();
 
             default:
                 throw new Exception("No injector");

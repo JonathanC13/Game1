@@ -33,7 +33,7 @@ public static class FraudTemplates
             case FraudType.AmountMismatch:
                 return AmountMismatch(type);
 
-            case FraudType.ShipmnetDateMismatch:
+            case FraudType.ShipmentDateMismatch:
                 return ShipmnetDateMismatch(type);
 
             case FraudType.ShipmentQuantityMismatch:

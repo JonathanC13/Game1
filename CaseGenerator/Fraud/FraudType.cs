@@ -10,7 +10,7 @@ public enum FraudType
 
     BuyerMismatch,
     AmountMismatch,
-    ShipmnetDateMismatch,
+    ShipmentDateMismatch,
     ShipmentQuantityMismatch,
     ShipmentStatusMismatch,
     PaymentStatusMismatch

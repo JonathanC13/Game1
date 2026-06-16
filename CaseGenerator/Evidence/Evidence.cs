@@ -58,12 +58,12 @@ public static class EvidenceTypeFactTypeList
             [EvidenceType.Contract] = new List<FactType> { FactType.Contractor, FactType.ContractAmount, FactType.ContractPaymentStatus },
             [EvidenceType.Bank_statement_contract] = new List<FactType> { FactType.Contractor, FactType.ContractAmount, FactType.ContractPaymentStatus },
             [EvidenceType.Email_from_bank_contract] = new List<FactType> { FactType.Contractor, FactType.ContractAmount, FactType.ContractPaymentStatus },
-            [EvidenceType.Email_inv_out] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.ShipmnetDate, FactType.ShipmentQuantity },
-            [EvidenceType.Invoice_sale] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.ShipmnetDate, FactType.ShipmentQuantity },
+            [EvidenceType.Email_inv_out] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.ShipmentDate, FactType.ShipmentQuantity },
+            [EvidenceType.Invoice_sale] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.ShipmentDate, FactType.ShipmentQuantity },
             [EvidenceType.Purchase_order] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.ShipmentQuantity },
             [EvidenceType.Inventory_report] = new List<FactType> { FactType.ShipmentQuantity },
-            [EvidenceType.Shipping_log] = new List<FactType> { FactType.ShipmnetDate, FactType.ShipmentQuantity, FactType.ShipmentStatus },
-            [EvidenceType.Email_from_shipping] = new List<FactType> { FactType.ShipmnetDate, FactType.ShipmentQuantity, FactType.ShipmentStatus },
+            [EvidenceType.Shipping_log] = new List<FactType> { FactType.ShipmentDate, FactType.ShipmentQuantity, FactType.ShipmentStatus },
+            [EvidenceType.Email_from_shipping] = new List<FactType> { FactType.ShipmentDate, FactType.ShipmentQuantity, FactType.ShipmentStatus },
             [EvidenceType.Bank_statement_sale] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.PaymentStatus },
             [EvidenceType.Email_from_bank_sale] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.PaymentStatus }
         };

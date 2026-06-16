@@ -11,7 +11,7 @@ public class ShipmentDateMismatchInjector : IFraudInjector
         string caseId, 
         List<Fact> factsInvolved)
     {
-        FactType factTypeMod = FactType.ShipmnetDate;
+        FactType factTypeMod = FactType.ShipmentDate;
         string contraId = Guid.NewGuid().ToString();
         string contraDisplayId = GenerateDisplayId.generate(EntityType.CONTRA);
 
@@ -58,7 +58,7 @@ public class ShipmentDateMismatchInjector : IFraudInjector
             FactAModded = firstEvDate,
             FactB = secondEvDate,
             FactType = factTypeMod,
-            FraudType = FraudType.ShipmnetDateMismatch,
+            FraudType = FraudType.ShipmentDateMismatch,
 
             Description = "Shipment date mismatch."
         };

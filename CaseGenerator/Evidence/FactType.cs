@@ -15,7 +15,7 @@ public enum FactType
     Sale_record_id,
     Buyer,
     Amount,
-    ShipmnetDate,
+    ShipmentDate,
     ShipmentQuantity,
     ShipmentStatus,
     PaymentStatus

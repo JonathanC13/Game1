@@ -53,7 +53,7 @@ public static class FraudScenarioGenerator
             {
                 FraudType.BuyerMismatch,
                 FraudType.AmountMismatch,
-                FraudType.ShipmnetDateMismatch,
+                FraudType.ShipmentDateMismatch,
                 FraudType.ShipmentQuantityMismatch,
                 FraudType.ShipmentStatusMismatch,
                 FraudType.PaymentStatusMismatch

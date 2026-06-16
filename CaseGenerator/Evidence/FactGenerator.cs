@@ -241,7 +241,7 @@ public static class FactGenerator
 
             Values =
             {
-                ["Amout"] = amount
+                ["Amount"] = amount
             }
         };
     }
@@ -257,7 +257,7 @@ public static class FactGenerator
 
             Evidence = evidence,
 
-            FactType = FactType.ShipmnetDate,
+            FactType = FactType.ShipmentDate,
 
             Values =
             {
