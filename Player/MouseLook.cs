@@ -1,13 +1,8 @@
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
-[RequireComponent(typeof(CharacterController))]
-public class FirstPersonController : MonoBehaviour
+public class MouseLook : MonoBehaviour
 {
-    [Header("Movement")]
-    public float moveSpeed = 5f;
-    public float jumpHeight = 1.2f;
-    public float gravity = -9.81f;
-
     [Header("Look")]
     public float mouseSensitivity = 0.1f;
     public Transform cameraPivot;
@@ -15,12 +10,11 @@ public class FirstPersonController : MonoBehaviour
     private CharacterController controller;
     private InputSystem_Actions controls;
 
-    private Vector2 moveInput;
     private Vector2 lookInput;
-    private bool jumpPressed;
 
-    private Vector3 velocity;
     private float xRotation;
+
+    private bool updateEnabled;
 
     void Awake()
     {
@@ -31,14 +25,12 @@ public class FirstPersonController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
+        updateEnabled = true;
     }
 
     void OnEnable()
     {
         controls.Enable();
-
-        controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
         controls.Player.Look.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
         controls.Player.Look.canceled += ctx => lookInput = Vector2.zero;
@@ -53,31 +45,10 @@ public class FirstPersonController : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
-        HandleLook();
-    }
-
-    void HandleMovement()
-    {
-        bool grounded = controller.isGrounded;
-
-        if (grounded && velocity.y < 0)
+        if (updateEnabled)
         {
-            velocity.y = -2f; // keeps player stuck to ground
-        }
-
-        Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
-        controller.Move(move * moveSpeed * Time.deltaTime);
-
-        if (jumpPressed && grounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-
-        jumpPressed = false;
-
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+            HandleLook();
+        }       
     }
 
     void HandleLook()
@@ -93,5 +64,10 @@ public class FirstPersonController : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         cameraPivot.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+    }
+
+    public void setEnabled(bool newEnabled)
+    {
+        updateEnabled = newEnabled;
     }
 }

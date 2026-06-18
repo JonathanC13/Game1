@@ -1,3 +1,5 @@
+using System;
+
 public static class CaseTruthGenerator
 {
     public static CaseTruth Generate()
@@ -6,6 +8,8 @@ public static class CaseTruthGenerator
 
         return new CaseTruth
         {
+            TruthId = Guid.NewGuid().ToString(),
+
             Employee = EmployeeGenerator.Generate(),
 
             Contractor = ContractorGenerator.Generate(),

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
 
 
 public static class FraudTemplates
@@ -52,12 +54,12 @@ public static class FraudTemplates
 
     private static List<EvidenceType> GetPairForFactType(FactType ft)
     {
-        var random = new Random();
+        var random = new System.Random();
         List<EvidenceType> evidenceType = EvidenceTypeFactTypeList.FE_LIST[ft];
 
         if (evidenceType.Count < 2)
         {
-            throw new System.Exception($"For FactType {ft}, not enought EvidenceTypes");
+            throw new System.Exception($"For FactType {ft}, not enough EvidenceTypes");
         }
 
         int firstIndex = random.Next(evidenceType.Count);
@@ -77,11 +79,11 @@ public static class FraudTemplates
 
     private static FraudTemplate EmpPayAmountMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.EmpPayAmount;
 
         return new FraudTemplate
         {
-            Type =  fraudType,
+            Type = fraudType,
 
             TargetFacts =
             {
@@ -104,7 +106,7 @@ public static class FraudTemplates
 
     private static FraudTemplate EmpPaymentStatusMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.EmpPaymentStatus;
 
         return new FraudTemplate
         {
@@ -130,7 +132,7 @@ public static class FraudTemplates
 
     private static FraudTemplate EmployeeStatusMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.EmployeeStatus;
 
         return new FraudTemplate
         {
@@ -156,7 +158,7 @@ public static class FraudTemplates
 
     private static FraudTemplate ContractorMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.Contractor;
 
         return new FraudTemplate
         {
@@ -183,7 +185,7 @@ public static class FraudTemplates
 
     private static FraudTemplate ContractAmountMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.ContractAmount;
 
         return new FraudTemplate
         {
@@ -210,7 +212,7 @@ public static class FraudTemplates
 
     private static FraudTemplate ContractPaymentStatusMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.ContractPaymentStatus;
 
         return new FraudTemplate
         {
@@ -237,7 +239,7 @@ public static class FraudTemplates
 
     private static FraudTemplate BuyerMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.Buyer;
 
         return new FraudTemplate
         {
@@ -299,7 +301,7 @@ public static class FraudTemplates
 
     private static FraudTemplate ShipmnetDateMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.ShipmentDate;
 
         return new FraudTemplate
         {
@@ -330,7 +332,7 @@ public static class FraudTemplates
 
     private static FraudTemplate ShipmentQuantityMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.ShipmentQuantity;
 
         return new FraudTemplate
         {
@@ -361,7 +363,7 @@ public static class FraudTemplates
 
     private static FraudTemplate ShipmentStatusMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.ShipmentStatus;
 
         return new FraudTemplate
         {
@@ -392,7 +394,7 @@ public static class FraudTemplates
 
     private static FraudTemplate PaymentStatusMismatch(FraudType fraudType)
     {
-        FactType ft = FactType.Amount;
+        FactType ft = FactType.PaymentStatus;
 
         return new FraudTemplate
         {

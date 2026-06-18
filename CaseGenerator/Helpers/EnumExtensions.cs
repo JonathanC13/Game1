@@ -8,4 +8,9 @@ public static class EnumExtensions
         var values = (T[])Enum.GetValues(typeof(T));
         return values[new Random().Next(values.Length)];
     }
+
+    public static T[] GetArray<T>() where T : Enum
+    {
+        return (T[])Enum.GetValues(typeof(T));
+    }
 }

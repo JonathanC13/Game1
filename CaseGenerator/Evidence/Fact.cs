@@ -15,7 +15,8 @@ public class Fact
 
     public string GetFactInfo()
     {
-        string sb = "Fact \n";
+        string sb = $"Fact\n";
+        sb += $"Id: {Id} \n";
         sb += $"EvidenceId: {Evidence.Id} \n";
         sb += $"FactType: {FactType} \n";
         sb += $"Properties: \n";

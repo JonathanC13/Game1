@@ -11,6 +11,7 @@ public static class FactGenerator
         string employeeRecordId
         )
     {
+        
         return new Fact
         {
             Id = Guid.NewGuid().ToString(),
@@ -71,6 +72,7 @@ public static class FactGenerator
         string employeeId
         )
     {
+        
         return new Fact
         {
             Id = Guid.NewGuid().ToString(),

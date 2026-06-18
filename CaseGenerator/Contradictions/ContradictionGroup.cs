@@ -10,7 +10,7 @@ public class ContradictionGroup
 
     public FraudType FraudType;
 
-    public Dictionary<string, Fact> TrueFacts;
+    public Dictionary<string, Fact> TrueFacts = new();
 
     public Fact OutlierFact;
 

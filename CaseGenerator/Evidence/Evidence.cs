@@ -33,7 +33,7 @@ public class Evidence
 
         foreach (Fact fact in Facts)
         {
-            sb += fact.GetFactInfo();
+            sb += fact.GetFactInfo() + '\n';
         }
 
         Debug.Log(sb);

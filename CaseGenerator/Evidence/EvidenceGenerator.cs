@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 // Helper functions to generate the specific Evidence. 
 public static class EvidenceGenerator
@@ -19,7 +21,7 @@ public static class EvidenceGenerator
                 CaseId = caseId
             };
 
-        // Picked what value from Truth to assign to fact here so the Evidence can control what goes into the Fact.
+        //Picked what value from Truth to assign to fact here so the Evidence can control what goes into the Fact.
         evidence.Facts.Add(
             FactGenerator.CreateEmployeeRecordIdFact(
                 evidence,
@@ -308,8 +310,8 @@ public static class EvidenceGenerator
                 CaseId = caseId
             };
 
-        // Facts
-        evidence.Facts.Add(
+    // Facts
+    evidence.Facts.Add(
             FactGenerator.CreateSaleRecordIdFact(
                 evidence,
                 e.Purpose == EvidencePurpose.RedHerring ? GenerateDisplayId.generate(EntityType.SALE_REC) : truth.PurchaseOrder.SaleRecordId));

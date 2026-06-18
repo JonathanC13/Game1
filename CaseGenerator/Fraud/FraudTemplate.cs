@@ -5,7 +5,7 @@ public class FraudTemplate
 {
     public FraudType Type;
 
-    public List<FactType> TargetFacts;
+    public List<FactType> TargetFacts = new();
 
     public List<EvidenceType> RequiredEvidence = new();
 

@@ -1,7 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 public class test_Entry : MonoBehaviour
 {
@@ -10,45 +11,16 @@ public class test_Entry : MonoBehaviour
     {
         CaseBuilder cbuild = new CaseBuilder();
 
+        Array levels = EnumExtensions.GetArray<DifficultyLevel>();
         CaseData cd = cbuild.Build(DifficultyLevel.Easy);
-
-        print(cd.Id + " : " + cd.DisplayId);
-
-        printDifficulty(cd.Difficulty);
-
-        foreach (Evidence item in cd.Evidence)
-        {
-            print(item.Type + ": " + item.DisplayContent);
-            //EvidenceGameObjectGenerator.Create(item, evidencePrefab);
-        }
-
-        foreach (Contradiction item in cd.Contradictions)
-        {
-            print(item.FactType + ": " + item.FactAModded.Id + "|" + item.FactB.Id + ". " + item.FraudType + ": " + item.Description);
-            //EvidenceGameObjectGenerator.Create(item, evidencePrefab);
-        }
-
-        foreach (ContradictionGroup item in cd.ContradictionGroups)
-        {
-            print(item.FactType + ": " + item.OutlierFact.Id + "|" + string.Join(", ", item.TrueFacts.Keys) + ". " + item.FraudType);
-            //EvidenceGameObjectGenerator.Create(item, evidencePrefab);
-        }
+        //cd.PrintCaseData();
+        //foreach (DifficultyLevel level in levels) {
+        //    CaseData cd = cbuild.Build(level);
+        //    cd.PrintCaseData();
+        //    Debug.Log("-----");
+        //}
 
 
-        string selectedAId = "a"; // Will be GameObject -> Fact -> Fact.Id
-        string selectedBId = "b";
-        bool result =
-            cd.ContradictionIndex.TryFind(
-                selectedAId,
-                selectedBId,
-                out Contradiction contradiction);
-
-        HashSet<string> solved = new();
-        solved.Add(contradiction.Id);
-
-        bool solvedCase =
-            solved.Count ==
-            cd.Contradictions.Count;
     }
 
     // Update is called once per frame

@@ -53,7 +53,7 @@ public static class DifficultyProfiles
                     MinimumEvidenceCount = Math.Min(9, maxEvidenceCount)
                 };
 
-            case DifficultyLevel.test:
+            case DifficultyLevel.TEST:
                 return new DifficultySettings
                 {
                     FraudCount = maxFraudCount,

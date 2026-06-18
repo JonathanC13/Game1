@@ -12,11 +12,11 @@ public class DifficultySettings
 
     public void PrintDifficultySettings()
     {
-        string sb = "Difficulty Settings\n";
-        sb += $"FraudCount: {FraudCount.ToString()}";
-        sb += $"OptionalEvidenceChance: {OptionalEvidenceChance.ToString()}";
-        sb += $"RedHerringCount: {RedHerringCount.ToString()}";
-        sb += $"MinimumEvidenceCount:: {MinimumEvidenceCount.ToString()}";
+        string sb = "Difficulty Settings \n";
+        sb += $"FraudCount: {FraudCount.ToString()} \n";
+        sb += $"OptionalEvidenceChance: {OptionalEvidenceChance.ToString()} \n";
+        sb += $"RedHerringCount: {RedHerringCount.ToString()} \n";
+        sb += $"MinimumEvidenceCount:: {MinimumEvidenceCount.ToString()} \n";
         Debug.Log(sb);
     }
 }
