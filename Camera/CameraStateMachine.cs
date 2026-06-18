@@ -17,8 +17,11 @@ public class CameraStateMachine : MonoBehaviour
     Transform fpsTarget;
     Transform inspectTarget;
 
+    readonly float inspectFOV = 60f;
+
     Vector3 savedPos;
     Quaternion savedRot;
+    float savedFOV;
 
     void Awake()
     {
@@ -54,6 +57,7 @@ public class CameraStateMachine : MonoBehaviour
 
         savedPos = playerCamera.transform.position;
         savedRot = playerCamera.transform.rotation;
+        savedFOV = playerCamera.fieldOfView;
 
         inspectTarget = target;
 
@@ -115,11 +119,18 @@ public class CameraStateMachine : MonoBehaviour
                 Time.deltaTime * moveSpeed
             );
 
+        playerCamera.fieldOfView =
+            Mathf.Lerp(
+                playerCamera.fieldOfView, 
+                inspectFOV, 
+                Time.deltaTime * moveSpeed);
+
 
         if (Vector3.Distance(playerCamera.transform.position, target.position) < 0.01f)
         {
             playerCamera.transform.position = target.position;
             playerCamera.transform.rotation = target.rotation;
+            playerCamera.fieldOfView = inspectFOV;
 
             state = nextState;
         }
@@ -143,11 +154,18 @@ public class CameraStateMachine : MonoBehaviour
                 Time.deltaTime * moveSpeed
             );
 
+        playerCamera.fieldOfView =
+            Mathf.Lerp(
+                playerCamera.fieldOfView,
+                savedFOV,
+                Time.deltaTime * moveSpeed);
+
 
         if (Vector3.Distance(playerCamera.transform.position, savedPos) < 0.01f)
         {
             playerCamera.transform.position = savedPos;
             playerCamera.transform.rotation = savedRot;
+            playerCamera.fieldOfView = savedFOV;
 
             mouseLook.enabled = true;
             movement.enabled = true;

@@ -7,7 +7,7 @@ public abstract class Interactable : MonoBehaviour
 
     public virtual void OnFocus()
     {
-        Debug.Log("Looking at " + name);
+        //Debug.Log("Looking at " + name);
     }
 
 

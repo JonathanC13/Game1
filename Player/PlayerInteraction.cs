@@ -14,6 +14,8 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private LayerMask interactLayer;
     [SerializeField] private float interactDistance = 3f;
 
+    [SerializeField] private CameraStateMachine camStateMachine;
+
     private Interactable currentInteractable;
 
     
@@ -41,7 +43,31 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
-        DetectInteractable();
+        if (camStateMachine.state == CameraState.FPS)
+        {
+            DetectInteractable();
+        }
+        else if (currentInteractable != null)
+        {
+            ClearDetected();
+        }
+    }
+
+    private void ClearDetected()
+    {
+        if (currentInteractable != null)
+        {
+            currentInteractable.OnLoseFocus();
+
+            if (currentInteractable.TryGetComponent<Highlightable>(out Highlightable highlight))
+            {
+                highlight.Highlight(false);
+            }
+
+            interactionUI.Hide();
+
+            currentInteractable = null;
+        }
     }
 
     private void DetectInteractable()

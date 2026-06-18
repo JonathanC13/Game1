@@ -4,6 +4,6 @@ public class DoorInteractable : Interactable
 {
     public override void Interact()
     {
-        Debug.Log("Door selected");
+        //Debug.Log("Door selected");
     }
 }
