@@ -57,10 +57,10 @@ public class CaseBuilder
                 EvidenceSelector.Select(evidenceTypes, evidenceToGenerate, template, settings.OptionalEvidenceChance);
             }
 
-            // Add Red Herring evidence
+            // Add Red Herring evidence, can add duplicate EvidenceTypes but with different recordID from truth.
             RedHerringGenerator.Add(evidenceTypes, evidenceToGenerate, settings);
 
-            // If after not enough documents, add enough documents for difficulty
+            // If after not enough documents, add non-duplicate documents for difficulty
             EvidenceCountBalancer.EnsureMinimum(evidenceTypes, evidenceToGenerate, settings);
 
             // Generate the Evidence (Evidence generates its facts.)

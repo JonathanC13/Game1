@@ -11,8 +11,8 @@ public class PuzzleManager : MonoBehaviour
 
     private void Start()
     {
-        PuzzleBuilder = new PuzzleBuilder();
-        PuzzleBuilder.generate();
+        //PuzzleBuilder = new PuzzleBuilder();
+        //PuzzleBuilder.generate();
     }
 
     public void MoveTo(PuzzleLocation location)

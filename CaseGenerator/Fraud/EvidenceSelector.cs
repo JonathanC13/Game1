@@ -14,6 +14,7 @@ public static class EvidenceSelector
         List<EvidenceToGenerate> result = new();
         HashSet<EvidenceType> evidenceTypeHash = new HashSet<EvidenceType>(evidenceType);
 
+        // Get the required first, since trimming duplicate EvidenceTypes.
         foreach (var required in template.RequiredEvidence)
         {
             if (!evidenceTypeHash.Contains(required))

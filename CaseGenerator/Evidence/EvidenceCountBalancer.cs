@@ -13,17 +13,16 @@ public static class EvidenceCountBalancer
         HashSet<EvidenceType> evidenceHash = new HashSet<EvidenceType>(evidenceTypes);
 
         List<EvidenceType> filler = Enum.GetValues(typeof(EvidenceType)).Cast<EvidenceType>().ToList();
+        filler.Shuffle();
+        int fillerLen = filler.Count;
 
-        Random random = new Random();
-        int max = filler.Count;
-        int fails = 0;  // hard stop if 3 in a row cannot random an EvidenceType that isn't included.
-        while (evidenceTypes.Count < settings.MinimumEvidenceCount && fails < 3)
+        int i = 0;
+        while (i < fillerLen && evidenceTypes.Count < settings.MinimumEvidenceCount)
         {
-            EvidenceType extra = filler[random.Next(0, max)];
+            EvidenceType extra = filler[i];
 
             if (!evidenceHash.Contains(extra))
             {  
-                fails = 0;
                 evidenceHash.Add(extra);
                 evidenceTypes.Add(extra);
                 evidence.Add(
@@ -33,10 +32,9 @@ public static class EvidenceCountBalancer
 
                         Purpose = EvidencePurpose.Filler
                     });
-            } else
-            {
-                fails += 1;
             }
+
+            i++;
         }
 
     }

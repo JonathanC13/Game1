@@ -15,21 +15,11 @@ public class EmpPaymentStatusMismatchInjector : IFraudInjector
         string contraId = Guid.NewGuid().ToString();
         string contraDisplayId = GenerateDisplayId.generate(EntityType.CONTRA);
 
-        List<Evidence> shuffledEvidence = evidence.OrderBy(x => System.Guid.NewGuid())
-                .ToList();
+        List<Evidence> fraudPair = FraudPair.GetPair(evidence, factTypeMod);
 
-        // Get evidence
-        Evidence firstEv =
-            evidence.First(
-                x =>
-                EvidenceTypeFactTypeList.EF_LIST[x.Type].Contains(factTypeMod));
+        Evidence firstEv = fraudPair[0];
 
-        Evidence secondEv =
-            evidence.First(
-                x =>
-                {
-                    return (x != firstEv && EvidenceTypeFactTypeList.EF_LIST[x.Type].Contains(factTypeMod));
-                });
+        Evidence secondEv = fraudPair[1];
 
         // Get the facts to modify
         Fact firstEvFact = firstEv.Facts.First(x => x.FactType == factTypeMod);

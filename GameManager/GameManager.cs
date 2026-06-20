@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public PuzzleSpawner puzzleSpawner;
+    public PuzzleManager puzzleManager;
 
     void Start()
     {
-        puzzleSpawner.Spawn(PuzzleLocation.Table);
+        //puzzleManager.Spawn(PuzzleLocation.Table);
     }
 }
