@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Overlays;
 using UnityEngine;
 
@@ -27,7 +28,8 @@ public class PuzzleManager : MonoBehaviour
 
     private CaseBuilder caseBuilder;
     private CaseData caseData;
-    private List<EvidenceView> evidenceViews;
+    private List<EvidenceView> evidenceViews = new();
+    private float towardPlayerIncrement = 0.01f;
 
     void Awake()
     {
@@ -45,6 +47,11 @@ public class PuzzleManager : MonoBehaviour
         Build();
     }
 
+    void OnDestroy()
+    {
+        unSubscribeClick();
+    }
+
     void Build()
     {
         caseBuilder = new CaseBuilder();
@@ -53,12 +60,14 @@ public class PuzzleManager : MonoBehaviour
         caseData = caseBuilder.Build(DifficultyLevel.Easy);
         //caseData.PrintCaseData();
 
+        unSubscribeClick(); // remove old listeners
         evidenceViews = new();
+
         float towardViewer = 0f;
 
         foreach (Evidence evidence in caseData.Evidence)
         {
-            towardViewer += 0.01f;
+            towardViewer += towardPlayerIncrement;
             CreateEvidence(evidence, towardViewer);
         }
     }
@@ -83,7 +92,11 @@ public class PuzzleManager : MonoBehaviour
             instance.transform.rotation = Quaternion.Euler(90, 0, 90);
 
             instance.Setup(evidence);
-            instance.AssignInspectionSurface(inspectionSurface);
+            instance.AssignDependencies(inspectionSurface);
+
+            // add event listenter
+            instance.GetComponent<InspectableItem>().OnClicked += EvidenceClicked;
+
             evidenceViews.Add(instance);
         }
         else
@@ -92,6 +105,52 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
+    void unSubscribeClick()
+    {
+        foreach (var item in evidenceViews)
+        {
+            if (item == null)
+            {
+                continue;
+            }
+
+            InspectableItem ii = item.GetComponent<InspectableItem>();
+            if (ii != null)
+            {
+                ii.OnClicked -= EvidenceClicked;
+            }
+        }
+    }
+
+    void EvidenceClicked(InspectableItem item)
+    {
+        shiftToFront(item);
+    }
+
+    void shiftToFront(InspectableItem item)
+    {
+        EvidenceView ev = item.GetComponent<EvidenceView>();
+        int i = evidenceViews.IndexOf(ev);
+        if (i == -1)
+        {
+            return;
+        } 
+        
+        for (int j = i; j < evidenceViews.Count - 1; j++)
+        {
+            // shift left by swapping
+            float prevY = evidenceViews[j].transform.localPosition.y;
+            EvidenceView next = evidenceViews[j + 1];
+            float nextY = next.transform.localPosition.y;
+
+            evidenceViews[j + 1] = evidenceViews[j];
+            evidenceViews[j] = next;
+
+            // replace y localPosition
+            evidenceViews[j].transform.localPosition = new Vector3(evidenceViews[j].transform.localPosition.x, prevY, evidenceViews[j].transform.localPosition.z);
+            evidenceViews[j + 1].transform.localPosition = new Vector3(evidenceViews[j + 1].transform.localPosition.x, nextY, evidenceViews[j + 1].transform.localPosition.z);
+        }
+    }
 
     // later change to moving the puzzleArea to different anchor's center
     public void MoveTo(PuzzleLocation location)

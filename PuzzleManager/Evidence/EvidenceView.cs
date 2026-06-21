@@ -21,7 +21,7 @@ public class EvidenceView : MonoBehaviour
         
     }
 
-    public void AssignInspectionSurface(InspectionSurface inspectionSurface)
+    public void AssignDependencies(InspectionSurface inspectionSurface)
     {
         if (inspectable != null)
         {

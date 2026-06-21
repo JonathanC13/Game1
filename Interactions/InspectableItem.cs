@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,6 +13,8 @@ public class InspectableItem : MonoBehaviour
 
     public InspectionSurface surface;
 
+    public event Action<InspectableItem> OnClicked;
+
     Vector3 dragOffset;
     Plane plane;
 
@@ -22,7 +25,8 @@ public class InspectableItem : MonoBehaviour
 
     public void OnClick()
     {
-        //Debug.Log("Clicked: " + itemName);
+        Debug.Log("Clicked: " + itemName);
+        OnClicked?.Invoke(this);
     }
 
     public void StartDrag(Camera cam)

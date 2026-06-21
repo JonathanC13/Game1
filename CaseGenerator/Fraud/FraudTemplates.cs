@@ -36,7 +36,7 @@ public static class FraudTemplates
                 return AmountMismatch(type);
 
             case FraudType.ShipmentDateMismatch:
-                return ShipmnetDateMismatch(type);
+                return ShipmentDateMismatch(type);
 
             case FraudType.ShipmentQuantityMismatch:
                 return ShipmentQuantityMismatch(type);
@@ -290,7 +290,7 @@ public static class FraudTemplates
         };
     }
 
-    private static FraudTemplate ShipmnetDateMismatch(FraudType fraudType)
+    private static FraudTemplate ShipmentDateMismatch(FraudType fraudType)
     {
         FactType ft = FactType.ShipmentDate;
 
