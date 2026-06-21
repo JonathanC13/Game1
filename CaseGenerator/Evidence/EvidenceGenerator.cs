@@ -310,8 +310,8 @@ public static class EvidenceGenerator
                 CaseId = caseId
             };
 
-    // Facts
-    evidence.Facts.Add(
+        // Facts
+        evidence.Facts.Add(
             FactGenerator.CreateSaleRecordIdFact(
                 evidence,
                 e.Purpose == EvidencePurpose.RedHerring ? GenerateDisplayId.generate(EntityType.SALE_REC) : truth.PurchaseOrder.SaleRecordId));
@@ -377,6 +377,48 @@ public static class EvidenceGenerator
             FactGenerator.CreateShipmentDateFact(
                 evidence,
                 truth.Shipment.Date));
+
+        evidence.Facts.Add(
+            FactGenerator.CreateShipmentQuantityFact(
+                evidence,
+                truth.Shipment.Quantity));
+
+        EvidenceTypeFactTypeList.ValidateFactsAdded(evidence);
+
+        return evidence;
+    }
+
+    public static Evidence CreatePurchaseOrder(
+    EvidenceToGenerate e,
+        CaseTruth truth,
+        string caseId)
+    {
+        var evidence =
+            new Evidence
+            {
+                Id = Guid.NewGuid().ToString(),
+                DisplayName = "Purchase order",
+                DisplayId = GenerateDisplayId.generate(EntityType.PRCORD),
+                Type = e.Type,
+                Purpose = e.Purpose,
+                CaseId = caseId
+            };
+
+        // Facts
+        evidence.Facts.Add(
+            FactGenerator.CreateSaleRecordIdFact(
+                evidence,
+                e.Purpose == EvidencePurpose.RedHerring ? GenerateDisplayId.generate(EntityType.SALE_REC) : truth.PurchaseOrder.SaleRecordId));
+
+        evidence.Facts.Add(
+            FactGenerator.CreateBuyerFact(
+                evidence,
+                truth.PurchaseOrder.BuyerId));
+
+        evidence.Facts.Add(
+            FactGenerator.CreateAmountFact(
+                evidence,
+                truth.PurchaseOrder.Amount));
 
         evidence.Facts.Add(
             FactGenerator.CreateShipmentQuantityFact(

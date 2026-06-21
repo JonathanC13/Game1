@@ -61,8 +61,7 @@ public class CameraStateMachine : MonoBehaviour
 
         inspectTarget = target;
 
-        mouseLook.enabled = false;
-        movement.enabled = false;
+        EnterInspecting();
 
         state = CameraState.MovingToInspect;
     }
@@ -130,7 +129,7 @@ public class CameraStateMachine : MonoBehaviour
         {
             playerCamera.transform.position = target.position;
             playerCamera.transform.rotation = target.rotation;
-            playerCamera.fieldOfView = inspectFOV;
+            playerCamera.fieldOfView = inspectFOV;       
 
             state = nextState;
         }
@@ -170,7 +169,28 @@ public class CameraStateMachine : MonoBehaviour
             mouseLook.enabled = true;
             movement.enabled = true;
 
+            EnterFPS();
+
             state = CameraState.FPS;
         }
+    }
+
+    void EnterFPS()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        mouseLook.enabled = true;
+        movement.enabled = true;
+    }
+
+
+    void EnterInspecting()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        mouseLook.enabled = false;
+        movement.enabled = false;
     }
 }

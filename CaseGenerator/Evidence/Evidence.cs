@@ -65,8 +65,14 @@ public static class EvidenceTypeFactTypeList
             [EvidenceType.Shipping_log] = new List<FactType> { FactType.ShipmentDate, FactType.ShipmentQuantity, FactType.ShipmentStatus },
             [EvidenceType.Email_from_shipping] = new List<FactType> { FactType.ShipmentDate, FactType.ShipmentQuantity, FactType.ShipmentStatus },
             [EvidenceType.Bank_statement_sale] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.PaymentStatus },
-            [EvidenceType.Email_from_bank_sale] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.PaymentStatus }
-        };
+            [EvidenceType.Email_from_bank_sale] = new List<FactType> { FactType.Buyer, FactType.Amount, FactType.PaymentStatus },
+
+            [EvidenceType.Gambling_ad] = new List<FactType>(),
+            [EvidenceType.FastFood_ad] = new List<FactType>(),
+            [EvidenceType.MoneyLending_ad] = new List<FactType>(),
+            [EvidenceType.FocusPills_ad] = new List<FactType>(),
+            [EvidenceType.Cult_ad] = new List<FactType>()
+    };
 
     public static Dictionary<FactType, List<EvidenceType>> FE_LIST = new();
 

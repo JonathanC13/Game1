@@ -37,6 +37,9 @@ public static class EvidenceFactory
             case EvidenceType.Invoice_sale:
                 return EvidenceGenerator.CreateInvoice(e, truth, caseId);
 
+            case EvidenceType.Purchase_order:
+                return EvidenceGenerator.CreatePurchaseOrder(e, truth, caseId);
+
             case EvidenceType.Bank_statement_sale:
                 return EvidenceGenerator.CreateBankStatementSales(e, truth, caseId);
 

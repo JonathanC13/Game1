@@ -54,26 +54,17 @@ public static class FraudTemplates
 
     private static List<EvidenceType> GetPairForFactType(FactType ft)
     {
-        var random = new System.Random();
         List<EvidenceType> evidenceType = EvidenceTypeFactTypeList.FE_LIST[ft];
+        evidenceType.Shuffle();
 
         if (evidenceType.Count < 2)
         {
             throw new System.Exception($"For FactType {ft}, not enough EvidenceTypes");
         }
 
-        int firstIndex = random.Next(evidenceType.Count);
-
-        int secondIndex;
-        do
-        {
-            secondIndex = random.Next(evidenceType.Count);
-        }
-        while (secondIndex == firstIndex);
-
         return new List<EvidenceType> { 
-            evidenceType[firstIndex], 
-            evidenceType[secondIndex] 
+            evidenceType[0], 
+            evidenceType[1] 
         };
     }
 
