@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class InventoryReportEvidenceView : EvidenceView
 {
-    public TMP_Text saleRecordId;
-    public TMP_Text shipmentQuantity;
+    public FactItem saleRecordId;
+    public FactItem shipmentQuantity;
 
     public override void Setup(Evidence evidence)
     {
@@ -16,11 +16,11 @@ public class InventoryReportEvidenceView : EvidenceView
             switch (fact.FactType)
             {
                 case FactType.Sale_record_id:
-                    saleRecordId.text = FactRenderer.Render(fact);
+                    saleRecordId.Setup(fact);
                     break;
 
                 case FactType.ShipmentQuantity:
-                    shipmentQuantity.text = FactRenderer.Render(fact);
+                    shipmentQuantity.Setup(fact);
                     break;
                 default:
                     Debug.LogWarning(

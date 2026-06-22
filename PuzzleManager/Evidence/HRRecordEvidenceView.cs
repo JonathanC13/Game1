@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class HRRecordEvidenceView : EvidenceView
 {
-    public TMP_Text employeeRecordId;
-    public TMP_Text employeeId;
-    public TMP_Text employeeStatus;
+    public FactItem employeeRecordId;
+    public FactItem employeeId;
+    public FactItem employeeStatus;
 
     public override void Setup(Evidence evidence)
     {
@@ -17,15 +17,15 @@ public class HRRecordEvidenceView : EvidenceView
             switch (fact.FactType)
             {
                 case FactType.Employee_record_id:
-                    employeeRecordId.text = FactRenderer.Render(fact);
+                    employeeRecordId.Setup(fact);
                     break;
 
                 case FactType.EmployeeId:
-                    employeeId.text = FactRenderer.Render(fact);
+                    employeeId.Setup(fact);
                     break;
 
                 case FactType.EmployeeStatus:
-                    employeeStatus.text = FactRenderer.Render(fact);
+                    employeeStatus.Setup(fact);
                     break;
 
                 default:

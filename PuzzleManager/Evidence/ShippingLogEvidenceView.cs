@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class ShippingLogEvidenceView : EvidenceView
 {
-    public TMP_Text saleRecordId;
-    public TMP_Text shipmentDate;
-    public TMP_Text shipmentQuantity;
-    public TMP_Text shipmentStatus;
+    public FactItem saleRecordId;
+    public FactItem shipmentDate;
+    public FactItem shipmentQuantity;
+    public FactItem shipmentStatus;
 
     public override void Setup(Evidence evidence)
     {
@@ -18,19 +18,19 @@ public class ShippingLogEvidenceView : EvidenceView
             switch (fact.FactType)
             {
                 case FactType.Sale_record_id:
-                    saleRecordId.text = FactRenderer.Render(fact);
+                    saleRecordId.Setup(fact);
                     break;
 
                 case FactType.ShipmentDate:
-                    shipmentDate.text = FactRenderer.Render(fact);
+                    shipmentDate.Setup(fact);
                     break;
 
                 case FactType.ShipmentQuantity:
-                    shipmentQuantity.text = FactRenderer.Render(fact);
+                    shipmentQuantity.Setup(fact);
                     break;
 
                 case FactType.ShipmentStatus:
-                    shipmentStatus.text = FactRenderer.Render(fact);
+                    shipmentStatus.Setup(fact);
                     break;
 
                 default:

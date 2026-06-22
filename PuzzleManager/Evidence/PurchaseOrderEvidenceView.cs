@@ -13,6 +13,7 @@ public class PurchaseOrderEvidenceView : EvidenceView
     {
         base.Setup(evidence);
 
+        // Setup Facts
         foreach (Fact fact in evidence.Facts)
         {
             switch (fact.FactType)

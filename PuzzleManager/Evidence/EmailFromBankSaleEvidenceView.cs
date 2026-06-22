@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class EmailFromBankSaleEvidenceView : EvidenceView
 {
-    public TMP_Text saleRecordId;
-    public TMP_Text buyer;
-    public TMP_Text amount;
-    public TMP_Text paymentStatus;
+    public FactItem saleRecordId;
+    public FactItem buyer;
+    public FactItem amount;
+    public FactItem paymentStatus;
 
     public override void Setup(Evidence evidence)
     {
@@ -18,19 +18,19 @@ public class EmailFromBankSaleEvidenceView : EvidenceView
             switch (fact.FactType)
             {
                 case FactType.Sale_record_id:
-                    saleRecordId.text = FactRenderer.Render(fact);
+                    saleRecordId.Setup(fact);
                     break;
 
                 case FactType.Buyer:
-                    buyer.text = FactRenderer.Render(fact);
+                    buyer.Setup(fact);
                     break;
 
                 case FactType.Amount:
-                    amount.text = FactRenderer.Render(fact);
+                    amount.Setup(fact);
                     break;
 
                 case FactType.PaymentStatus:
-                    paymentStatus.text = FactRenderer.Render(fact);
+                    paymentStatus.Setup(fact);
                     break;
 
                 default:

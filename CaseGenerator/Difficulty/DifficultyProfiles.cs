@@ -24,7 +24,7 @@ public static class DifficultyProfiles
 
                     RedHerringCount = 0,
 
-                    MinimumEvidenceCount = Math.Min(3, maxEvidenceCount)    // ensure able to fill since each evidence can only appear once if value mistake.
+                    MinimumEvidenceCount = Math.Min(2, maxEvidenceCount)    // ensure able to fill since each evidence can only appear once if value mistake.
                 };
 
 

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class BankStatementHREvidenceView : EvidenceView
 {
-    public TMP_Text employeeRecordId;
-    public TMP_Text employeeId;
-    public TMP_Text employeePayAmount;
-    public TMP_Text employeePaymentStatus;
+    public FactItem employeeRecordId;
+    public FactItem employeeId;
+    public FactItem employeePayAmount;
+    public FactItem employeePaymentStatus;
 
     public override void Setup(Evidence evidence)
     {
@@ -18,19 +18,19 @@ public class BankStatementHREvidenceView : EvidenceView
             switch(fact.FactType)
             {
                 case FactType.Employee_record_id:
-                    employeeRecordId.text = FactRenderer.Render(fact);
+                    employeeRecordId.Setup(fact);
                     break;
 
                 case FactType.EmployeeId:
-                    employeeId.text = FactRenderer.Render(fact);
+                    employeeId.Setup(fact);
                     break;
 
                 case FactType.EmpPayAmount:
-                    employeePayAmount.text = FactRenderer.Render(fact);
+                    employeePayAmount.Setup(fact);
                     break;
 
                 case FactType.EmpPaymentStatus:
-                    employeePaymentStatus.text = FactRenderer.Render(fact);
+                    employeePaymentStatus.Setup(fact);
                     break;
 
                 default:

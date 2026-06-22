@@ -24,6 +24,8 @@ public class PuzzleManager : MonoBehaviour
     public Transform tableAnchor;
     public Transform playerAnchor;
 
+    public LinkPairManager linkPairManager;
+
     private Dictionary<EvidenceType, EvidenceView> prefabLookup;
 
     private CaseBuilder caseBuilder;
@@ -96,6 +98,14 @@ public class PuzzleManager : MonoBehaviour
 
             // add event listenter
             instance.GetComponent<InspectableItem>().OnClicked += EvidenceClicked;
+
+            // Register listener from linkPairManager
+            LinkableItem[] linkableItems = instance.GetComponentsInChildren<LinkableItem>();
+
+            foreach (LinkableItem item in linkableItems)
+            {
+                linkPairManager.Register(item);
+            }
 
             evidenceViews.Add(instance);
         }

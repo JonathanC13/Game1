@@ -1,7 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
+/*
+ * Current handling of:
+ * 1. Raycast for clicking and dragging of InspectableItem.
+ * 2. Raycast for linking of pairs of LinkableItem.
+ */
 public class InspectObjectController : MonoBehaviour
 {
     public Camera inspectCamera;
@@ -61,20 +65,28 @@ public class InspectObjectController : MonoBehaviour
             inspectCamera.ScreenPointToRay(
                 Mouse.current.position.ReadValue()
             );
-
+   
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            InspectableItem item = hit.collider.GetComponent<InspectableItem>();
+            // Click and dragging of InspectableItem
+            InspectableItem inspectItem = hit.collider.GetComponent<InspectableItem>();
 
-            if (item != null)
+            if (inspectItem != null)
             {
-                currentItem = item;
+                currentItem = inspectItem;
 
                 dragging = true;
 
-                item.OnClick();
+                inspectItem.OnClick();
 
-                item.StartDrag(inspectCamera);
+                inspectItem.StartDrag(inspectCamera);
+            }
+
+            LinkableItem linkItem = hit.collider.GetComponent<LinkableItem>();
+
+            if (linkItem != null)
+            {
+                linkItem.Select();
             }
         }
     }
