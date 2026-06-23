@@ -7,6 +7,8 @@ public class FactItem : MonoBehaviour
 
     public Fact FactObj;
 
+    public bool linkable = true;
+
     public LinkableItem LinkItem;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -15,6 +17,9 @@ public class FactItem : MonoBehaviour
         FactObj = fact;
         FactText.text = FactRenderer.Render(fact);
 
-        LinkItem.Setup(fact.Id);
+        if (linkable)
+        {
+            LinkItem.Setup(fact.Id);
+        }
     }
 }

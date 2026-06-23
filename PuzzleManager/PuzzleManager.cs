@@ -1,9 +1,11 @@
+using MyProject.Core;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Overlays;
 using UnityEngine;
+using static MyProject.Core.Constants;
 
 public class PuzzleManager : MonoBehaviour
 {
@@ -31,7 +33,7 @@ public class PuzzleManager : MonoBehaviour
     private CaseBuilder caseBuilder;
     private CaseData caseData;
     private List<EvidenceView> evidenceViews = new();
-    private float towardPlayerIncrement = 0.01f;
+    private float towardPlayerIncrement = EvidenceProps.EvidenceLayerIncrement;
 
     void Awake()
     {

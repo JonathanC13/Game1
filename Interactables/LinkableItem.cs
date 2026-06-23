@@ -9,8 +9,10 @@ public class LinkableItem : MonoBehaviour
 
     public event Action<LinkableItem> OnSelected;
 
-    public GameObject linkBox;
+    public LinkBox linkBox;
 
+    public Transform leftLinkPoint;
+    public Transform rightLinkPoint;
 
     public void Setup(string id)
     {
@@ -25,11 +27,11 @@ public class LinkableItem : MonoBehaviour
 
     public void ShowLinkedBox()
     {
-        linkBox.SetActive(true);
+        linkBox.SetLinked();
     }
 
-    public void hideLinkedBox()
+    public void HideLinkedBox()
     {
-        linkBox.SetActive(false);
+        linkBox.Hide();
     }
 }

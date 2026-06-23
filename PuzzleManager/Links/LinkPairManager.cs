@@ -36,8 +36,8 @@ public class LinkPairManager : MonoBehaviour
 
     void CreatePair(LinkableItem a, LinkableItem b)
     {
-        //a.ShowLinkedBox();
-        //b.ShowLinkedBox();
+        a.ShowLinkedBox();
+        b.ShowLinkedBox();
 
         LinkLine line = Instantiate(linePrefab, lineParent);
         line.Setup(a, b);
