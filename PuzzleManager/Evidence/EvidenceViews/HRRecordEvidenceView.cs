@@ -2,13 +2,11 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class PayrollRecordEvidenceView : EvidenceView
+public class HRRecordEvidenceView : EvidenceView
 {
-    public FactItem employeeRecordId;
+    public TMP_Text employeeRecordId;
     public FactItem employeeId;
     public FactItem employeeStatus;
-    public FactItem employeePayAmount;
-    public FactItem employeePaymentStatus;
 
     public override void Setup(Evidence evidence)
     {
@@ -19,7 +17,7 @@ public class PayrollRecordEvidenceView : EvidenceView
             switch (fact.FactType)
             {
                 case FactType.Employee_record_id:
-                    employeeRecordId.Setup(fact);
+                    employeeRecordId.text = FactRenderer.Render(fact);
                     break;
 
                 case FactType.EmployeeId:
@@ -28,14 +26,6 @@ public class PayrollRecordEvidenceView : EvidenceView
 
                 case FactType.EmployeeStatus:
                     employeeStatus.Setup(fact);
-                    break;
-
-                case FactType.EmpPayAmount:
-                    employeePayAmount.Setup(fact);
-                    break;
-
-                case FactType.EmpPaymentStatus:
-                    employeePaymentStatus.Setup(fact);
                     break;
 
                 default:

@@ -33,6 +33,7 @@ public class PuzzleManager : MonoBehaviour
     private CaseBuilder caseBuilder;
     private CaseData caseData;
     private List<EvidenceView> evidenceViews = new();
+    private List<EvidenceBounds> evidenceBounds = new();
     private float towardPlayerIncrement = EvidenceProps.EvidenceLayerIncrement;
 
     void Awake()
@@ -66,6 +67,7 @@ public class PuzzleManager : MonoBehaviour
 
         unSubscribeClick(); // remove old listeners
         evidenceViews = new();
+        evidenceBounds = new();
 
         float towardViewer = 0f;
 
@@ -110,6 +112,7 @@ public class PuzzleManager : MonoBehaviour
             }
 
             evidenceViews.Add(instance);
+            evidenceBounds.Add(instance.GetBounds());
         }
         else
         {
@@ -162,6 +165,11 @@ public class PuzzleManager : MonoBehaviour
             evidenceViews[j].transform.localPosition = new Vector3(evidenceViews[j].transform.localPosition.x, prevY, evidenceViews[j].transform.localPosition.z);
             evidenceViews[j + 1].transform.localPosition = new Vector3(evidenceViews[j + 1].transform.localPosition.x, nextY, evidenceViews[j + 1].transform.localPosition.z);
         }
+    }
+
+    public IReadOnlyList<EvidenceBounds> GetEvidenceBounds()
+    {
+        return evidenceBounds;
     }
 
     // later change to moving the puzzleArea to different anchor's center

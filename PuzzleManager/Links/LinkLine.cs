@@ -6,66 +6,87 @@ public class LinkLine : MonoBehaviour
 {
     public LineRenderer line;
 
-    LinkableItem itemA;
-    LinkableItem itemB;
+    private Vector3 start;
+    private Vector3 end;
 
-    public void Setup(LinkableItem a, LinkableItem b)
+    public void Setup(Vector3 start, Vector3 end)
     {
-        line.positionCount = 4;
-        itemA = a;
-        itemB = b;
+        line.positionCount = 2;
 
-        //UpdateLine(itemA, itemB);
+        this.start = end;
+        this.end = end;
+
+        line.SetPosition(0, start);
+        line.SetPosition(1, end);
     }
 
-    private void Update()
+    public void RemoveLine()
     {
-        if (itemA == null || itemB == null)
-            return;
-
-        UpdateLine(itemA, itemB);
-        //line.SetPosition(0, itemA.transform.position);
-        //line.SetPosition(1, itemB.transform.position);
+        Object.Destroy(line.gameObject);
     }
 
-    private void UpdateLine(LinkableItem a, LinkableItem b)
-    {
-        if (itemA == null || itemB == null)
-        {
-            return;
-        }
+    // -------
 
-        //line.SetPosition(0, new Vector3(a.transform.position.x, a.transform.position.y, a.transform.position.z));
-        //line.SetPosition(1, new Vector3(b.transform.position.x, b.transform.position.y, b.transform.position.z));
+    //LinkableItem itemA;
+    //LinkableItem itemB;
 
-        bool aExitLeft = exitLeft(a, b);
-        Vector3 aBoxExit = aExitLeft 
-            ? a.linkBox.LeftCenter() 
-            : a.linkBox.RightCenter();
-        Vector3 aPoint = aExitLeft && a.leftLinkPoint != null
-            ? a.leftLinkPoint.position
-            : a.rightLinkPoint != null
-                ? a.rightLinkPoint.position
-                : aBoxExit;
+    //public void Setup(LinkableItem a, LinkableItem b)
+    //{
+    //    line.positionCount = 4;
+    //    itemA = a;
+    //    itemB = b;
 
-        bool bExitLeft = exitLeft(b, a);
-        Vector3 bBoxExit = bExitLeft 
-            ? b.linkBox.LeftCenter() 
-            : b.linkBox.RightCenter();
-        Vector3 bPoint = bExitLeft && b.leftLinkPoint != null
-            ? b.leftLinkPoint.position
-            : b.rightLinkPoint != null
-                ? b.rightLinkPoint.position
-                : bBoxExit;
+    //    //UpdateLine(itemA, itemB);
+    //}
 
-        line.SetPosition(0, aBoxExit);
-        line.SetPosition(1, aPoint);
-        line.SetPosition(2, bPoint);
-        line.SetPosition(3, bBoxExit);
-    }
+    //private void Update()
+    //{
+    //    if (itemA == null || itemB == null)
+    //        return;
 
-    private bool exitLeft(LinkableItem src, LinkableItem dst)
-    {
-        return Vector3.Distance(src.leftLinkPoint.position, dst.transform.position) < Vector3.Distance(src.rightLinkPoint.position, dst.transform.position);
-    }
+    //    UpdateLine(itemA, itemB);
+    //    //line.SetPosition(0, itemA.transform.position);
+    //    //line.SetPosition(1, itemB.transform.position);
+    //}
+
+    //private void UpdateLine(LinkableItem a, LinkableItem b)
+    //{
+    //    if (itemA == null || itemB == null)
+    //    {
+    //        return;
+    //    }
+
+    //    //line.SetPosition(0, new Vector3(a.transform.position.x, a.transform.position.y, a.transform.position.z));
+    //    //line.SetPosition(1, new Vector3(b.transform.position.x, b.transform.position.y, b.transform.position.z));
+
+    //    bool aExitLeft = exitLeft(a, b);
+    //    Vector3 aBoxExit = aExitLeft 
+    //        ? a.linkBox.LeftCenter() 
+    //        : a.linkBox.RightCenter();
+    //    Vector3 aPoint = aExitLeft && a.leftLinkPoint != null
+    //        ? a.leftLinkPoint.position
+    //        : a.rightLinkPoint != null
+    //            ? a.rightLinkPoint.position
+    //            : aBoxExit;
+
+    //    bool bExitLeft = exitLeft(b, a);
+    //    Vector3 bBoxExit = bExitLeft 
+    //        ? b.linkBox.LeftCenter() 
+    //        : b.linkBox.RightCenter();
+    //    Vector3 bPoint = bExitLeft && b.leftLinkPoint != null
+    //        ? b.leftLinkPoint.position
+    //        : b.rightLinkPoint != null
+    //            ? b.rightLinkPoint.position
+    //            : bBoxExit;
+
+    //    line.SetPosition(0, aBoxExit);
+    //    line.SetPosition(1, aPoint);
+    //    line.SetPosition(2, bPoint);
+    //    line.SetPosition(3, bBoxExit);
+    //}
+
+    //private bool exitLeft(LinkableItem src, LinkableItem dst)
+    //{
+    //    return Vector3.Distance(src.leftLinkPoint.position, dst.transform.position) < Vector3.Distance(src.rightLinkPoint.position, dst.transform.position);
+    //}
 }

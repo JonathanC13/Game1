@@ -3,11 +3,15 @@ using System.Collections.Generic;
 
 public class LinkPairManager : MonoBehaviour
 {
+    public PuzzleManager puzzleManager;
+
     public LinkLine linePrefab;
 
     public Transform lineParent;
 
     public List<LinkPair> connectedPairs = new();
+
+    private HashSet<LinkableItem> usedItems = new();
 
     LinkableItem firstSelection = null;
 
@@ -18,7 +22,11 @@ public class LinkPairManager : MonoBehaviour
 
     void ItemSelected(LinkableItem item)
     {
-        if (firstSelection == null) 
+        if (usedItems.Contains(item))
+        {
+            Debug.Log("One of the facts exists in an active pair.");
+            return;
+        } else if (firstSelection == null) 
         {
             firstSelection = item;
             Debug.Log("first selection: " + item.linkableId);
@@ -36,14 +44,49 @@ public class LinkPairManager : MonoBehaviour
 
     void CreatePair(LinkableItem a, LinkableItem b)
     {
+        if (usedItems.Contains(a) || usedItems.Contains(b))
+        {
+            Debug.Log("One of the facts exists in an active pair.");
+            return;
+        }
+
+        usedItems.Add(a);
+        usedItems.Add(b);
+
         a.ShowLinkedBox();
         b.ShowLinkedBox();
 
-        LinkLine line = Instantiate(linePrefab, lineParent);
-        line.Setup(a, b);
+        LinkRouter linkRouter = new();
+        List <(Vector3 start, Vector3 end)> segments =
+            linkRouter.CalculateRoute(
+                a,
+                b,
+                puzzleManager.GetEvidenceBounds()
+            );
+        Debug.Log(segments.Count);
+        LinkVisual visual = new LinkVisual();
+        foreach (var segment in segments)
+        {
+            LinkLine line = Instantiate(linePrefab, lineParent);
+            line.Setup(segment.start, segment.end);
 
-        connectedPairs.Add(new LinkPair(a, b));
+            visual.segments.Add(line);
+
+        }
+
+        connectedPairs.Add(new LinkPair(a, b, visual));
+
         Debug.Log("connected: " + a.linkableId + " <-> " + b.linkableId);
+    }
+
+    public void RemovePair(LinkPair pair)
+    {
+        connectedPairs.Remove(pair);
+
+        usedItems.Remove(pair.linkItemA);
+        usedItems.Remove(pair.linkItemB);
+
+        pair.RemoveLinkVisual();
     }
 
 }

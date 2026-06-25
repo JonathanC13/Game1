@@ -2,10 +2,11 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class BankStatementHREvidenceView : EvidenceView
+public class PayrollRecordEvidenceView : EvidenceView
 {
-    public FactItem employeeRecordId;
+    public TMP_Text employeeRecordId;
     public FactItem employeeId;
+    public FactItem employeeStatus;
     public FactItem employeePayAmount;
     public FactItem employeePaymentStatus;
 
@@ -15,14 +16,18 @@ public class BankStatementHREvidenceView : EvidenceView
 
         foreach (Fact fact in evidence.Facts)
         {
-            switch(fact.FactType)
+            switch (fact.FactType)
             {
                 case FactType.Employee_record_id:
-                    employeeRecordId.Setup(fact);
+                    employeeRecordId.text = FactRenderer.Render(fact);
                     break;
 
                 case FactType.EmployeeId:
                     employeeId.Setup(fact);
+                    break;
+
+                case FactType.EmployeeStatus:
+                    employeeStatus.Setup(fact);
                     break;
 
                 case FactType.EmpPayAmount:
@@ -40,6 +45,6 @@ public class BankStatementHREvidenceView : EvidenceView
                     break;
             }
         }
-        
+
     }
 }

@@ -18,7 +18,6 @@ public class EvidenceView : MonoBehaviour
     {
         DisplayName.text = evidence.DisplayName;
         DisplayId.text = evidence.DisplayId;
-        
     }
 
     public void AssignDependencies(InspectionSurface inspectionSurface)
@@ -27,5 +26,19 @@ public class EvidenceView : MonoBehaviour
         {
             inspectable.Initialize(inspectionSurface);
         }
+    }
+
+    // world space
+    public EvidenceBounds GetBounds()
+    {
+        Bounds b = GetComponent<Renderer>().bounds;
+
+        return new EvidenceBounds
+        {
+            minX = b.min.x,
+            maxX = b.max.x,
+            minZ = b.min.z,
+            maxZ = b.max.z
+        };
     }
 }
