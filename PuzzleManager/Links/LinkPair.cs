@@ -6,6 +6,9 @@ public class LinkPair
     public LinkableItem linkItemA;
     public LinkableItem linkItemB;
 
+    public EvidenceView viewA;
+    public EvidenceView viewB;
+
     public LinkVisual linkVisual;
 
     public LinkPair(LinkableItem a, LinkableItem b, LinkVisual visual)
@@ -13,6 +16,10 @@ public class LinkPair
         linkItemA = a;
         linkItemB = b;
         linkVisual = visual;
+
+        // Get the moving owners
+        viewA = a.GetComponentInParent<EvidenceView>();
+        viewB = b.GetComponentInParent<EvidenceView>();
     }
 
     public void RemoveLinkVisual()

@@ -12,7 +12,6 @@ public class InspectObjectController : MonoBehaviour
 
     public CameraStateMachine cameraStateMachine;
 
-
     InputSystem_Actions input;
 
     InspectableItem currentItem;

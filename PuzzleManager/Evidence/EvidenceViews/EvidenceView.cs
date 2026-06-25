@@ -2,10 +2,12 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EvidenceView : MonoBehaviour
+public class EvidenceView : MonoBehaviour, IMovableNotify
 {
     public TMP_Text DisplayName;
     public TMP_Text DisplayId;
+
+    public event System.Action<EvidenceView> OnMoved;
 
     private InspectableItem inspectable;
 
@@ -26,6 +28,11 @@ public class EvidenceView : MonoBehaviour
         {
             inspectable.Initialize(inspectionSurface);
         }
+    }
+
+    public void NotifyMoved()
+    {
+        OnMoved?.Invoke(this);
     }
 
     // world space

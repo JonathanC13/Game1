@@ -120,6 +120,11 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
+    void unSubscribeAll()
+    {
+        unSubscribeClick();
+    }
+
     void unSubscribeClick()
     {
         foreach (var item in evidenceViews)

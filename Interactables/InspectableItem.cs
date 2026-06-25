@@ -15,8 +15,15 @@ public class InspectableItem : MonoBehaviour
 
     public event Action<InspectableItem> OnClicked;
 
+    private IMovableNotify movableNotify;
+
     Vector3 dragOffset;
     Plane plane;
+
+    void Awake()
+    {
+        movableNotify = GetComponent<IMovableNotify>();
+    }
 
     public void Initialize(InspectionSurface parentSurface)
     {
@@ -60,6 +67,8 @@ public class InspectableItem : MonoBehaviour
             targetPos = surface.dragPlane.ClampPosition(targetPos);
 
             transform.position = targetPos;
+
+            movableNotify?.NotifyMoved();    // tell movable
         }
     }
 
