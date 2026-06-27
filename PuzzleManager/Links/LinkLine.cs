@@ -16,6 +16,8 @@ public class LinkLine : MonoBehaviour
         this.start = end;
         this.end = end;
 
+        line.startWidth = 0.005f;
+        line.endWidth = 0.005f;
         line.SetPosition(0, start);
         line.SetPosition(1, end);
     }

@@ -27,6 +27,10 @@ public class LinkPair
         if (linkVisual != null)
         {
             linkVisual.Destroy();
-        }    
+        }
+
+        linkItemA.HideLinkedBox();
+        linkItemB.HideLinkedBox();
+
     }
 }

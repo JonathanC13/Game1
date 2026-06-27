@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class LinkPairManager : MonoBehaviour
 {
@@ -10,13 +9,19 @@ public class LinkPairManager : MonoBehaviour
 
     public Transform lineParent;
 
+    public DestroyLinkButton destroyButtonPrefab;
+
+    private DestroyLinkButton activeDestroyButton;
+
     LinkRouter linkRouter = new();
 
     private readonly List<LinkPair> connectedPairs = new();
 
     private HashSet<LinkableItem> usedItems = new();
 
-    LinkableItem firstSelection = null;
+    private LinkableItem firstSelection = null;
+
+    private LinkPair selectedPair = null;
 
     // EvidenceView -> Links affected by this view
     private readonly Dictionary<EvidenceView, HashSet<LinkPair>> viewToPairs = new();
@@ -40,9 +45,34 @@ public class LinkPairManager : MonoBehaviour
 
     void ItemSelected(LinkableItem item)
     {
+        if (activeDestroyButton != null)
+            activeDestroyButton.Hide();
+
         if (usedItems.Contains(item))
         {
             Debug.Log("One of the facts exists in an active pair.");
+
+            // find the LinkPair the selected item is associated with.
+            foreach (LinkPair pair in connectedPairs)
+            {
+                if (pair.linkItemA == item || pair.linkItemB == item)
+                {
+                    selectedPair = pair;
+
+                    Vector3 itemPosition = item.GetDestroyButtonPos();
+
+                    // manage destroy button
+                    if (activeDestroyButton == null)
+                    {
+                        activeDestroyButton = Instantiate(destroyButtonPrefab);
+                        activeDestroyButton.Setup(this);
+                    }
+
+                    activeDestroyButton.Show(itemPosition);
+
+                    break;
+                }
+            }
             return;
         } else if (firstSelection == null) 
         {
@@ -78,8 +108,7 @@ public class LinkPairManager : MonoBehaviour
         List <(Vector3 start, Vector3 end)> segments =
             linkRouter.CalculateRoute(
                 a,
-                b,
-                puzzleManager.GetEvidenceBounds()
+                b
             );
         
         LinkVisual visual = new LinkVisual();
@@ -168,8 +197,7 @@ public class LinkPairManager : MonoBehaviour
         List<(Vector3 start, Vector3 end)> segments =
             linkRouter.CalculateRoute(
                 pair.linkItemA,
-                pair.linkItemB,
-                puzzleManager.GetEvidenceBounds()
+                pair.linkItemB
             );
 
         List<LinkLine> linkLines = new();
@@ -182,6 +210,20 @@ public class LinkPairManager : MonoBehaviour
 
         }
         pair.linkVisual.UpdateSegments(linkLines);
+    }
+
+    public void RemoveSelectedPair()
+    {
+        if (selectedPair != null)
+        {
+            RemovePair(selectedPair);
+            selectedPair = null;
+        }
+
+        if (activeDestroyButton != null)
+        {
+            activeDestroyButton.Hide();
+        }
     }
 
     public void RemovePair(LinkPair pair)

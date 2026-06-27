@@ -9,7 +9,61 @@ public class LinkRouter
     LinkableItem itemA;
     LinkableItem itemB;
 
-    public List<(Vector3 start, Vector3 end)> CalculateRoute(LinkableItem a, LinkableItem b, IReadOnlyList<EvidenceBounds> obstacles)
+    /* Since prioritize last interacted EvidenceView's pairs, lines of:
+     * 1. From LinkBox to Exit point, same y plane as FactItem.
+     * 2. Exit point to Fact2 enter point, but maintain y value.
+     * 3. Drop to Fact2 enter point
+     * 4. Enter point to Fact2 linkbox
+     * 
+     * Can also do this in reverse, but it makes more sense for the "active" EvidenceView's links to be "on top" of others inbetween.
+     * 
+     * Recalculation is simpler since do not need to iteration obstacles, just recalculate segments.
+     */
+    public List<(Vector3 start, Vector3 end)> CalculateRoute(LinkableItem a,  LinkableItem b)
+    {
+        List<(Vector3 start, Vector3 end)> segments = new();
+
+        // Put "top" in itemA
+        itemA = a.transform.position.y >= b.transform.position.y ? a : b;
+        itemB = itemA == a ? b : a;
+
+        // exit for a;
+        bool aExitLeft = exitLeft(itemA, itemB);
+        Vector3 aBoxExit = aExitLeft
+            ? itemA.linkBox.LeftCenter()
+            : itemA.linkBox.RightCenter();
+        Vector3 aPoint = aExitLeft && itemA.leftLinkPoint != null
+            ? itemA.leftLinkPoint.position
+            : itemA.rightLinkPoint != null
+                ? itemA.rightLinkPoint.position
+                : aBoxExit;
+
+        // exit for b
+        bool bExitLeft = exitLeft(itemB, itemA);
+        Vector3 bBoxExit = bExitLeft
+            ? itemB.linkBox.LeftCenter()
+            : itemB.linkBox.RightCenter();
+        Vector3 bPoint = bExitLeft && itemB.leftLinkPoint != null
+            ? itemB.leftLinkPoint.position
+            : itemB.rightLinkPoint != null
+                ? itemB.rightLinkPoint.position
+                : bBoxExit;
+
+        // Calculate lines between aPoint and bPoint
+        Vector3 bHoverPoint = new Vector3(bPoint.x, aPoint.y, bPoint.z); // maintain y value so inbetween EvidenceViews are "under" the line.
+
+        segments.Add((aBoxExit, aPoint));
+        segments.Add((aPoint, bHoverPoint));
+        segments.Add((bHoverPoint, bPoint));
+        segments.Add((bPoint, bBoxExit));
+
+        return segments;
+    }
+
+    // Create segments where a x,z plane line is not intercepted by a obstacle's rect.
+    // In this game, doesn't make sense the top EvidenceView that can be dragged has its pair lines "go behind" and obscured by other EvidenceView.
+    // Also, this requires any EvidenceView moved to recalculate all routes, not just the 2 EvidenceView of the paired FactItems.
+    public List<(Vector3 start, Vector3 end)> CalculateRoute2(LinkableItem a, LinkableItem b, IReadOnlyList<EvidenceBounds> obstacles)
     {
         List<(Vector3 start, Vector3 end)> segments = new();
         List<Rect> blockingRects = new();

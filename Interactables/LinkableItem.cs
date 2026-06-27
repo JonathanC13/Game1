@@ -34,4 +34,9 @@ public class LinkableItem : MonoBehaviour
     {
         linkBox.Hide();
     }
+
+    public Vector3 GetDestroyButtonPos()
+    {
+        return gameObject.transform.position;
+    }
 }

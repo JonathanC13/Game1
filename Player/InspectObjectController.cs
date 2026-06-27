@@ -81,11 +81,20 @@ public class InspectObjectController : MonoBehaviour
                 inspectItem.StartDrag(inspectCamera);
             }
 
+
             LinkableItem linkItem = hit.collider.GetComponent<LinkableItem>();
 
             if (linkItem != null)
             {
                 linkItem.Select();
+            }
+
+
+            DestroyLinkButton destroyLinkPair = hit.collider.GetComponent<DestroyLinkButton>();
+
+            if (destroyLinkPair != null)
+            {
+                destroyLinkPair.OnClickRemoveLinkPair();
             }
         }
     }
