@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InvoiceEvidenceView : EvidenceView
 {
-    public FactItem saleRecordId;
+    public TMP_Text saleRecordId;
     public FactItem buyer;
     public FactItem amount;
     public FactItem shipmentDate;
@@ -19,7 +19,7 @@ public class InvoiceEvidenceView : EvidenceView
             switch (fact.FactType)
             {
                 case FactType.Sale_record_id:
-                    saleRecordId.Setup(fact);
+                    saleRecordId.text = FactRenderer.Render(fact);
                     break;
 
                 case FactType.Buyer:

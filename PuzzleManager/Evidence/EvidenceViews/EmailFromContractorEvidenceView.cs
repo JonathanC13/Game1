@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EmailFromContractorEvidenceView : EvidenceView
 {
-    public FactItem contractRecordId;
+    public TMP_Text contractRecordId;
     public FactItem contractor;
     public FactItem contractAmount;
 
@@ -17,7 +17,7 @@ public class EmailFromContractorEvidenceView : EvidenceView
             switch (fact.FactType)
             {
                 case FactType.Contract_record_id:
-                    contractRecordId.Setup(fact);
+                    contractRecordId.text = FactRenderer.Render(fact);
                     break;
 
                 case FactType.Contractor:

@@ -5,9 +5,9 @@ using UnityEngine;
 public class PurchaseOrderEvidenceView : EvidenceView
 {
     public TMP_Text saleRecordId;
-    public TMP_Text buyer;
-    public TMP_Text amount;
-    public TMP_Text shipmentQuantity;
+    public FactItem buyer;
+    public FactItem amount;
+    public FactItem shipmentQuantity;
 
     public override void Setup(Evidence evidence)
     {
@@ -23,15 +23,15 @@ public class PurchaseOrderEvidenceView : EvidenceView
                     break;
 
                 case FactType.Buyer:
-                    buyer.text = FactRenderer.Render(fact);
+                    buyer.Setup(fact);
                     break;
 
                 case FactType.Amount:
-                    amount.text = FactRenderer.Render(fact);
+                    amount.Setup(fact);
                     break;
 
                 case FactType.ShipmentQuantity:
-                    shipmentQuantity.text = FactRenderer.Render(fact);
+                    shipmentQuantity.Setup(fact);
                     break;
 
                 default:

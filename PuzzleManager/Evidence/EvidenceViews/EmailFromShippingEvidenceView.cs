@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EmailFromShippingEvidenceView : EvidenceView
 {
-    public FactItem saleRecordId;
+    public TMP_Text saleRecordId;
     public FactItem shipmentDate;
     public FactItem shipmentQuantity;
     public FactItem shipmentStatus;
@@ -18,7 +18,7 @@ public class EmailFromShippingEvidenceView : EvidenceView
             switch (fact.FactType)
             {
                 case FactType.Sale_record_id:
-                    saleRecordId.Setup(fact);
+                    saleRecordId.text = FactRenderer.Render(fact);
                     break;
 
                 case FactType.ShipmentDate:
