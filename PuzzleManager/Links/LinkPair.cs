@@ -13,6 +13,11 @@ public class LinkPair
 
     public LinkPair(LinkableItem a, LinkableItem b, LinkVisual visual)
     {
+        Setup(a, b, visual);
+    }
+
+    public void Setup(LinkableItem a, LinkableItem b, LinkVisual visual)
+    {
         linkItemA = a;
         linkItemB = b;
         linkVisual = visual;
@@ -29,8 +34,7 @@ public class LinkPair
             linkVisual.Destroy();
         }
 
-        linkItemA.HideLinkedBox();
-        linkItemB.HideLinkedBox();
-
+        if(linkItemA != null) linkItemA.HideLinkedBox();
+        if (linkItemB != null) linkItemB.HideLinkedBox();
     }
 }

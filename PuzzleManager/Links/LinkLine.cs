@@ -9,22 +9,43 @@ public class LinkLine : MonoBehaviour
     private Vector3 start;
     private Vector3 end;
 
-    public void Setup(Vector3 start, Vector3 end)
+    void Start()
     {
         line.positionCount = 2;
+        line.startWidth = 0.005f;
+        line.endWidth = 0.005f;
+    }
+
+    public void Setup(Vector3 start, Vector3 end)
+    {
+        line.SetPosition(0, start);
+        line.SetPosition(1, end);
 
         this.start = end;
         this.end = end;
-
-        line.startWidth = 0.005f;
-        line.endWidth = 0.005f;
-        line.SetPosition(0, start);
-        line.SetPosition(1, end);
     }
 
     public void RemoveLine()
     {
         Object.Destroy(line.gameObject);
+    }
+
+    public void SetStart(Vector3 start)
+    {
+        this.start = start;
+        line.SetPosition(0, start);
+    }
+
+    public void SetEnd(Vector3 end)
+    {
+        this.end = end;
+        line.SetPosition(1, end);
+    }
+
+    public void SetPosition(Vector3 start, Vector3 end)
+    {
+        SetStart(start);
+        SetEnd(end);
     }
 
     // -------

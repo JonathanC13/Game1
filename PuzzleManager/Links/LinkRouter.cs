@@ -9,6 +9,40 @@ public class LinkRouter
     LinkableItem itemA;
     LinkableItem itemB;
 
+    private List<(Vector3 BoxExit, Vector3 PointExit)> GetExitAnchors(LinkableItem src, Vector3 target)
+    {
+        List<(Vector3 BoxExit, Vector3 PointExit)> points = new();
+
+        bool aExitLeft = exitLeft(src, target);
+        Vector3 aBoxExit = aExitLeft
+            ? src.linkBox.LeftCenter()
+            : src.linkBox.RightCenter();
+        Vector3 aPoint = aExitLeft && src.leftLinkPoint != null
+            ? src.leftLinkPoint.position
+            : src.rightLinkPoint != null
+                ? src.rightLinkPoint.position
+                : aBoxExit;
+
+        points.Add((aBoxExit, aPoint));
+
+        return points;
+    }
+
+    public List<(Vector3 start, Vector3 end)> LinkItemToPoint(LinkableItem src, Vector3 point)
+    {
+        List<(Vector3 start, Vector3 end)> segments = new();
+
+        // exit for a;
+        List<(Vector3 BoxExit, Vector3 PointExit)> aAnchors = GetExitAnchors(src, point);
+        Vector3 aBoxExit = aAnchors[0].BoxExit;
+        Vector3 aPoint = aAnchors[0].PointExit;
+
+        segments.Add((aBoxExit, aPoint));
+        segments.Add((aPoint, point));
+
+        return segments;
+    }
+
     /* Since prioritize last interacted EvidenceView's pairs, lines of:
      * 1. From LinkBox to Exit point, same y plane as FactItem.
      * 2. Exit point to Fact2 enter point, but maintain y value.
@@ -28,26 +62,14 @@ public class LinkRouter
         itemB = itemA == a ? b : a;
 
         // exit for a;
-        bool aExitLeft = exitLeft(itemA, itemB);
-        Vector3 aBoxExit = aExitLeft
-            ? itemA.linkBox.LeftCenter()
-            : itemA.linkBox.RightCenter();
-        Vector3 aPoint = aExitLeft && itemA.leftLinkPoint != null
-            ? itemA.leftLinkPoint.position
-            : itemA.rightLinkPoint != null
-                ? itemA.rightLinkPoint.position
-                : aBoxExit;
+        List<(Vector3 BoxExit, Vector3 PointExit)> aAnchors = GetExitAnchors(itemA, itemB.transform.position);
+        Vector3 aBoxExit = aAnchors[0].BoxExit;
+        Vector3 aPoint = aAnchors[0].PointExit;
 
         // exit for b
-        bool bExitLeft = exitLeft(itemB, itemA);
-        Vector3 bBoxExit = bExitLeft
-            ? itemB.linkBox.LeftCenter()
-            : itemB.linkBox.RightCenter();
-        Vector3 bPoint = bExitLeft && itemB.leftLinkPoint != null
-            ? itemB.leftLinkPoint.position
-            : itemB.rightLinkPoint != null
-                ? itemB.rightLinkPoint.position
-                : bBoxExit;
+        List<(Vector3 BoxExit, Vector3 PointExit)> bAnchors = GetExitAnchors(itemB, itemA.transform.position);
+        Vector3 bBoxExit = bAnchors[0].BoxExit;
+        Vector3 bPoint = bAnchors[0].PointExit;
 
         // Calculate lines between aPoint and bPoint
         Vector3 bHoverPoint = new Vector3(bPoint.x, aPoint.y, bPoint.z); // maintain y value so inbetween EvidenceViews are "under" the line.
@@ -85,26 +107,14 @@ public class LinkRouter
         }
 
         // exit for a;
-        bool aExitLeft = exitLeft(a, b);
-        Vector3 aBoxExit = aExitLeft
-            ? a.linkBox.LeftCenter()
-            : a.linkBox.RightCenter();
-        Vector3 aPoint = aExitLeft && a.leftLinkPoint != null
-            ? a.leftLinkPoint.position
-            : a.rightLinkPoint != null
-                ? a.rightLinkPoint.position
-                : aBoxExit;
+        List<(Vector3 BoxExit, Vector3 PointExit)> aAnchors = GetExitAnchors(itemA, itemB.transform.position);
+        Vector3 aBoxExit = aAnchors[0].BoxExit;
+        Vector3 aPoint = aAnchors[0].PointExit;
 
         // exit for b
-        bool bExitLeft = exitLeft(b, a);
-        Vector3 bBoxExit = bExitLeft
-            ? b.linkBox.LeftCenter()
-            : b.linkBox.RightCenter();
-        Vector3 bPoint = bExitLeft && b.leftLinkPoint != null
-            ? b.leftLinkPoint.position
-            : b.rightLinkPoint != null
-                ? b.rightLinkPoint.position
-                : bBoxExit;
+        List<(Vector3 BoxExit, Vector3 PointExit)> bAnchors = GetExitAnchors(itemB, itemA.transform.position);
+        Vector3 bBoxExit = bAnchors[0].BoxExit;
+        Vector3 bPoint = bAnchors[0].PointExit;
 
         // Calculate lines between aPoint and bPoint
         // Find the first obstacle hit
@@ -168,9 +178,9 @@ public class LinkRouter
     }
 
 
-    private bool exitLeft(LinkableItem src, LinkableItem dst)
+    private bool exitLeft(LinkableItem src, Vector3 target)
     {
-        return Vector3.Distance(src.leftLinkPoint.position, dst.transform.position) < Vector3.Distance(src.rightLinkPoint.position, dst.transform.position);
+        return Vector3.Distance(src.leftLinkPoint.position, target) < Vector3.Distance(src.rightLinkPoint.position, target);
     }
 
     private bool LineIntersectsRect(

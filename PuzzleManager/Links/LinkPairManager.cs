@@ -1,11 +1,22 @@
+using NUnit;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.HableCurve;
 
 public class LinkPairManager : MonoBehaviour
 {
     public PuzzleManager puzzleManager;
 
+    public Camera playerCamera;
+
+    public Transform puzzleArea;
+
     public LinkLine linePrefab;
+
+    public LinkLine previewLinePrefab;
 
     public Transform lineParent;
 
@@ -23,6 +34,12 @@ public class LinkPairManager : MonoBehaviour
 
     private LinkPair selectedPair = null;
 
+    private PendingLink pendingLink = null;
+
+    private float previewHeight = 10.0f;
+
+    private float linkDistance = 0.2f;
+
     // EvidenceView -> Links affected by this view
     private readonly Dictionary<EvidenceView, HashSet<LinkPair>> viewToPairs = new();
 
@@ -36,6 +53,19 @@ public class LinkPairManager : MonoBehaviour
         PropagateDirtyViews();
 
         UpdateDirtyPairs();
+
+        // for pending link
+        if (pendingLink != null && pendingLink.linkLine != null)
+        {
+            Vector3 mouseWorld = GetMouseWorldPosition();
+            //Vector3 endPos = new Vector3(mouseWorld.x, pendingLink.startItem.transform.position.y, mouseWorld.z); // do not use, causes offset.
+            //Debug.Log(endPos);
+            //Debug.Log("mouse" + mouseWorld);
+            //Vector3 start = GetPreviewPoint(pendingLink.startItem.transform.position);
+            //Vector3 end = GetPreviewPoint(mouseWorld);
+            pendingLink.linkLine.SetPosition(pendingLink.startItem.transform.position, mouseWorld);
+        }
+        
     }
 
     public void Register(LinkableItem item)
@@ -78,16 +108,50 @@ public class LinkPairManager : MonoBehaviour
         {
             firstSelection = item;
             Debug.Log("first selection: " + item.linkableId);
+
+            startPendingLink(item);
+
             return;
         }
         else if (firstSelection == item)
         {
+            // self
             return;
         }
 
         CreatePair(firstSelection, item);
 
         firstSelection = null;
+    }
+
+    private void startPendingLink(LinkableItem item)
+    {
+        Vector3 mouseWorld = GetMouseWorldPosition();
+        Vector3 endPos = new Vector3(mouseWorld.x, item.transform.position.y, mouseWorld.z);   // mouse x,y to x,z plane of puzzle surface.
+
+        pendingLink = new PendingLink(item);
+
+        pendingLink.linkLine = Instantiate(previewLinePrefab, lineParent);
+
+        pendingLink.linkLine.line.sortingLayerName = "UI";
+        pendingLink.linkLine.line.sortingOrder = 100;
+    }
+
+    void RemovePendingLink()
+    {
+        /* listener for cancel pending pair with player interaction.
+        Call when:
+            right click
+            escape
+            clicking empty space
+        */
+        if (pendingLink != null)
+        {
+            pendingLink.linkLine.RemoveLine();
+
+            pendingLink = null;
+        }    
+        
     }
 
     void CreatePair(LinkableItem a, LinkableItem b)
@@ -121,7 +185,9 @@ public class LinkPairManager : MonoBehaviour
 
         }
 
-        LinkPair pair = new LinkPair(a, b, visual);
+        LinkPair pair = new LinkPair(a, b, visual); 
+        pair.Setup(a, b, visual);
+
         connectedPairs.Add(pair);
 
         RegisterViewPair(pair.viewA, pair);
@@ -131,6 +197,8 @@ public class LinkPairManager : MonoBehaviour
         SubscribeToViews(pair);
 
         Debug.Log("connected: " + a.linkableId + " <-> " + b.linkableId);
+
+        RemovePendingLink();
     }
 
     private void RegisterViewPair(
@@ -157,6 +225,16 @@ public class LinkPairManager : MonoBehaviour
 
         if (pair.viewB != null)
             pair.viewB.OnMoved += HandleViewMoved;
+    }
+
+    private void unSubscribeToViews(LinkPair pair)
+    {
+        if (pair.viewA != null)
+            pair.viewA.OnMoved -= HandleViewMoved;
+
+
+        if (pair.viewB != null)
+            pair.viewB.OnMoved -= HandleViewMoved;
     }
 
     private void HandleViewMoved(EvidenceView view)
@@ -235,12 +313,72 @@ public class LinkPairManager : MonoBehaviour
 
         pair.RemoveLinkVisual();
 
-        if (pair.viewA != null)
-            pair.viewA.OnMoved -= HandleViewMoved;
-
-
-        if (pair.viewB != null)
-            pair.viewB.OnMoved -= HandleViewMoved;
+        unSubscribeToViews(pair);
     }
 
+    private Vector3 GetMouseWorldPosition()
+    {
+        // mouse position on screen
+        Vector2 mouseScreen =
+            Mouse.current.position.ReadValue();
+
+        // create ray going to mouse position
+        Ray ray =
+            playerCamera.ScreenPointToRay(mouseScreen);
+
+        // debug 
+        //Debug.DrawRay(
+        //    playerCamera.transform.position,
+        //    ray.direction * 100,
+        //    Color.red
+        //);
+
+        // create plane to hit on x,z
+        // (normal (perpendicular), point on the surface)
+        //Plane plane =
+        //    new Plane(Vector3.up, puzzleArea.position);
+
+        //// where on the plane the ray hit.
+        //if (plane.Raycast(ray, out float distance))
+        //{
+        //    // convert to world position
+        //    return ray.GetPoint(distance);
+        //}
+
+        // colliding with puzzle pieces
+        //if (Physics.Raycast(ray, out RaycastHit hit))
+        //{
+        //    return hit.point;
+        //}
+
+        // player camera plane
+        Plane plane = GetLinkPlane();
+
+        if (plane.Raycast(ray, out float distance))
+        {
+            return ray.GetPoint(distance);
+        }
+
+
+        return Vector3.zero;
+    }
+    private Vector3 GetPreviewPoint(Vector3 point)
+    {
+        return new Vector3(
+            point.x,
+            previewHeight,
+            point.z
+        );
+    }
+
+    private Plane GetLinkPlane()
+    {
+        // 0.1 < link distance
+        // playerCamera.transform.forward * linkDistance < 0.4 (from puzzle camera anchor to puzzle surface
+        //Debug.Log(linkDistance);
+        return new Plane(
+            playerCamera.transform.forward,
+            playerCamera.transform.position + playerCamera.transform.forward * linkDistance
+        );
+    }
 }

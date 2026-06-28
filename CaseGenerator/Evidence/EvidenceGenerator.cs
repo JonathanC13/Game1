@@ -201,7 +201,7 @@ public static class EvidenceGenerator
                 truth.Contract.ContractAmount));
 
         evidence.Facts.Add(
-            FactGenerator.CreatePaymentStatusFact(
+            FactGenerator.CreateContractPaymentStatusFact(
                 evidence,
                 truth.Contract.PaymentStatus));
 

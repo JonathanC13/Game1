@@ -32,7 +32,7 @@ public class ContractEvidenceView : EvidenceView
                 case FactType.ContractPaymentStatus:
                     contractPaymentStatus.Setup(fact);
                     break;
-
+                    
                 default:
                     Debug.LogWarning(
                         $"No TMP_Text found for {fact.FactType}"
