@@ -4,10 +4,15 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 using static UnityEngine.Rendering.HableCurve;
 
 public class LinkPairManager : MonoBehaviour
 {
+    InputSystem_Actions input;
+
+    public CameraStateMachine cameraStateMachine;
+
     public PuzzleManager puzzleManager;
 
     public Camera playerCamera;
@@ -40,12 +45,18 @@ public class LinkPairManager : MonoBehaviour
 
     private float linkDistance = 0.2f;
 
+
     // EvidenceView -> Links affected by this view
     private readonly Dictionary<EvidenceView, HashSet<LinkPair>> viewToPairs = new();
 
     // dirty queues
     private readonly HashSet<EvidenceView> dirtyViews = new();
     private readonly HashSet<LinkPair> dirtyPairs = new();
+
+    void Awake()
+    {
+        input = new InputSystem_Actions();
+    }
 
     // Unity lifecycle method that runs once per frame after all Update() calls have finished.
     private void LateUpdate()
@@ -66,6 +77,20 @@ public class LinkPairManager : MonoBehaviour
             pendingLink.linkLine.SetPosition(pendingLink.startItem.transform.position, mouseWorld);
         }
         
+    }
+
+    private void OnEnable()
+    {
+        input.Enable();
+
+        input.Player.CancelLink.started += cancelPendingLink;
+    }
+
+    private void OnDisable()
+    {
+        input.Player.CancelLink.started -= cancelPendingLink;
+
+        input.Disable();
     }
 
     public void Register(LinkableItem item)
@@ -138,15 +163,16 @@ public class LinkPairManager : MonoBehaviour
     }
 
     void RemovePendingLink()
-    {
+    {       
         /* listener for cancel pending pair with player interaction.
         Call when:
             right click
             escape
-            clicking empty space
         */
         if (pendingLink != null)
         {
+            firstSelection = null;
+
             pendingLink.linkLine.RemoveLine();
 
             pendingLink = null;
@@ -380,5 +406,16 @@ public class LinkPairManager : MonoBehaviour
             playerCamera.transform.forward,
             playerCamera.transform.position + playerCamera.transform.forward * linkDistance
         );
+    }
+
+    private void cancelPendingLink(InputAction.CallbackContext ctx)
+    {
+        if (cameraStateMachine == null || cameraStateMachine.state == CameraState.FPS)
+        {
+            // CameraState.FPS because esc key during Inspecting transitions player out of CameraState.Inspecting, therefore OK to cancel link if in transition state.
+            return;
+        }
+
+        RemovePendingLink();
     }
 }
