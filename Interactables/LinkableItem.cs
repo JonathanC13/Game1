@@ -35,8 +35,14 @@ public class LinkableItem : MonoBehaviour
         linkBox.Hide();
     }
 
+    // to change
     public Vector3 GetDestroyButtonPos()
     {
         return gameObject.transform.position;
+    }
+
+    public Quaternion GetContainerRotation()
+    {
+        return this.GetComponentInParent<EvidenceView>().transform.rotation;
     }
 }

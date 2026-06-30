@@ -48,13 +48,13 @@ public class PuzzleManager : MonoBehaviour
 
     private void Start()
     {
-        MoveTo(PuzzleLocation.Init);
+        MoveTo(state);
         Build();
     }
 
     void OnDestroy()
     {
-        unSubscribeClick();
+        UnSubscribeClick();
     }
 
     void Build()
@@ -65,7 +65,7 @@ public class PuzzleManager : MonoBehaviour
         caseData = caseBuilder.Build(DifficultyLevel.Easy);
         //caseData.PrintCaseData();
 
-        unSubscribeClick(); // remove old listeners
+        UnSubscribeClick(); // remove old listeners
         evidenceViews = new();
         evidenceBounds = new();
 
@@ -120,12 +120,7 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
-    void unSubscribeAll()
-    {
-        unSubscribeClick();
-    }
-
-    void unSubscribeClick()
+    void UnSubscribeClick()
     {
         foreach (var item in evidenceViews)
         {
@@ -142,9 +137,11 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
+    // first mouse down.
     void EvidenceClicked(InspectableItem item)
     {
         shiftToFront(item);
+        linkPairManager.HandleViewInteracted(); // handle first click elevation change.
     }
 
     void shiftToFront(InspectableItem item)
@@ -154,7 +151,8 @@ public class PuzzleManager : MonoBehaviour
         if (i == -1)
         {
             return;
-        } 
+        }
+        //Debug.Log("shift: " + ev.DisplayName.text + " " + i + " " + evidenceViews.Count + " " + ev);
         
         for (int j = i; j < evidenceViews.Count - 1; j++)
         {
@@ -200,11 +198,8 @@ public class PuzzleManager : MonoBehaviour
 
         state = location;
 
-        //GameObject puzzle = Instantiate(
-        //    puzzlePrefab,
-        //    target.GetSpawnPosition(),
-        //    target.GetSpawnRotation()
-        //);
+        inspectionSurface.transform.position = target.position;
+        //inspectionSurface.transform.rotation = target.rotation;
 
         //puzzle.transform.SetParent(target.transform);
     }

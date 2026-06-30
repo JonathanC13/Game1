@@ -15,7 +15,7 @@ public class InspectableItem : MonoBehaviour
 
     public event Action<InspectableItem> OnClicked;
 
-    private IMovableNotify movableNotify;
+    public IMovableNotify movableNotify;
 
     Vector3 dragOffset;
     Plane plane;
@@ -38,7 +38,7 @@ public class InspectableItem : MonoBehaviour
 
     public void StartDrag(Camera cam)
     {
-        //Debug.Log("Drag started");
+        Debug.Log("Drag started");
         plane = new Plane(
             surface.dragPlane.transform.up,
             transform.position
@@ -54,6 +54,7 @@ public class InspectableItem : MonoBehaviour
         }
     }
 
+    // Currently instantly called when item is clicked.
     public void Drag(Camera cam)
     {
         Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -68,7 +69,7 @@ public class InspectableItem : MonoBehaviour
 
             transform.position = targetPos;
 
-            movableNotify?.NotifyMoved();    // tell movable
+            movableNotify?.NotifyMoved();    // tell listeners, in this case the links routes need to be updated.
         }
     }
 

@@ -74,7 +74,7 @@ public class LinkBox : MonoBehaviour
 
         boxSize = size;
 
-        Debug.Log(boxSize);
+        //Debug.Log(boxSize);
     }
 
     // world positions

@@ -27,7 +27,10 @@ public class LinkLine : MonoBehaviour
 
     public void RemoveLine()
     {
-        Object.Destroy(line.gameObject);
+        if (line != null)
+        {
+            Object.Destroy(line.gameObject);
+        }    
     }
 
     public void SetStart(Vector3 start)

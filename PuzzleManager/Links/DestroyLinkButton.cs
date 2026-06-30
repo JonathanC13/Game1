@@ -24,9 +24,8 @@ public class DestroyLinkButton : MonoBehaviour
         linkPairManager.RemoveSelectedPair();
     }
 
-    public void Show(Vector3 pos)
+    public void Show()
     {
-        gameObject.transform.position = pos;
         gameObject.SetActive(true);
     }
 

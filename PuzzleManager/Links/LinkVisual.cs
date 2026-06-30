@@ -6,11 +6,9 @@ public class LinkVisual
     public List<LinkLine> segments = new();
 
 
-    public void UpdateSegments(List<LinkLine> linkLines)
+    public void SetNewSegments(List<LinkLine> linkLines)
     {
         Destroy();
-
-        segments.Clear();
 
         segments = linkLines;
     }
@@ -21,5 +19,6 @@ public class LinkVisual
         {
             segment.RemoveLine();
         }
+        segments.Clear();
     }
 }

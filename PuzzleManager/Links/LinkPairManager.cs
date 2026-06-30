@@ -65,6 +65,7 @@ public class LinkPairManager : MonoBehaviour
 
         UpdateDirtyPairs();
 
+
         // for pending link
         if (pendingLink != null && pendingLink.linkLine != null)
         {
@@ -100,12 +101,14 @@ public class LinkPairManager : MonoBehaviour
 
     void ItemSelected(LinkableItem item)
     {
+        selectedPair = null;
+
         if (activeDestroyButton != null)
             activeDestroyButton.Hide();
 
         if (usedItems.Contains(item))
         {
-            Debug.Log("One of the facts exists in an active pair.");
+            //Debug.Log("One of the facts exists in an active pair.");
 
             // find the LinkPair the selected item is associated with.
             foreach (LinkPair pair in connectedPairs)
@@ -114,16 +117,16 @@ public class LinkPairManager : MonoBehaviour
                 {
                     selectedPair = pair;
 
-                    Vector3 itemPosition = item.GetDestroyButtonPos();
-
                     // manage destroy button
                     if (activeDestroyButton == null)
                     {
                         activeDestroyButton = Instantiate(destroyButtonPrefab);
                         activeDestroyButton.Setup(this);
                     }
-
-                    activeDestroyButton.Show(itemPosition);
+                    
+                    activeDestroyButton.transform.SetParent(item.transform, false);
+                    activeDestroyButton.SetPosition(item.GetDestroyButtonPos());
+                    activeDestroyButton.Show();
 
                     break;
                 }
@@ -132,7 +135,7 @@ public class LinkPairManager : MonoBehaviour
         } else if (firstSelection == null) 
         {
             firstSelection = item;
-            Debug.Log("first selection: " + item.linkableId);
+            //Debug.Log("first selection: " + item.linkableId);
 
             startPendingLink(item);
 
@@ -173,7 +176,10 @@ public class LinkPairManager : MonoBehaviour
         {
             firstSelection = null;
 
-            pendingLink.linkLine.RemoveLine();
+            if (pendingLink.linkLine != null)
+            {
+                pendingLink.linkLine.RemoveLine();
+            }
 
             pendingLink = null;
         }    
@@ -184,7 +190,7 @@ public class LinkPairManager : MonoBehaviour
     {
         if (usedItems.Contains(a) || usedItems.Contains(b))
         {
-            Debug.Log("One of the facts exists in an active pair.");
+            //Debug.Log("One of the facts exists in an active pair.");
             return;
         }
 
@@ -222,7 +228,7 @@ public class LinkPairManager : MonoBehaviour
 
         SubscribeToViews(pair);
 
-        Debug.Log("connected: " + a.linkableId + " <-> " + b.linkableId);
+        //Debug.Log("connected: " + a.linkableId + " <-> " + b.linkableId);
 
         RemovePendingLink();
     }
@@ -263,9 +269,19 @@ public class LinkPairManager : MonoBehaviour
             pair.viewB.OnMoved -= HandleViewMoved;
     }
 
+    // Dragging pair update link
     private void HandleViewMoved(EvidenceView view)
     {
         dirtyViews.Add(view);
+    }
+
+    // for first mouseDown for elevation change, must update all pair links.
+    public void HandleViewInteracted()
+    {
+        foreach (LinkPair pair in connectedPairs)
+        {
+            dirtyPairs.Add(pair);
+        }
     }
 
     private void PropagateDirtyViews()
@@ -288,6 +304,10 @@ public class LinkPairManager : MonoBehaviour
 
     private void UpdateDirtyPairs()
     {
+        //if (dirtyPairs.Count > 0)
+        //{
+        //    Debug.Log("dirtyPairs: " + dirtyPairs.Count);
+        //}
         foreach (LinkPair pair in dirtyPairs)
         {
             UpdatePair(pair);
@@ -303,7 +323,7 @@ public class LinkPairManager : MonoBehaviour
                 pair.linkItemA,
                 pair.linkItemB
             );
-
+        
         List<LinkLine> linkLines = new();
         foreach (var segment in segments)
         {
@@ -313,7 +333,8 @@ public class LinkPairManager : MonoBehaviour
             linkLines.Add(line);
 
         }
-        pair.linkVisual.UpdateSegments(linkLines);
+
+        pair.linkVisual.SetNewSegments(linkLines);
     }
 
     public void RemoveSelectedPair()
@@ -338,6 +359,15 @@ public class LinkPairManager : MonoBehaviour
         usedItems.Remove(pair.linkItemB);
 
         pair.RemoveLinkVisual();
+
+        if (viewToPairs.TryGetValue(pair.viewA, out var pairsA))
+        {
+            pairsA.Remove(pair);
+        }
+        if (viewToPairs.TryGetValue(pair.viewB, out var pairsB))
+        {
+            pairsB.Remove(pair);
+        }
 
         unSubscribeToViews(pair);
     }

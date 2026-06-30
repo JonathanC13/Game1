@@ -34,7 +34,7 @@ public class LinkPair
             linkVisual.Destroy();
         }
 
-        if(linkItemA != null) linkItemA.HideLinkedBox();
+        if (linkItemA != null) linkItemA.HideLinkedBox();
         if (linkItemB != null) linkItemB.HideLinkedBox();
     }
 }
