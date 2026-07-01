@@ -1,5 +1,6 @@
 // The class contains the values that describe the Entity during the current Truth state.
 using System;
+using System.Text;
 using UnityEngine;
 
 public class Payment
@@ -12,11 +13,11 @@ public class Payment
 
     public void PrintPayment()
     {
-        string sb = "Payment \n";
-        sb += $"Id: {Id} \n";
-        sb += $"Amount: {Amount} \n";
-        sb += $"Status: {Status} \n";
-        Debug.Log(sb);
+        StringBuilder sb = new StringBuilder("Payment");
+        sb.AppendLine($"Id: {Id}");
+        sb.AppendLine($"Amount: {Amount}");
+        sb.AppendLine($"Status: {Status}");
+        Debug.Log(sb.ToString());
     }
 }
 

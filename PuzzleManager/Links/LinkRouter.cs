@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.Rendering.HableCurve;
+using static MyProject.Core.Constants;
 
 public class LinkRouter
 {
     LinkableItem itemA;
     LinkableItem itemB;
+
+    readonly float inbetweenViewsInc = EvidenceProps.EvidenceLayerIncrement / 2;
 
     private List<(Vector3 BoxExit, Vector3 PointExit)> GetExitAnchors(LinkableItem src, Vector3 target)
     {
@@ -45,7 +48,8 @@ public class LinkRouter
 
     /* Since prioritize last interacted EvidenceView's pairs, lines of:
      * 1. From LinkBox to Exit point, same y plane as FactItem.
-     * 2. Exit point to Fact2 enter point, but maintain y value.
+     * 2. Exit to drop inbetweenViewsInc y.
+     * 2. To Fact2 enter point, but maintain y value.
      * 3. Drop to Fact2 enter point
      * 4. Enter point to Fact2 linkbox
      * 
@@ -71,11 +75,17 @@ public class LinkRouter
         Vector3 bBoxExit = bAnchors[0].BoxExit;
         Vector3 bPoint = bAnchors[0].PointExit;
 
+        float mainLineY = aPoint.y - inbetweenViewsInc;
+
+        // A hover between owner view and directly below view. For the case when destination pair is underneath so the "middle main" connector; aHoverPoint to bHoverPoint does not overlap owner view.
+        Vector3 aHoverPoint = new Vector3(aPoint.x, mainLineY, aPoint.z);
+
         // Calculate lines between aPoint and bPoint
-        Vector3 bHoverPoint = new Vector3(bPoint.x, aPoint.y, bPoint.z); // maintain y value so inbetween EvidenceViews are "under" the line.
+        Vector3 bHoverPoint = new Vector3(bPoint.x, mainLineY, bPoint.z); // maintain y value so inbetween EvidenceViews are "under" the line.
 
         segments.Add((aBoxExit, aPoint));
-        segments.Add((aPoint, bHoverPoint));
+        segments.Add((aPoint, aHoverPoint));
+        segments.Add((aHoverPoint, bHoverPoint));
         segments.Add((bHoverPoint, bPoint));
         segments.Add((bPoint, bBoxExit));
 

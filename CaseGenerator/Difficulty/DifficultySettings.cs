@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 public class DifficultySettings
@@ -12,11 +13,11 @@ public class DifficultySettings
 
     public void PrintDifficultySettings()
     {
-        string sb = "Difficulty Settings \n";
-        sb += $"FraudCount: {FraudCount.ToString()} \n";
-        sb += $"OptionalEvidenceChance: {OptionalEvidenceChance.ToString()} \n";
-        sb += $"RedHerringCount: {RedHerringCount.ToString()} \n";
-        sb += $"MinimumEvidenceCount:: {MinimumEvidenceCount.ToString()} \n";
-        Debug.Log(sb);
+        StringBuilder sb = new StringBuilder("Difficulty Settings");
+        sb.AppendLine($"FraudCount: {FraudCount.ToString()}");
+        sb.AppendLine($"OptionalEvidenceChance: {OptionalEvidenceChance.ToString()}");
+        sb.AppendLine($"RedHerringCount: {RedHerringCount.ToString()}");
+        sb.AppendLine($"MinimumEvidenceCount:: {MinimumEvidenceCount.ToString()}");
+        Debug.Log(sb.ToString());
     }
 }

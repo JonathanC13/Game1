@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 // Blueprint for Evidence. Contains all the information for an Evidence piece.
@@ -21,22 +22,22 @@ public class Evidence
 
     public void PrintEvidence()
     {
-        string sb = "Evidence \n";
-        sb += $"Id: {Id} \n";
-        sb += $"DisplayName: {DisplayName} \n";
-        sb += $"DisplayId: {DisplayId} \n";
-        sb += $"Type: {Type} \n";
-        sb += $"Purpose: {Purpose} \n";
-        sb += $"CaseId: {CaseId} \n";
-        sb += $"DisplayContent: {DisplayContent} \n";
-        sb += "Facts: \n";
+        StringBuilder sb = new StringBuilder("Evidence");
+        sb.AppendLine($"Id: {Id}");
+        sb.AppendLine($"DisplayName: {DisplayName}");
+        sb.AppendLine($"DisplayId: {DisplayId}");
+        sb.AppendLine($"Type: {Type}");
+        sb.AppendLine($"Purpose: {Purpose}");
+        sb.AppendLine($"CaseId: {CaseId}");
+        sb.AppendLine($"DisplayContent: {DisplayContent}");
+        sb.AppendLine("Facts:");
 
         foreach (Fact fact in Facts)
         {
-            sb += fact.GetFactInfo() + '\n';
+            sb.AppendLine(fact.GetFactInfo());
         }
 
-        Debug.Log(sb);
+        Debug.Log(sb.ToString());
     }
 }
 

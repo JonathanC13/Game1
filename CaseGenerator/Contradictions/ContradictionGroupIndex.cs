@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 // Precompute Contradiction Index so fast scoring.
 public class ContradictionGroupIndex
 {
     private Dictionary<string, ContradictionGroup> index = new();
+
+    public IReadOnlyDictionary<string, ContradictionGroup> Index => index;
 
     public void Build(
         List<ContradictionGroup> contradictionGroups)
@@ -42,11 +45,12 @@ public class ContradictionGroupIndex
 
     public void PrintContradictionGroupIndex()
     {
-        string sb = "ContradictionGroupIndex \n";
+        StringBuilder sb = new StringBuilder("ContradictionGroupIndex");
+
         foreach (KeyValuePair<string, ContradictionGroup> kvp in index)
         {
-            sb += $"Key: {kvp.Key} \n";
-            sb += kvp.Value.GetContradictionGroupInfo() + "\n";
+            sb.AppendLine($"Key: {kvp.Key}");
+            sb.AppendLine(kvp.Value.GetContradictionGroupInfo());
         }
 
         Debug.Log(sb);

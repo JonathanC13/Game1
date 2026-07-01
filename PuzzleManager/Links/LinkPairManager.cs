@@ -33,6 +33,8 @@ public class LinkPairManager : MonoBehaviour
 
     private readonly List<LinkPair> connectedPairs = new();
 
+    public IReadOnlyList<LinkPair> ConnectedPairs => connectedPairs;
+
     private HashSet<LinkableItem> usedItems = new();
 
     private LinkableItem firstSelection = null;
@@ -41,9 +43,9 @@ public class LinkPairManager : MonoBehaviour
 
     private PendingLink pendingLink = null;
 
-    private float previewHeight = 10.0f;
+    private readonly float previewHeight = 10.0f;
 
-    private float linkDistance = 0.2f;
+    private readonly float linkDistance = 0.2f;
 
 
     // EvidenceView -> Links affected by this view

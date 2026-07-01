@@ -1,5 +1,6 @@
 // The class contains the values that describe the Entity during the current Truth state.
 using System;
+using System.Text;
 using UnityEngine;
 
 public class Contractor
@@ -10,10 +11,10 @@ public class Contractor
 
     public void PrintContractor()
     {
-        string sb = "Contractor \n";
-        sb += $"Id: {Id} \n";
-        sb += $"ContractorId: {ContractorId} \n";
-        Debug.Log(sb);
+        StringBuilder sb = new StringBuilder("Contractor");
+        sb.AppendLine($"Id: {Id}");
+        sb.AppendLine($"ContractorId: {ContractorId}");
+        Debug.Log(sb.ToString());
     }
 }
 

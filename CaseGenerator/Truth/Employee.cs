@@ -1,5 +1,6 @@
 // The class contains the values that describe the Entity during the current Truth state.
 using System;
+using System.Text;
 using UnityEngine;
 
 public class Employee
@@ -18,14 +19,14 @@ public class Employee
 
     public void PrintEmployee()
     {
-        string sb = "Employee \n";
-        sb += $"Id: {Id} \n";
-        sb += $"EmployeeRecordId: {EmployeeRecordId} \n";
-        sb += $"EmployeeId: {EmployeeId} \n";
-        sb += $"EmployeePay: {EmployeePay} \n";
-        sb += $"EmployeeStatus: {EmployeeStatus} \n";
-        sb += $"PaymentStatus: {PaymentStatus} \n";
-        Debug.Log(sb);
+        StringBuilder sb = new StringBuilder("Employee");
+        sb.AppendLine($"Id: {Id}");
+        sb.AppendLine($"EmployeeRecordId: {EmployeeRecordId}");
+        sb.AppendLine($"EmployeeId: {EmployeeId}");
+        sb.AppendLine($"EmployeePay: {EmployeePay}");
+        sb.AppendLine($"EmployeeStatus: {EmployeeStatus}");
+        sb.AppendLine($"PaymentStatus: {PaymentStatus}");
+        Debug.Log(sb.ToString());
     }
 }
 

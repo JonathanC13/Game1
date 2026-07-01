@@ -2,6 +2,7 @@ using MyProject.Core;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Unity.VisualScripting;
 using UnityEditor.Overlays;
 using UnityEngine;
@@ -49,7 +50,7 @@ public class PuzzleManager : MonoBehaviour
     private void Start()
     {
         MoveTo(state);
-        Build();
+        //Build();
     }
 
     void OnDestroy()
@@ -57,7 +58,54 @@ public class PuzzleManager : MonoBehaviour
         UnSubscribeClick();
     }
 
-    void Build()
+    public bool CheckSolution()
+    {
+        StringBuilder markedPairs = new StringBuilder();
+
+        var solutionObj = caseData.ContradictionGroupIndex;
+
+        int currScore = 0;
+        int perfectScore = solutionObj.Index.Count;
+        foreach (LinkPair pair in linkPairManager.ConnectedPairs)
+        {
+            markedPairs.AppendLine(pair.FactA.FactObj.GetFactInfo());
+            markedPairs.AppendLine(" <-> ");
+            markedPairs.AppendLine(pair.FactB.FactObj.GetFactInfo());
+            // Need to check both ways since ContradictionGroupIndex.Index key is the outlier.
+            if (EvaluatePairInSolutionKey(solutionObj, pair.FactA.FactObj, pair.FactB.FactObj) || EvaluatePairInSolutionKey(solutionObj, pair.FactB.FactObj, pair.FactA.FactObj))
+            {
+                currScore += 1;
+                pair.isCorrect = true;
+                markedPairs.AppendLine("CORRECT");
+            }
+            else
+            {
+                currScore -= 1;
+                markedPairs.AppendLine("WRONG");
+            }
+        }
+
+        Debug.Log(markedPairs);
+        Debug.Log($"{currScore.ToString()} out of {perfectScore.ToString()}");
+
+        return currScore == perfectScore;
+    }
+
+    bool EvaluatePairInSolutionKey(ContradictionGroupIndex cGI, Fact outlier, Fact b)
+    {
+        if (cGI.TryFind(outlier, b, out ContradictionGroup contradictionGroup))
+        {
+            if (!contradictionGroup.Marked)
+            {
+                // not scored yet.
+                contradictionGroup.Marked = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void BuildPuzzle()
     {
         caseBuilder = new CaseBuilder();
 

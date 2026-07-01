@@ -1,4 +1,5 @@
 // Contains the information of the specific contradiction.
+using System.Text;
 using UnityEngine;
 
 public class Contradiction
@@ -24,18 +25,17 @@ public class Contradiction
 
     public string GetContradictionInfo()
     {
-        string sb = "Contradiction \n";
+        StringBuilder sb = new StringBuilder("Contradiction");
+        sb.AppendLine($"Id: {Id}");
+        sb.AppendLine($"DisplayId: {DisplayId}");
+        sb.AppendLine($"EvidenceAId: {EvidenceA.Id}");
+        sb.AppendLine($"EvidenceBId: {EvidenceB.Id}");
+        sb.AppendLine($"FactAModdedId: {FactAModded.Id}");
+        sb.AppendLine($"FactB: {FactB.Id}");
+        sb.AppendLine($"FactType: {FactType}");
+        sb.AppendLine($"FraudType: {FraudType}");
+        sb.AppendLine($"Description: {Description}");
 
-        sb += $"Id: {Id} \n";
-        sb += $"DisplayId: {DisplayId} \n";
-        sb += $"EvidenceAId: {EvidenceA.Id} \n";
-        sb += $"EvidenceBId: {EvidenceB.Id} \n";
-        sb += $"FactAModdedId: {FactAModded.Id} \n";
-        sb += $"FactB: {FactB.Id} \n";
-        sb += $"FactType: {FactType} \n";
-        sb += $"FraudType: {FraudType} \n";
-        sb += $"Description: {Description} \n";
-
-        return sb;
+        return sb.ToString();
     }
 }

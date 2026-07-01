@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using UnityEngine;
 using UnityEngine.LightTransport;
 
@@ -17,13 +18,13 @@ public class Shipment
 
     public void PrintShipment()
     {
-        string sb = "Shipment \n";
-        sb += $"Id: {Id} \n";
-        sb += $"ShipmentId: {ShipmentId} \n";
-        sb += $"Date: {Date.ToString("yyyy-MM-dd")} \n";
-        sb += $"Quantity: {Quantity} \n";
-        sb += $"Status: {Status} \n";
-        Debug.Log(sb);
+        StringBuilder sb = new StringBuilder("Shipment");
+        sb.AppendLine($"Id: {Id}");
+        sb.AppendLine($"ShipmentId: {ShipmentId}");
+        sb.AppendLine($"Date: {Date.ToString("yyyy-MM-dd")}");
+        sb.AppendLine($"Quantity: {Quantity}");
+        sb.AppendLine($"Status: {Status}");
+        Debug.Log(sb.ToString());
     }
 }
 

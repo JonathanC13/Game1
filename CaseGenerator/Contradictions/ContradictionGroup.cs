@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 public class ContradictionGroup
@@ -18,15 +19,15 @@ public class ContradictionGroup
 
     public string GetContradictionGroupInfo()
     {
-        string sb = "ContradictionGroup \n";
-        sb += $"Id: {Id} \n";
-        sb += $"FactType: {FactType} \n";
-        sb += $"FraudType: {FraudType} \n";
-        sb += $"OutlierFactId: {OutlierFact.Id} \n";
-        sb += $"Marked: {Marked} \n";
-        sb += $"TrueFactsId: {string.Join(", ", TrueFacts.Keys)}\n";
+        StringBuilder sb = new StringBuilder("ContradictionGroup");
+        sb.AppendLine($"Id: {Id}");
+        sb.AppendLine($"FactType: {FactType}");
+        sb.AppendLine($"FraudType: {FraudType}");
+        sb.AppendLine($"OutlierFactId: {OutlierFact.Id}");
+        sb.AppendLine($"Marked: {Marked}");
+        sb.AppendLine($"TrueFactsId: {string.Join(", ", TrueFacts.Keys)}");
 
-        return sb;
+        return sb.ToString();
     }
 }
 

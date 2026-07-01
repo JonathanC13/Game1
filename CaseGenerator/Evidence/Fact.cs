@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 
 // Blueprint for a Fact, contains all the information for a Fact.
 public class Fact
@@ -15,17 +16,17 @@ public class Fact
 
     public string GetFactInfo()
     {
-        string sb = $"Fact\n";
-        sb += $"Id: {Id} \n";
-        sb += $"EvidenceId: {Evidence.Id} \n";
-        sb += $"FactType: {FactType} \n";
-        sb += $"Properties: \n";
+        StringBuilder sb = new StringBuilder($"Fact");
+        sb.AppendLine($"Id: {Id}");
+        sb.AppendLine($"EvidenceId: {Evidence.Id}");
+        sb.AppendLine($"FactType: {FactType}");
+        sb.AppendLine($"Properties:");
 
         foreach (KeyValuePair<string, object> kvp in Values)
         {
-            sb += $"{kvp.Key}: {kvp.Value} \n";
+            sb.AppendLine($"{kvp.Key}: {kvp.Value}");
         }
 
-        return sb;
+        return sb.ToString();
     }
 }

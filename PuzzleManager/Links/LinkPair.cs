@@ -6,10 +6,15 @@ public class LinkPair
     public LinkableItem linkItemA;
     public LinkableItem linkItemB;
 
+    public FactItem FactA;
+    public FactItem FactB;
+
     public EvidenceView viewA;
     public EvidenceView viewB;
 
     public LinkVisual linkVisual;
+
+    public bool isCorrect { set; get; } = false;
 
     public LinkPair(LinkableItem a, LinkableItem b, LinkVisual visual)
     {
@@ -21,6 +26,10 @@ public class LinkPair
         linkItemA = a;
         linkItemB = b;
         linkVisual = visual;
+
+        // Get FactItem of same object
+        FactA = a.GetComponent<FactItem>();
+        FactB = b.GetComponent<FactItem>();
 
         // Get the moving owners
         viewA = a.GetComponentInParent<EvidenceView>();
