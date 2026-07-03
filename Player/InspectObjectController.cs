@@ -42,24 +42,29 @@ public class InspectObjectController : MonoBehaviour
         input.Disable();
     }
 
+    public void Enable() => enabled = true;
+
+    public void Disable()
+    {
+        enabled = false;
+    }
+
     void Update()
     {
+        if (enabled)
+        {
+            if (!dragging)
+                return;
 
-        if (!dragging)
-            return;
+            if (currentItem == null)
+                return;
 
-        if (currentItem == null)
-            return;
-
-        currentItem.Drag(inspectCamera);
+            currentItem.Drag(inspectCamera);
+        }
     }
 
     void MouseDown(InputAction.CallbackContext ctx)
     {
-
-        if (cameraStateMachine.state != CameraState.Inspecting)
-            return;
-
         Ray ray =
             inspectCamera.ScreenPointToRay(
                 Mouse.current.position.ReadValue()

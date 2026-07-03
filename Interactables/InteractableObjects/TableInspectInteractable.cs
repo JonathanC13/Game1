@@ -7,6 +7,10 @@ public class TableInspectInteractable : Interactable
 
     public override void Interact()
     {
-        cameraStateMachine.StartInspect(inspectView);
+        cameraStateMachine.CameraTransition.Configure(
+            inspectView,
+            cameraStateMachine.Inspecting);
+
+        cameraStateMachine.ChangeState(cameraStateMachine.CameraTransition);
     }
 }

@@ -9,7 +9,10 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         doorInteractable.OnInteracted += HandleFinDoorInteracted;
+    }
 
+    void Start()
+    {
         puzzleManager.BuildPuzzle();
     }
 

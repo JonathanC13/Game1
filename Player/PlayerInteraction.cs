@@ -32,7 +32,7 @@ public class PlayerInteraction : MonoBehaviour
 
         input.Player.Interact.performed += OnInteract;
     }
-
+    
 
     void OnDisable()
     {
@@ -41,16 +41,29 @@ public class PlayerInteraction : MonoBehaviour
         input.Disable();
     }
 
+    public void Enable() => enabled = true;
+
+    public void Disable()
+    {
+        ClearDetected();
+        enabled = false;
+    }
+
     void Update()
     {
-        if (camStateMachine.state == CameraState.FPS)
+        if (enabled)
         {
             DetectInteractable();
         }
-        else if (currentInteractable != null)
-        {
-            ClearDetected();
-        }
+
+        //if (camStateMachine.state == CameraState.FPS)
+        //{
+            //DetectInteractable();
+        //}
+        //else if (currentInteractable != null)
+        //{
+        //    ClearDetected();
+        //}
     }
 
     private void ClearDetected()

@@ -50,7 +50,7 @@ public class PuzzleManager : MonoBehaviour
     private void Start()
     {
         MoveTo(state);
-        //Build();
+        //BuildPuzzle();
     }
 
     void OnDestroy()
@@ -98,7 +98,7 @@ public class PuzzleManager : MonoBehaviour
             if (!contradictionGroup.Marked)
             {
                 // not scored yet.
-                contradictionGroup.Marked = true;
+                contradictionGroup.Marked = true; // Only one try, so ok to mark and leave it.
                 return true;
             }
         }

@@ -86,12 +86,12 @@ public class LinkPairManager : MonoBehaviour
     {
         input.Enable();
 
-        input.Player.CancelLink.started += cancelPendingLink;
+        input.Player.RightClick.started += CancelPendingLink;
     }
 
     private void OnDisable()
     {
-        input.Player.CancelLink.started -= cancelPendingLink;
+        input.Player.RightClick.started -= CancelPendingLink;
 
         input.Disable();
     }
@@ -167,7 +167,7 @@ public class LinkPairManager : MonoBehaviour
         pendingLink.linkLine.line.sortingOrder = 100;
     }
 
-    void RemovePendingLink()
+    public void RemovePendingLink()
     {       
         /* listener for cancel pending pair with player interaction.
         Call when:
@@ -440,14 +440,8 @@ public class LinkPairManager : MonoBehaviour
         );
     }
 
-    private void cancelPendingLink(InputAction.CallbackContext ctx)
+    public void CancelPendingLink(InputAction.CallbackContext ctx)
     {
-        if (cameraStateMachine == null || cameraStateMachine.state == CameraState.FPS)
-        {
-            // CameraState.FPS because esc key during Inspecting transitions player out of CameraState.Inspecting, therefore OK to cancel link if in transition state.
-            return;
-        }
-
         RemovePendingLink();
     }
 }

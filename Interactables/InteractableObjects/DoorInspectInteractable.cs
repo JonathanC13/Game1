@@ -9,7 +9,12 @@ public class DoorInspectInteractable : Interactable
 
     public override void Interact()
     {
-        Debug.Log("Door selected");
+        cameraStateMachine.CameraTransition.Configure(
+            inspectView,
+            cameraStateMachine.Inspecting);
+
+        cameraStateMachine.ChangeState(cameraStateMachine.CameraTransition);
+
         OnInteracted?.Invoke(this);
     }
 }
