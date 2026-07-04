@@ -1,26 +1,34 @@
+using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CameraStateMachine : MonoBehaviour
 {
-    [SerializeField] private CameraRig cameraRig;
-    public CameraRig CameraRig => cameraRig;
-
     InputSystem_Actions input;
 
-    public Transform PlayerHead;
-
+    [SerializeField] private CameraRig cameraRig;
+    [SerializeField] private ScreenFader screenFader;
+    [SerializeField] private TransitionRunner transitionRunner;
+    [SerializeField] private Transform playerHeadCameraPos;
     [SerializeField] private MouseLook mouseLook;
-    public MouseLook MouseLook => mouseLook;
-
-    public PlayerMovement movement;
+    [SerializeField] private PlayerMovement movement;
+    [SerializeField] private TransitionAsset returnTransition;
 
     [SerializeField] private PlayerInteraction playerInteraction;
     [SerializeField] private InspectObjectController inspectController;
 
     [SerializeField] private LinkPairManager linkPairManager;
+
+    public CameraRig CameraRig => cameraRig;
+    public ScreenFader ScreenFader => screenFader;
+    public TransitionRunner TransitionRunner => transitionRunner;
+    public Transform PlayerHeadCameraPos => playerHeadCameraPos;
+    public MouseLook MouseLook => mouseLook;
+    public PlayerMovement Movement => movement;
+    public TransitionAsset ReturnTransition => returnTransition;
 
     //public float moveSpeed = 5f;
     //public float rotateSpeed = 5f;
@@ -40,8 +48,9 @@ public class CameraStateMachine : MonoBehaviour
     void Awake()
     {
         input = new InputSystem_Actions();
+        transitionRunner = new TransitionRunner(this);
 
-        FPS = new FPSState(this, playerInteraction, inspectController, PlayerHead, mouseLook);
+        FPS = new FPSState(this, playerInteraction, inspectController, PlayerHeadCameraPos, mouseLook);
         Inspecting = new InspectingState(this, linkPairManager, playerInteraction, inspectController);
         CameraTransition = new CameraTransitionState(this, playerInteraction);
         //TransitionScene = new TransitioningSceneState(this);
@@ -76,6 +85,10 @@ public class CameraStateMachine : MonoBehaviour
         currentState?.LateTick();
     }
 
+    public void StartTransition(TransitionRequest request)
+    {
+        StartCoroutine(transitionRunner.Play(request));
+    }
 
     public void ChangeState(CameraState nextState)
     {

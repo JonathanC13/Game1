@@ -9,8 +9,10 @@ public class CameraRig : MonoBehaviour
     public float rotateSpeed = 5f;
     private Transform target;
     private float targetFov;
-    public bool IsMoving => target != null;
     private float playerSetFOV = 60f;
+
+    private bool isMoving = false;
+    public bool IsMoving => isMoving;
 
     private void Start()
     {
@@ -20,7 +22,7 @@ public class CameraRig : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (target == null)
+        if (isMoving == false)
         {
             return;
         }
@@ -44,6 +46,12 @@ public class CameraRig : MonoBehaviour
                 playerCamera.fieldOfView,
                 targetFov,
                 Time.deltaTime * moveSpeed);
+
+        if (HasReachedTarget())
+        {
+            SnapCamera(target, targetFov);
+            isMoving = false;
+        }
         
     }
 
@@ -66,12 +74,14 @@ public class CameraRig : MonoBehaviour
     {
         this.target = target;
         this.targetFov = fov <= 0.0f ? playerSetFOV : fov;
+        isMoving = true;
     }
 
     public void ClearTarget()
     {
         target = null;
         targetFov = playerSetFOV;
+        isMoving = false;
     }
 
     public bool HasReachedTarget(float positionTolerance = 0.02f, float angleTolerance = 1f)
@@ -89,15 +99,7 @@ public class CameraRig : MonoBehaviour
                 this.transform.rotation,
                 target.rotation) <= angleTolerance;
 
-        if (positionReached && rotationReached)
-        {
-            SnapCamera(target, targetFov);
-
-            ClearTarget();
-            return true;
-        }
-
-        return false;
+        return positionReached && rotationReached;
     }
 
     public void SnapCamera(Transform target, float fov)

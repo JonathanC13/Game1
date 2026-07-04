@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -5,9 +6,7 @@ using UnityEngine.InputSystem;
 
 public class CameraTransitionState : CameraState
 {
-    private Transform destination;
-    private float fov;
-    private CameraState nextState;
+    private TransitionRequest request;
 
     private readonly PlayerInteraction interaction;
 
@@ -21,13 +20,9 @@ public class CameraTransitionState : CameraState
     }
 
     public void Configure(
-        Transform destination,
-        float fov,
-        CameraState nextState)
+        TransitionRequest request)
     {
-        this.destination = destination;
-        this.fov = fov;
-        this.nextState = nextState;
+        this.request = request;
         this.isConfigured = true;
     }
 
@@ -40,7 +35,9 @@ public class CameraTransitionState : CameraState
         }
 
         stateMachine.DisableAll();
-        stateMachine.CameraRig.MoveTo(destination, fov);
+        //stateMachine.CameraRig.MoveTo(transitionSettings.Destination, transitionSettings.fov);
+
+        stateMachine.StartTransition(request);
     }
 
     public override void Exit()
@@ -53,9 +50,9 @@ public class CameraTransitionState : CameraState
 
     public override void Tick()
     {
-        if (stateMachine.CameraRig.HasReachedTarget())
+        if (!stateMachine.CameraRig.IsMoving)
         {
-            stateMachine.ChangeState(nextState);
+            //stateMachine.ChangeState(nextState);
             isConfigured = false; // reset for safety
         }
     }

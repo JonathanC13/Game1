@@ -37,15 +37,30 @@ public class InspectingState : CameraState
 
     }
 
+    // on 'esc'. For dialogue, disable 'esc', want to trigger fade, so use different input.
     public override void OnCancel()
     {
         linkPairManager.RemovePendingLink();
 
-        stateMachine.CameraTransition.Configure(
-            stateMachine.CameraRig.PlayerHeadPos,
-            -1.0f,
-            stateMachine.FPS);
+        //stateMachine.CameraTransition.Configure(
+        //    new CameraTransitionSettings
+        //    {
+        //        Destination = stateMachine.CameraRig.PlayerHeadPos,
+        //        fov = -1.0f,
+        //        NextState = stateMachine.FPS,
+        //        Fade = false
+        //    });
+        //stateMachine.ChangeState(stateMachine.CameraTransition);
 
+        TransitionRequest request = new()
+        {
+            Transition = stateMachine.ReturnTransition,
+            CameraDestination = stateMachine.CameraRig.PlayerHeadPos,
+            FOVDestination = -1.0f,
+            NextState = stateMachine.FPS
+        };
+
+        stateMachine.CameraTransition.Configure(request);
         stateMachine.ChangeState(stateMachine.CameraTransition);
     }
 }

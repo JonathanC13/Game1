@@ -31,7 +31,7 @@ public class InspectCameraState : MonoBehaviour
 
         //mouseLook.setEnabled(false);
 
-        movement.setEnabled(false);
+        movement.enabled = false;
 
         StartCoroutine(MoveToView());
     }
@@ -44,7 +44,7 @@ public class InspectCameraState : MonoBehaviour
 
         //mouseLook.setEnabled(true);
 
-        movement.setEnabled(true);
+        movement.enabled = true;
 
         StopAllCoroutines();
 

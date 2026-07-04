@@ -17,8 +17,6 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 velocity;
 
-    private bool updateEnabled;
-
     void Awake()
     {
         controls = new InputSystem_Actions();
@@ -27,7 +25,6 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        updateEnabled = true;
     }
 
     void OnEnable()
@@ -45,9 +42,16 @@ public class PlayerMovement : MonoBehaviour
         controls.Disable();
     }
 
+    public void Enable() => enabled = true;
+
+    public void Disable()
+    {
+        enabled = false;
+    }
+
     void Update()
     {
-        if (updateEnabled)
+        if (enabled)
         {
             HandleMovement();
         }
@@ -76,8 +80,10 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
-    public void setEnabled(bool newEnabled)
+    public void Teleport(Transform target)
     {
-        updateEnabled = newEnabled;
+        this.transform.SetPositionAndRotation(
+            target.position,
+            target.rotation);
     }
 }

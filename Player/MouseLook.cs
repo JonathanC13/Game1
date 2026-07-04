@@ -28,6 +28,10 @@ public class MouseLook : MonoBehaviour
 
     private void Update()
     {
+        if (!enabled)
+        {
+            return;
+        }
         HandleLook();
     }
 

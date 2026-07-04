@@ -5,14 +5,14 @@ public class FPSState : CameraState
 {
     private readonly PlayerInteraction interaction;
     private readonly InspectObjectController inspectController;
-    private readonly Transform playerHeadPos;
+    private readonly Transform playerHeadCameraPos;
     private readonly MouseLook mouseLook;
 
-    public FPSState(CameraStateMachine machine, PlayerInteraction interaction, InspectObjectController inspectController, Transform playerHeadPos, MouseLook mouseLook) : base(machine)
+    public FPSState(CameraStateMachine machine, PlayerInteraction interaction, InspectObjectController inspectController, Transform playerHeadCameraPos, MouseLook mouseLook) : base(machine)
     {
         this.interaction = interaction;
         this.inspectController = inspectController;
-        this.playerHeadPos = playerHeadPos;
+        this.playerHeadCameraPos = playerHeadCameraPos;
         this.mouseLook = mouseLook;
     }
 
@@ -34,7 +34,7 @@ public class FPSState : CameraState
         interaction.Enable();
         inspectController.Disable();
 
-        //stateMachine.CameraRig.SetTarget(playerHeadPos, -1.0f);
+        //stateMachine.CameraRig.SetTarget(playerHeadCameraPos, -1.0f);
         mouseLook.SyncFromCamera(stateMachine.CameraRig.transform);
 
         Debug.Log("fps entered");

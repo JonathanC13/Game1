@@ -226,7 +226,7 @@ public class PuzzleManager : MonoBehaviour
     // later change to moving the puzzleArea to different anchor's center
     public void MoveTo(PuzzleLocation location)
     {
-        Debug.Log(location);
+        //Debug.Log(location);
         Transform target;
 
         switch (location)

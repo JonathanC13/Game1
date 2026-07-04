@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        doorInteractable.OnInteracted += HandleFinDoorInteracted;
+        doorInteractable.OnInteracted += HandleCompleteDoorTransition;
     }
 
     void Start()
@@ -18,12 +18,12 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        doorInteractable.OnInteracted -= HandleFinDoorInteracted;
+        doorInteractable.OnInteracted -= HandleCompleteDoorTransition;
     }
 
-    void HandleFinDoorInteracted(DoorInspectInteractable door)
+    void HandleCompleteDoorTransition(DoorInspectInteractable door)
     {
-        // GameManager listens to call SceneTransitionManager to run animation to zoom, cut to black, cut into looking through peep hole with eye. Call DiagloueManager for conversation with textboxes, on "confirm" calls puzzleManager checkSolution. Cannot back out after "confirm" only click on conversation options.
+        // On Transition complete, call DiagloueManager for conversation with textboxes, on "confirm" calls puzzleManager checkSolution. Cannot back out after "confirm" only click on conversation options.
 
         // current just check solution with puzzleManager
         puzzleManager.CheckSolution();
