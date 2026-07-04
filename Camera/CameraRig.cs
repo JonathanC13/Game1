@@ -3,18 +3,19 @@ using UnityEngine;
 
 public class CameraRig : MonoBehaviour
 {
-    public Transform PlayerHead;
+    public Transform PlayerHeadPos;
     public Camera playerCamera;
     public float moveSpeed = 5f;
     public float rotateSpeed = 5f;
-    private float inspectFOV = 60f;
     private Transform target;
+    private float targetFov;
     public bool IsMoving => target != null;
-    private float playerSetFOV = 0f;
+    private float playerSetFOV = 60f;
 
     private void Start()
     {
         playerSetFOV = playerCamera.fieldOfView;
+        targetFov = playerSetFOV;
     }
 
     private void LateUpdate()
@@ -24,16 +25,16 @@ public class CameraRig : MonoBehaviour
             return;
         }
 
-        playerCamera.transform.position =
+        this.transform.position =
         Vector3.Lerp(
-            playerCamera.transform.position,
+            this.transform.position,
             target.position,
             Time.deltaTime * moveSpeed
         );
 
-        playerCamera.transform.rotation =
+        this.transform.rotation =
             Quaternion.Slerp(
-                playerCamera.transform.rotation,
+                this.transform.rotation,
                 target.rotation,
                 Time.deltaTime * rotateSpeed
             );
@@ -41,24 +42,36 @@ public class CameraRig : MonoBehaviour
         playerCamera.fieldOfView =
             Mathf.Lerp(
                 playerCamera.fieldOfView,
-                inspectFOV,
+                targetFov,
                 Time.deltaTime * moveSpeed);
         
     }
 
-    public void MoveTo(Transform target)
+    public void SetPosition(Vector3 position)
     {
-        SetTarget(target);
+        transform.position = position;
     }
 
-    public void SetTarget(Transform target)
+    public void SetRotation(Quaternion rotation)
+    {
+        transform.rotation = rotation;
+    }
+
+    public void MoveTo(Transform target, float fov)
+    {
+        SetTarget(target, fov);
+    }
+
+    public void SetTarget(Transform target, float fov)
     {
         this.target = target;
+        this.targetFov = fov <= 0.0f ? playerSetFOV : fov;
     }
 
     public void ClearTarget()
     {
         target = null;
+        targetFov = playerSetFOV;
     }
 
     public bool HasReachedTarget(float positionTolerance = 0.02f, float angleTolerance = 1f)
@@ -68,16 +81,18 @@ public class CameraRig : MonoBehaviour
 
         bool positionReached =
             Vector3.Distance(
-                playerCamera.transform.position,
+                this.transform.position,
                 target.position) <= positionTolerance;
 
         bool rotationReached =
             Quaternion.Angle(
-                playerCamera.transform.rotation,
+                this.transform.rotation,
                 target.rotation) <= angleTolerance;
 
         if (positionReached && rotationReached)
         {
+            SnapCamera(target, targetFov);
+
             ClearTarget();
             return true;
         }
@@ -85,11 +100,13 @@ public class CameraRig : MonoBehaviour
         return false;
     }
 
-    public void SnapCamera(Transform target)
+    public void SnapCamera(Transform target, float fov)
     {
-        playerCamera.transform.SetPositionAndRotation(
+        this.transform.SetPositionAndRotation(
             target.position,
             target.rotation);
+
+        playerCamera.fieldOfView = fov;
 
         ClearTarget();
     }

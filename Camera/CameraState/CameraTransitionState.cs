@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class CameraTransitionState : CameraState
 {
     private Transform destination;
+    private float fov;
     private CameraState nextState;
 
     private readonly PlayerInteraction interaction;
@@ -21,9 +22,11 @@ public class CameraTransitionState : CameraState
 
     public void Configure(
         Transform destination,
+        float fov,
         CameraState nextState)
     {
         this.destination = destination;
+        this.fov = fov;
         this.nextState = nextState;
         this.isConfigured = true;
     }
@@ -37,7 +40,7 @@ public class CameraTransitionState : CameraState
         }
 
         stateMachine.DisableAll();
-        stateMachine.CameraRig.MoveTo(destination);
+        stateMachine.CameraRig.MoveTo(destination, fov);
     }
 
     public override void Exit()

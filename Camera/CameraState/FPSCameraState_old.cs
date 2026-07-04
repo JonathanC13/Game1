@@ -8,9 +8,9 @@ public class FPSCameraState : MonoBehaviour
 
     public void Enter()
     {
-        mouseLook.setEnabled(true);
+        //mouseLook.setEnabled(true);
 
-        movement.setEnabled(true);
+        //movement.setEnabled(true);
 
     }
 

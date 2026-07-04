@@ -9,6 +9,7 @@ public class TableInspectInteractable : Interactable
     {
         cameraStateMachine.CameraTransition.Configure(
             inspectView,
+            cameraStateMachine.inspectFOV,
             cameraStateMachine.Inspecting);
 
         cameraStateMachine.ChangeState(cameraStateMachine.CameraTransition);

@@ -42,7 +42,8 @@ public class InspectingState : CameraState
         linkPairManager.RemovePendingLink();
 
         stateMachine.CameraTransition.Configure(
-            stateMachine.CameraRig.PlayerHead,
+            stateMachine.CameraRig.PlayerHeadPos,
+            -1.0f,
             stateMachine.FPS);
 
         stateMachine.ChangeState(stateMachine.CameraTransition);

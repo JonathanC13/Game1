@@ -10,9 +10,11 @@ public class CameraStateMachine : MonoBehaviour
 
     InputSystem_Actions input;
 
-    //public Camera playerCamera;
+    public Transform PlayerHead;
 
-    public MouseLook mouseLook;
+    [SerializeField] private MouseLook mouseLook;
+    public MouseLook MouseLook => mouseLook;
+
     public PlayerMovement movement;
 
     [SerializeField] private PlayerInteraction playerInteraction;
@@ -22,6 +24,7 @@ public class CameraStateMachine : MonoBehaviour
 
     //public float moveSpeed = 5f;
     //public float rotateSpeed = 5f;
+    public float inspectFOV = 60f;
 
     private CameraState currentState;
 
@@ -38,7 +41,7 @@ public class CameraStateMachine : MonoBehaviour
     {
         input = new InputSystem_Actions();
 
-        FPS = new FPSState(this, playerInteraction, inspectController);
+        FPS = new FPSState(this, playerInteraction, inspectController, PlayerHead, mouseLook);
         Inspecting = new InspectingState(this, linkPairManager, playerInteraction, inspectController);
         CameraTransition = new CameraTransitionState(this, playerInteraction);
         //TransitionScene = new TransitioningSceneState(this);
@@ -109,7 +112,7 @@ public class CameraStateMachine : MonoBehaviour
     public void DisableAll()
     {
         Cursor.lockState = CursorLockMode.None;
-        mouseLook.enabled = false;
+        mouseLook.Disable();
         Cursor.visible = false;
         movement.enabled = false;
     }
@@ -117,13 +120,13 @@ public class CameraStateMachine : MonoBehaviour
     public void EnableCursorLook()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        mouseLook.enabled = true;
+        mouseLook.Enable();
     }
 
     public void DisableCursorLook()
     {
         Cursor.lockState = CursorLockMode.None;
-        mouseLook.enabled = false;
+        mouseLook.Disable();
     }
 
     public void ShowCursor()

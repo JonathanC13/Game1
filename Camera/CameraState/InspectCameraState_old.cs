@@ -29,7 +29,7 @@ public class InspectCameraState : MonoBehaviour
         savedPos = playerCamera.transform.position;
         savedRot = playerCamera.transform.rotation;
 
-        mouseLook.setEnabled(false);
+        //mouseLook.setEnabled(false);
 
         movement.setEnabled(false);
 
@@ -42,7 +42,7 @@ public class InspectCameraState : MonoBehaviour
 
         isTransitioning = true;
 
-        mouseLook.setEnabled(true);
+        //mouseLook.setEnabled(true);
 
         movement.setEnabled(true);
 

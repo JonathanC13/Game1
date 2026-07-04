@@ -3,71 +3,80 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class MouseLook : MonoBehaviour
 {
-    [Header("Look")]
-    public float mouseSensitivity = 0.1f;
-    public Transform cameraPivot;
+    [SerializeField] private CameraRig cameraRig;
+    [SerializeField] private Transform player;
+    [SerializeField] private Transform playerHeadPos;
 
-    private CharacterController controller;
-    private InputSystem_Actions controls;
+    [SerializeField] private float sensitivity = 0.1f;
+    //[SerializeField] private float eyeHeight = 0f;
 
     private Vector2 lookInput;
+    private float yaw;
+    private float pitch;
 
-    private float xRotation;
-
-    private bool updateEnabled;
-
-    void Awake()
+    private void OnEnable()
     {
-        controls = new InputSystem_Actions();
-    }
-
-    void Start()
-    {
-        controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
-        updateEnabled = true;
+        Cursor.visible = false;
     }
 
-    void OnEnable()
+    private void OnDisable()
     {
-        controls.Enable();
-
-        controls.Player.Look.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
-        controls.Player.Look.canceled += ctx => lookInput = Vector2.zero;
-
-        //controls.Player.Jump.performed += ctx => jumpPressed = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
-    void OnDisable()
+    private void Update()
     {
-        controls.Disable();
+        HandleLook();
     }
 
-    void Update()
+    public void SetLookInput(Vector2 input)
     {
-        if (updateEnabled)
-        {
-            HandleLook();
-        }       
+        lookInput = input;
     }
 
-    void HandleLook()
+    public void Enable() => enabled = true;
+
+    public void Disable()
     {
-        float mouseX = lookInput.x * mouseSensitivity;
-        float mouseY = lookInput.y * mouseSensitivity;
-
-        // rotate player left/right
-        transform.Rotate(Vector3.up * mouseX);
-
-        // rotate camera up/down
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
-        cameraPivot.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        enabled = false;
     }
 
-    public void setEnabled(bool newEnabled)
+    private void HandleLook()
     {
-        updateEnabled = newEnabled;
+        float mouseX = lookInput.x * sensitivity;
+        float mouseY = lookInput.y * sensitivity;
+
+        // --- YAW (player body) ---
+        yaw += mouseX;
+        player.rotation = Quaternion.Euler(0f, yaw, 0f);
+
+        // --- PITCH (camera only) ---
+        pitch -= mouseY;
+        pitch = Mathf.Clamp(pitch, -90f, 90f);
+
+        // Both for head
+        Quaternion camRotation =
+            Quaternion.Euler(pitch, yaw, 0f);
+
+        Vector3 camPosition = playerHeadPos.position;
+            //player.position + Vector3.up * eyeHeight;
+
+        // --- APPLY TO RIG ---
+        cameraRig.SetPosition(camPosition);
+        cameraRig.SetRotation(camRotation);
+    }
+
+    public void SyncFromCamera(Transform camTransform)
+    {
+        Vector3 euler = camTransform.eulerAngles;
+
+        yaw = euler.y;
+
+        float x = euler.x;
+        if (x > 180f) x -= 360f;
+
+        pitch = Mathf.Clamp(x, -90f, 90f);
     }
 }
