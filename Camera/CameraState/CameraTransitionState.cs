@@ -8,13 +8,10 @@ public class CameraTransitionState : CameraState
 {
     private TransitionRequest request;
 
-    private readonly PlayerInteraction interaction;
-
     private bool isConfigured;
 
     public CameraTransitionState(
-        CameraStateMachine machine,
-        PlayerInteraction interaction)
+        CameraStateMachine machine)
         : base(machine)
     {    
     }
@@ -28,6 +25,7 @@ public class CameraTransitionState : CameraState
 
     public override void Enter()
     {
+        Debug.Log("enter cameratransition");
         if (!isConfigured)
         {
             Debug.LogError("TransitionState used without Configure()");
@@ -42,9 +40,8 @@ public class CameraTransitionState : CameraState
 
     public override void Exit()
     {
-        stateMachine.DisableCursorLook();
-        stateMachine.HideCursor();
-        stateMachine.DisableMovement();
+        Debug.Log("exit cameratransition");
+        stateMachine.DisableAll();
         isConfigured = false;
     }
 

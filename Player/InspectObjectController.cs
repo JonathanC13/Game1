@@ -101,6 +101,8 @@ public class InspectObjectController : MonoBehaviour
             {
                 destroyLinkPair.OnClickRemoveLinkPair();
             }
+
+            // TODO, add Dialogue button click handler <DialogueOption>
         }
     }
 

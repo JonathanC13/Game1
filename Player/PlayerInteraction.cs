@@ -51,14 +51,17 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
-        if (enabled)
+        if (!enabled)
         {
-            DetectInteractable();
+            ClearDetected();
+            return;
         }
+
+        DetectInteractable();
 
         //if (camStateMachine.state == CameraState.FPS)
         //{
-            //DetectInteractable();
+        //DetectInteractable();
         //}
         //else if (currentInteractable != null)
         //{

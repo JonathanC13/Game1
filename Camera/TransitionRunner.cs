@@ -30,9 +30,11 @@ public class TransitionRunner
                 request);
         }
 
-        request.OnComplete?.Invoke();
+        //request.OnComplete?.Invoke();
 
         context.StateMachine.ChangeState(
             request.NextState);
+
+        request.OnComplete?.Invoke();
     }
 }

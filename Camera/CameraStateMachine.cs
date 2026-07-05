@@ -16,6 +16,9 @@ public class CameraStateMachine : MonoBehaviour
     [SerializeField] private MouseLook mouseLook;
     [SerializeField] private PlayerMovement movement;
     [SerializeField] private TransitionAsset returnTransition;
+    [SerializeField] private TransitionAsset returnTransitionFadeIn;
+    [SerializeField] private TransitionAsset dialogueTransitionIn;
+    [SerializeField] private TransitionAsset dialogueTransitionOut;
 
     [SerializeField] private PlayerInteraction playerInteraction;
     [SerializeField] private InspectObjectController inspectController;
@@ -29,6 +32,9 @@ public class CameraStateMachine : MonoBehaviour
     public MouseLook MouseLook => mouseLook;
     public PlayerMovement Movement => movement;
     public TransitionAsset ReturnTransition => returnTransition;
+    public TransitionAsset ReturnTransitionFadeIn => returnTransitionFadeIn;
+    public TransitionAsset DialogueTransitionIn => dialogueTransitionIn;
+    public TransitionAsset DialogueTransitionOut => dialogueTransitionOut;
 
     //public float moveSpeed = 5f;
     //public float rotateSpeed = 5f;
@@ -41,7 +47,7 @@ public class CameraStateMachine : MonoBehaviour
     public FPSState FPS { get; private set; }
     public InspectingState Inspecting { get; private set; }
     public CameraTransitionState CameraTransition { get; private set; }
-    //public TransitioningSceneState TransitionScene { get; private set; }
+    public DialogueCameraState Dialogue { get; private set; }
 
     //public Transform inspectTarget;
 
@@ -50,10 +56,10 @@ public class CameraStateMachine : MonoBehaviour
         input = new InputSystem_Actions();
         transitionRunner = new TransitionRunner(this);
 
-        FPS = new FPSState(this, playerInteraction, inspectController, PlayerHeadCameraPos, mouseLook);
-        Inspecting = new InspectingState(this, linkPairManager, playerInteraction, inspectController);
-        CameraTransition = new CameraTransitionState(this, playerInteraction);
-        //TransitionScene = new TransitioningSceneState(this);
+        FPS = new FPSState(this, PlayerHeadCameraPos, mouseLook);
+        Inspecting = new InspectingState(this, linkPairManager);
+        CameraTransition = new CameraTransitionState(this);
+        Dialogue = new DialogueCameraState(this);
 
         ChangeState(FPS);
     }
@@ -124,10 +130,12 @@ public class CameraStateMachine : MonoBehaviour
 
     public void DisableAll()
     {
-        Cursor.lockState = CursorLockMode.None;
-        mouseLook.Disable();
-        Cursor.visible = false;
-        movement.enabled = false;
+        DisableCursorLook();
+        HideCursor();
+        DisableMovement();
+
+        DisablePlayerInteraction();
+        DisableInspectController();
     }
 
     public void EnableCursorLook()
@@ -154,12 +162,32 @@ public class CameraStateMachine : MonoBehaviour
 
     public void EnableMovement()
     {
-        movement.enabled = true;
+        movement.Enable();
     }
 
     public void DisableMovement()
     {
-        movement.enabled = false;
+        movement.Disable();
+    }
+
+    public void EnablePlayerInteraction()
+    {
+        playerInteraction.Enable();
+    }
+
+    public void DisablePlayerInteraction()
+    {
+        playerInteraction.Disable();
+    }
+
+    public void EnableInspectController()
+    {
+        inspectController.Enable();
+    }
+
+    public void DisableInspectController()
+    {
+        inspectController.Disable();
     }
 
     void OnCancel(InputAction.CallbackContext ctx)

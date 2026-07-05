@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public PuzzleManager puzzleManager;
+    [SerializeField] private PuzzleManager puzzleManager;
+    [SerializeField] private CameraStateMachine cameraStateMachine;
 
-    public DoorInspectInteractable doorInteractable;
+    [SerializeField] private DoorInspectInteractable doorInteractable;
+
 
     void Awake()
     {

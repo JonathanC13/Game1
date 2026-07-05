@@ -4,14 +4,10 @@ using UnityEngine.InputSystem;
 public class InspectingState : CameraState
 {
     private readonly LinkPairManager linkPairManager;
-    private readonly PlayerInteraction interaction;
-    private readonly InspectObjectController inspectController;
 
-    public InspectingState(CameraStateMachine machine, LinkPairManager linkPairManager, PlayerInteraction interaction, InspectObjectController inspectController) : base(machine)
+    public InspectingState(CameraStateMachine machine, LinkPairManager linkPairManager) : base(machine)
     {
         this.linkPairManager = linkPairManager;
-        this.interaction = interaction;
-        this.inspectController = inspectController;
     }
 
     public override void Tick()
@@ -20,20 +16,19 @@ public class InspectingState : CameraState
 
     public override void Enter()
     {
+        Debug.Log("enter inspecting");
         stateMachine.DisableCursorLook();
         stateMachine.ShowCursor();
         stateMachine.DisableMovement();
 
-        inspectController.Enable();
+        stateMachine.DisablePlayerInteraction();
+        stateMachine.EnableInspectController();
     }
 
     public override void Exit()
     {
-        stateMachine.DisableCursorLook();
-        stateMachine.HideCursor();
-        stateMachine.DisableMovement();
-
-        inspectController.Disable();
+        Debug.Log("exit inspecting");
+        stateMachine.DisableAll();
 
     }
 

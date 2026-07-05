@@ -6,7 +6,9 @@ public class DoorInspectInteractable : Interactable
     public Transform inspectView;
     public CameraStateMachine cameraStateMachine;
 
-    [SerializeField] private TransitionAsset doorTransition;
+    [SerializeField] private TransitionAsset doorTransitionOut;
+    [SerializeField] private TransitionAsset dialogueTransitionIn;
+    [SerializeField] private Transform doorDialogueView;
 
     public event System.Action<DoorInspectInteractable> OnInteracted;
 
@@ -25,7 +27,7 @@ public class DoorInspectInteractable : Interactable
 
         TransitionRequest request = new()
         {
-            Transition = doorTransition,
+            Transition = doorTransitionOut,
             CameraDestination = inspectView,
             FOVDestination = cameraStateMachine.inspectFOV,
             NextState = cameraStateMachine.Inspecting,
@@ -38,6 +40,21 @@ public class DoorInspectInteractable : Interactable
 
     public void InvokeInteracted()
     {
+        cameraStateMachine.Dialogue.Configure(inspectView);
+
+        // Snap to dialogue location for door
+        TransitionRequest request = new()
+        {
+            Transition = dialogueTransitionIn,
+            CameraSource = inspectView,
+            CameraDestination = doorDialogueView,
+            FOVDestination = cameraStateMachine.inspectFOV,
+            NextState = cameraStateMachine.Dialogue
+        };
+
+        cameraStateMachine.CameraTransition.Configure(request);
+        cameraStateMachine.ChangeState(cameraStateMachine.CameraTransition);
+
         OnInteracted?.Invoke(this);
     }
 }
