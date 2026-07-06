@@ -13,4 +13,10 @@ public class ConversationManager : MonoBehaviour
     {
         
     }
+
+    public void StartConversation(
+        ConversationRequest request)
+    {
+
+    }
 }
