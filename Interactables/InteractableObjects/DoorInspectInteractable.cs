@@ -10,10 +10,11 @@ public class DoorInspectInteractable : Interactable
     [SerializeField] private TransitionAsset dialogueTransitionIn;
     [SerializeField] private Transform doorDialogueView;
 
-    public event System.Action<DoorInspectInteractable> OnInteracted;
+    //public event System.Action<DoorInspectInteractable> OnInteracted;
 
     public override void Interact()
     {
+        // old
         //cameraStateMachine.CameraTransition.Configure(
         //    new CameraTransitionSettings
         //    {
@@ -25,36 +26,36 @@ public class DoorInspectInteractable : Interactable
         //    });
 
 
-        TransitionRequest request = new()
-        {
-            Transition = doorTransitionOut,
-            CameraDestination = inspectView,
-            FOVDestination = cameraStateMachine.inspectFOV,
-            NextState = cameraStateMachine.Inspecting,
-            OnComplete = () => { InvokeInteracted(); }
-        };
+        //TransitionRequest request = new()
+        //{
+        //    Transition = doorTransitionOut,
+        //    CameraDestination = inspectView,
+        //    FOVDestination = cameraStateMachine.inspectFOV,
+        //    NextState = cameraStateMachine.Inspecting,
+        //    OnComplete = () => { InvokeInteracted(); }
+        //};
 
-        cameraStateMachine.CameraTransition.Configure(request);
-        cameraStateMachine.ChangeState(cameraStateMachine.CameraTransition);
+        //cameraStateMachine.CameraTransition.Configure(request);
+        //cameraStateMachine.ChangeState(cameraStateMachine.CameraTransition);
     }
 
-    public void InvokeInteracted()
-    {
-        cameraStateMachine.Dialogue.Configure(inspectView);
+    //public void InvokeInteracted()
+    //{
+    //    cameraStateMachine.Dialogue.Configure(inspectView);
 
-        // Snap to dialogue location for door
-        TransitionRequest request = new()
-        {
-            Transition = dialogueTransitionIn,
-            CameraSource = inspectView,
-            CameraDestination = doorDialogueView,
-            FOVDestination = cameraStateMachine.inspectFOV,
-            NextState = cameraStateMachine.Dialogue
-        };
+    //    // Snap to dialogue location for door
+    //    TransitionRequest request = new()
+    //    {
+    //        Transition = dialogueTransitionIn,
+    //        CameraSource = inspectView,
+    //        CameraDestination = doorDialogueView,
+    //        FOVDestination = cameraStateMachine.inspectFOV,
+    //        NextState = cameraStateMachine.Dialogue
+    //    };
 
-        cameraStateMachine.CameraTransition.Configure(request);
-        cameraStateMachine.ChangeState(cameraStateMachine.CameraTransition);
+    //    cameraStateMachine.CameraTransition.Configure(request);
+    //    cameraStateMachine.ChangeState(cameraStateMachine.CameraTransition);
 
-        OnInteracted?.Invoke(this);
-    }
+    //    OnInteracted?.Invoke(this);
+    //}
 }

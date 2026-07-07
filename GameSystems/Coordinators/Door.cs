@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ConversationManager : MonoBehaviour
+public class Door : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -12,21 +12,5 @@ public class ConversationManager : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void StartConversation(
-        ConversationRequest request)
-    {
-
-    }
-
-    public void Show()
-    {
-
-    }
-
-    public void Hide()
-    {
-
     }
 }

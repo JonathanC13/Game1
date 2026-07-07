@@ -25,10 +25,6 @@ public class FPSState : CameraState
     {
         stateMachine.EnableCursorLook();
         stateMachine.HideCursor();
-        stateMachine.EnableMovement();
-
-        stateMachine.EnablePlayerInteraction();
-        stateMachine.DisableInspectController();
 
         //stateMachine.CameraRig.SetTarget(playerHeadCameraPos, -1.0f);
         mouseLook.SyncFromCamera(stateMachine.CameraRig.transform);

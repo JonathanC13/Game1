@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class DialogueCameraState : CameraState
+public class ConversationCameraState : CameraState
 {
     private Transform returnPoint;
 
     private bool isConfigured = false;
 
-    public DialogueCameraState(
+    public ConversationCameraState(
         CameraStateMachine machine)
         : base(machine)
     {
@@ -22,10 +22,6 @@ public class DialogueCameraState : CameraState
     {
         stateMachine.DisableCursorLook();
         stateMachine.ShowCursor();
-        stateMachine.DisableMovement();
-
-        stateMachine.DisablePlayerInteraction();
-        stateMachine.EnableInspectController();
     }
 
     public override void Exit()
@@ -50,10 +46,10 @@ public class DialogueCameraState : CameraState
         // fade out, snap to return point
         TransitionRequest request = new()
         {
-            Transition = stateMachine.DialogueTransitionOut,
+            Transition = stateMachine.ConversationTransitionOut,
             CameraDestination = returnPoint,
             FOVDestination = -1.0f,
-            NextState = stateMachine.Dialogue,
+            NextState = stateMachine.Conversation,
             OnComplete = () => { ReturnToPlayer(); }
         };
 
@@ -68,7 +64,8 @@ public class DialogueCameraState : CameraState
             Transition = stateMachine.ReturnTransitionFadeIn,
             CameraDestination = stateMachine.CameraRig.PlayerHeadPos,
             FOVDestination = -1.0f,
-            NextState = stateMachine.FPS
+            NextState = stateMachine.FPS,
+            OnComplete = () => { stateMachine.Gameplay.ChangeState(stateMachine.Gameplay.FPS); }
         };
 
         stateMachine.CameraTransition.Configure(request);

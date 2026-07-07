@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InspectingState : CameraState
+public class CameraScriptedState : CameraState
 {
     private readonly LinkPairManager linkPairManager;
 
-    public InspectingState(CameraStateMachine machine, LinkPairManager linkPairManager) : base(machine)
+    public CameraScriptedState(CameraStateMachine machine, LinkPairManager linkPairManager) : base(machine)
     {
         this.linkPairManager = linkPairManager;
     }
@@ -19,10 +19,6 @@ public class InspectingState : CameraState
         Debug.Log("enter inspecting");
         stateMachine.DisableCursorLook();
         stateMachine.ShowCursor();
-        stateMachine.DisableMovement();
-
-        stateMachine.DisablePlayerInteraction();
-        stateMachine.EnableInspectController();
     }
 
     public override void Exit()
@@ -47,12 +43,15 @@ public class InspectingState : CameraState
         //    });
         //stateMachine.ChangeState(stateMachine.CameraTransition);
 
+        stateMachine.Gameplay.ChangeState(stateMachine.Gameplay.Blocked);
+
         TransitionRequest request = new()
         {
             Transition = stateMachine.ReturnTransition,
             CameraDestination = stateMachine.CameraRig.PlayerHeadPos,
             FOVDestination = -1.0f,
-            NextState = stateMachine.FPS
+            NextState = stateMachine.FPS,
+            OnComplete = () => { stateMachine.Gameplay.ChangeState(stateMachine.Gameplay.FPS); }
         };
 
         stateMachine.CameraTransition.Configure(request);

@@ -58,7 +58,7 @@ public class PuzzleManager : MonoBehaviour
         UnSubscribeClick();
     }
 
-    public bool CheckSolution()
+    public bool EvaluateSolution()
     {
         StringBuilder markedPairs = new StringBuilder();
 
@@ -89,7 +89,19 @@ public class PuzzleManager : MonoBehaviour
         Debug.Log($"{currScore.ToString()} out of {perfectScore.ToString()}");
 
         return currScore == perfectScore;
-    }
+
+        // Later return the card that just prints it onto a paper for the player, I think better than returning to the table to inspect again... Fun thing is 10% chance of jump scare when close paper or gun shot through paper.
+        //public class PuzzleResult
+        //{
+        //    public bool IsSolved;
+
+        //    public int CorrectLinks;
+
+        //    public int IncorrectLinks;
+
+        //    public string FailureReason;
+        //}
+}
 
     bool EvaluatePairInSolutionKey(ContradictionGroupIndex cGI, Fact outlier, Fact b)
     {

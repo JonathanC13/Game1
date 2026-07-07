@@ -9,6 +9,7 @@ public class CameraStateMachine : MonoBehaviour
 {
     InputSystem_Actions input;
 
+    [SerializeField] private GameplayStateMachine gameplay;
     [SerializeField] private CameraRig cameraRig;
     [SerializeField] private ScreenFader screenFader;
     [SerializeField] private TransitionRunner transitionRunner;
@@ -17,14 +18,15 @@ public class CameraStateMachine : MonoBehaviour
     [SerializeField] private PlayerMovement movement;
     [SerializeField] private TransitionAsset returnTransition;
     [SerializeField] private TransitionAsset returnTransitionFadeIn;
-    [SerializeField] private TransitionAsset dialogueTransitionIn;
-    [SerializeField] private TransitionAsset dialogueTransitionOut;
+    [SerializeField] private TransitionAsset converstationTransitionIn;
+    [SerializeField] private TransitionAsset converstationTransitionOut;
 
     [SerializeField] private PlayerInteraction playerInteraction;
     [SerializeField] private InspectObjectController inspectController;
 
     [SerializeField] private LinkPairManager linkPairManager;
 
+    public GameplayStateMachine Gameplay => gameplay;
     public CameraRig CameraRig => cameraRig;
     public ScreenFader ScreenFader => screenFader;
     public TransitionRunner TransitionRunner => transitionRunner;
@@ -33,8 +35,8 @@ public class CameraStateMachine : MonoBehaviour
     public PlayerMovement Movement => movement;
     public TransitionAsset ReturnTransition => returnTransition;
     public TransitionAsset ReturnTransitionFadeIn => returnTransitionFadeIn;
-    public TransitionAsset DialogueTransitionIn => dialogueTransitionIn;
-    public TransitionAsset DialogueTransitionOut => dialogueTransitionOut;
+    public TransitionAsset ConversationTransitionIn => converstationTransitionIn;
+    public TransitionAsset ConversationTransitionOut => converstationTransitionOut;
 
     //public float moveSpeed = 5f;
     //public float rotateSpeed = 5f;
@@ -45,9 +47,9 @@ public class CameraStateMachine : MonoBehaviour
     public CameraState CurrentState => currentState;
 
     public FPSState FPS { get; private set; }
-    public InspectingState Inspecting { get; private set; }
+    public CameraScriptedState CameraScripted { get; private set; }
     public CameraTransitionState CameraTransition { get; private set; }
-    public DialogueCameraState Dialogue { get; private set; }
+    public ConversationCameraState Conversation { get; private set; }
 
     //public Transform inspectTarget;
 
@@ -57,9 +59,9 @@ public class CameraStateMachine : MonoBehaviour
         transitionRunner = new TransitionRunner(this);
 
         FPS = new FPSState(this, PlayerHeadCameraPos, mouseLook);
-        Inspecting = new InspectingState(this, linkPairManager);
+        CameraScripted = new CameraScriptedState(this, linkPairManager);
         CameraTransition = new CameraTransitionState(this);
-        Dialogue = new DialogueCameraState(this);
+        Conversation = new ConversationCameraState(this);
 
         ChangeState(FPS);
     }
@@ -132,10 +134,6 @@ public class CameraStateMachine : MonoBehaviour
     {
         DisableCursorLook();
         HideCursor();
-        DisableMovement();
-
-        DisablePlayerInteraction();
-        DisableInspectController();
     }
 
     public void EnableCursorLook()
@@ -158,36 +156,6 @@ public class CameraStateMachine : MonoBehaviour
     public void HideCursor()
     {
         Cursor.visible = false;
-    }
-
-    public void EnableMovement()
-    {
-        movement.Enable();
-    }
-
-    public void DisableMovement()
-    {
-        movement.Disable();
-    }
-
-    public void EnablePlayerInteraction()
-    {
-        playerInteraction.Enable();
-    }
-
-    public void DisablePlayerInteraction()
-    {
-        playerInteraction.Disable();
-    }
-
-    public void EnableInspectController()
-    {
-        inspectController.Enable();
-    }
-
-    public void DisableInspectController()
-    {
-        inspectController.Disable();
     }
 
     void OnCancel(InputAction.CallbackContext ctx)

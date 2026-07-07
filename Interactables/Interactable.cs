@@ -4,7 +4,6 @@ public abstract class Interactable : MonoBehaviour
 {
     public string interactionText = "Interact";
 
-
     public virtual void OnFocus()
     {
         //Debug.Log("Looking at " + name);
