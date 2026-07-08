@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
@@ -105,6 +106,21 @@ public class CameraStateMachine : MonoBehaviour
         currentState = nextState;
 
         currentState.Enter();
+    }
+
+    public void ReturnToPlayer(Action callback)
+    {
+        TransitionRequest request = new()
+        {
+            Transition = ReturnTransitionFadeIn,
+            CameraDestination = CameraRig.PlayerHeadPos,
+            FOVDestination = -1.0f,
+            NextState = FPS,
+            OnComplete = () => { callback(); }
+        };
+
+        CameraTransition.Configure(request);
+        ChangeState(CameraTransition);
     }
 
     //void Update()

@@ -83,14 +83,14 @@ public class GameplayStateMachine : MonoBehaviour
         InspectObjectController.Disable();
     }
 
-    public void ShowConverstationManager()
-    {
-        ConversationManager.Show();
-    }
+    //public void ShowConverstationManager()
+    //{
+    //    ConversationManager.Show();
+    //}
 
-    public void HideConverstationManager()
-    {
-        ConversationManager.Hide();
-    }
+    //public void HideConverstationManager()
+    //{
+    //    ConversationManager.Hide();
+    //}
 
 }

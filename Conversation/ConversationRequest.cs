@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
 
+// The data used in the Conversation.
 public class ConversationRequest
 {
-    public DialogueAsset dialogue;
+    public DialogueGraph Graph;
 
-    public System.Action<int> OnOptionSelected;
+    public ConversationContext Context;
+
+    public Action<ConversationResult> OnFinished;   // Raise event when finished.
 }

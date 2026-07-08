@@ -5,14 +5,19 @@ public class SubmitPuzzleInteractable : Interactable
     [Header("Transition")]
     [SerializeField] private TransitionAsset transitionOut;
     [SerializeField] private TransitionAsset conversationTransitionIn;
+    [SerializeField] private TransitionAsset conversationTransitionOut;
 
     [SerializeField] private Transform inspectView;
     [SerializeField] private Transform doorConversationView;
 
+    [SerializeField] private DialogueGraph testDialogue;
+
     public TransitionAsset TransitionOut => transitionOut;
     public TransitionAsset ConversationTransitionIn => conversationTransitionIn;
+    public TransitionAsset ConversationTransitionOut => conversationTransitionOut;
     public Transform InspectView => inspectView;
     public Transform DoorConversationView => doorConversationView;
+    public DialogueGraph TestDialogue => testDialogue;
 
     public event System.Action<SubmitPuzzleInteractable> OnInteracted;
 

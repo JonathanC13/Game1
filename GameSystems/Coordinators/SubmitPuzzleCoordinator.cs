@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SubmitPuzzleCoordinator : MonoBehaviour
@@ -11,13 +12,11 @@ public class SubmitPuzzleCoordinator : MonoBehaviour
     {
         if (Instance == null)
         {
-            Debug.Log("hi");
             Instance = this; // Set this specific object as the global Instance
             DontDestroyOnLoad(gameObject); // Keep it alive between scenes
         }
         else
         {
-            Debug.Log("bya");
             Destroy(gameObject); // Delete duplicates if a new scene loads one
         }
     }
@@ -80,10 +79,73 @@ public class SubmitPuzzleCoordinator : MonoBehaviour
 
     private void HandleStartConversation(SubmitPuzzleInteractable submit)
     {
+        gameServices.Gameplay.ChangeState(gameServices.Gameplay.Conversation);
+
         bool result = gameServices.Puzzle.EvaluateSolution();
 
-        //ConversationRequest request = BuildConversation(door, result);
 
-        //gameServices.Gameplay.StartConversation(request);
+        ConversationRequest request = new();
+
+        request.Graph = submit.TestDialogue;
+
+        request.Context = new ConversationContext();
+
+        request.OnFinished = result =>
+        {
+            HandleConversationFinished(submit, result);
+        };
+
+        gameServices.Conversation.StartConversation(request);
     }
+
+    private void HandleConversationFinished(SubmitPuzzleInteractable submit, ConversationResult result)
+    {
+        Debug.Log("convo finished: " + result);
+
+        gameServices.Gameplay.ChangeState(gameServices.Gameplay.Blocked);
+
+        // fade out, snap to return point
+        TransitionRequest request = new()
+        {
+            Transition = submit.ConversationTransitionOut,
+            CameraDestination = submit.InspectView,
+            FOVDestination = -1.0f,
+            NextState = gameServices.Camera.Conversation,
+            OnComplete = () => { 
+                gameServices.Camera.ReturnToPlayer(
+                () => {
+                    gameServices.Gameplay.ChangeState(gameServices.Gameplay.FPS);
+                }); 
+            }
+        };
+
+        gameServices.Camera.CameraTransition.Configure(request);
+        gameServices.Camera.ChangeState(gameServices.Camera.CameraTransition);
+
+
+
+
+
+
+        // later when depend on result.
+        //switch (result)
+        //{
+        //    case ConversationResult.LeaveDoor:
+
+        //        TransitionRequest transition = BuildTransition(door);
+
+        //        cameraStateMachine.StartTransition(transition);
+
+        //        break;
+
+        //    case ConversationResult.ReviewEvidence:
+
+        //        gameplayStateMachine.ChangeState(
+        //            gameplayStateMachine.Inspect);
+
+        //        break;
+        //}
+    }
+
+    
 }

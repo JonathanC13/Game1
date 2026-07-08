@@ -34,41 +34,14 @@ public class ConversationCameraState : CameraState
     {
     }
 
-    // currently listen to cancel (esc), later only way out is an explicity option to leave.
     public override void OnCancel()
     {
-        if (!isConfigured)
-        {
-            Debug.LogError("DialogueCameraState returned used without Configure()");
-            return;
-        }
-
-        // fade out, snap to return point
-        TransitionRequest request = new()
-        {
-            Transition = stateMachine.ConversationTransitionOut,
-            CameraDestination = returnPoint,
-            FOVDestination = -1.0f,
-            NextState = stateMachine.Conversation,
-            OnComplete = () => { ReturnToPlayer(); }
-        };
-
-        stateMachine.CameraTransition.Configure(request);
-        stateMachine.ChangeState(stateMachine.CameraTransition);
+        //if (!isConfigured)
+        //{
+        //    Debug.LogError("DialogueCameraState returned used without Configure()");
+        //    return;
+        //}
     }
 
-    public void ReturnToPlayer()
-    {
-        TransitionRequest request = new()
-        {
-            Transition = stateMachine.ReturnTransitionFadeIn,
-            CameraDestination = stateMachine.CameraRig.PlayerHeadPos,
-            FOVDestination = -1.0f,
-            NextState = stateMachine.FPS,
-            OnComplete = () => { stateMachine.Gameplay.ChangeState(stateMachine.Gameplay.FPS); }
-        };
-
-        stateMachine.CameraTransition.Configure(request);
-        stateMachine.ChangeState(stateMachine.CameraTransition);
-    }
+    
 }
