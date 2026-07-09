@@ -58,6 +58,7 @@ public class PuzzleManager : MonoBehaviour
         UnSubscribeClick();
     }
 
+    // Only run when confirm submission
     public bool EvaluateSolution()
     {
         StringBuilder markedPairs = new StringBuilder();

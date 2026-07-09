@@ -85,8 +85,9 @@ public class SubmitPuzzleCoordinator : MonoBehaviour
 
 
         ConversationRequest request = new();
-
-        request.Graph = submit.TestDialogue;
+        
+        request.Graph = submit.SubmitDialogue;
+        
 
         request.Context = new ConversationContext();
 

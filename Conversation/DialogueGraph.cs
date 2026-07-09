@@ -1,23 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 // Collect the nodes in a List then create a lookup for O(1) Time to access next node
 [CreateAssetMenu(menuName = "Dialogue/Graph")]
 public class DialogueGraph : ScriptableObject
 {
-    public List<DialogueNodeData> nodes = new();
+    [SerializeReference]
+    private List<DialogueNodeData> nodes = new();
 
-    public string startGuid;
+    [SerializeField]
+    private string startGuid;
 
     private Dictionary<string, DialogueNodeData> lookup;
+
+    public string StartGuid => startGuid;
 
     public void SetStart(DialogueNodeData node)
     {
         startGuid = node.Guid;
     }
-
-    public string StartGuid => startGuid;
 
     private void EnsureLookup()
     {
@@ -114,5 +117,16 @@ public class DialogueGraph : ScriptableObject
 #if UNITY_EDITOR
         UnityEditor.EditorUtility.SetDirty(this);
 #endif
+    }
+
+    private void PrintLookup()
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (var kvp in lookup)
+        {
+            sb.AppendLine(kvp.Key +  ": " + kvp.Value);
+        }
+
+        Debug.Log(sb.ToString());
     }
 }

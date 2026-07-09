@@ -34,6 +34,7 @@ public class SpeechNodeData : DialogueNodeData
 
     public override void Enter(IConversationRunner runner)
     {
+        Debug.Log("speech enter");
         runner.ShowSpeech(this);
     }
 }

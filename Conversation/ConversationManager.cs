@@ -2,69 +2,84 @@ using UnityEngine;
 
 public class ConversationManager : MonoBehaviour, IConversationRunner
 {
-    [SerializeField] DialogueUI dialogueUI;
+    [SerializeField] private DialogueUI dialogueUI;
 
-    private ConversationRequest request;
+    private ConversationRequest currentRequest;
+
+    private DialogueGraph currentGraph;
 
     private string currentGuid;
 
+    private DialogueNodeData currentNode;
+
+    public bool IsConversationActive => currentRequest != null;
+
     public void StartConversation(ConversationRequest request)
     {
-        this.request = request;
+        currentRequest = request;
 
-        currentGuid = request.Graph.startGuid;
+        currentGraph = request.Graph;
+
+        currentGuid = request.Graph.StartGuid;
 
         dialogueUI.Show();
 
-        request.Graph.GetNode(currentGuid).Enter(this);
+        ExecuteCurrentNode();
+    }
+
+    private void HandleContinue()
+    {
+        if (currentNode is not SpeechNodeData speechNode)
+            return;
+
+        currentGuid = speechNode.NextGuid;
+
+        ExecuteCurrentNode();
+    }
+
+    private void HandleChoiceSelected(DialogueChoice choice)
+    {
+        if (currentNode is not ChoiceNodeData)
+            return;
+
+        currentGuid = choice.NextGuid;
+
+        ExecuteCurrentNode();
+    }
+
+    private void ExecuteCurrentNode()
+    {
+        currentNode = currentGraph.GetNode(currentGuid);
+
+        currentNode.Enter(this);
     }
 
     public void ShowSpeech(SpeechNodeData node)
     {
-        DialogueChoiceButton choiceButton = dialogueUI.Buttons[0];
-        choiceButton.gameObject.SetActive(true);
-
-        choiceButton.Setup("Continue", () =>
-        {
-            currentGuid = node.NextGuid;
-            node.Enter(this);
-        });
-
-        HideRemainingButtons(1);
+        dialogueUI.ShowSpeech(
+            node.Speaker,
+            node.Text,
+            HandleContinue
+            );
     }
 
     public void ShowChoices(ChoiceNodeData node)
     {
-        for (int i = 0; i < node.Choices.Count; i++)
-        {
-            DialogueChoiceButton choiceButton = dialogueUI.Buttons[i];
-            choiceButton.gameObject.SetActive(true);
-
-            choiceButton.Setup(node.Choices[i].Text, () =>
-            {
-                currentGuid = node.Choices[i].NextGuid;
-                node.Enter(this);
-            });
-
-        }
-
-        HideRemainingButtons(node.Choices.Count);
+        dialogueUI.ShowChoices(
+            node.Speaker,
+            node.Text,
+            node.Choices,
+            HandleChoiceSelected);
     }
 
     public void Finish(ConversationResult result)
     {
         dialogueUI.Hide();
 
-        request.OnFinished?.Invoke(result);
+        currentRequest.OnFinished?.Invoke(result);
 
-        request = null;
-    }
+        currentRequest = null;
 
-    private void HideRemainingButtons(int used)
-    {
-        for (int i = used; i < dialogueUI.Buttons.Count; i++)
-        {
-            dialogueUI.Buttons[i].gameObject.SetActive(false);
-        }
+        currentGraph = null;
     }
 }

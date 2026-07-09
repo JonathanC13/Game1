@@ -25,7 +25,7 @@ public class CameraTransitionState : CameraState
 
     public override void Enter()
     {
-        Debug.Log("enter cameratransition");
+        //Debug.Log("enter cameratransition");
         if (!isConfigured)
         {
             Debug.LogError("TransitionState used without Configure()");
@@ -40,7 +40,7 @@ public class CameraTransitionState : CameraState
 
     public override void Exit()
     {
-        Debug.Log("exit cameratransition");
+        //Debug.Log("exit cameratransition");
         stateMachine.DisableAll();
         isConfigured = false;
     }

@@ -16,14 +16,12 @@ public class CameraScriptedState : CameraState
 
     public override void Enter()
     {
-        Debug.Log("enter inspecting");
         stateMachine.DisableCursorLook();
         stateMachine.ShowCursor();
     }
 
     public override void Exit()
     {
-        Debug.Log("exit inspecting");
         stateMachine.DisableAll();
 
     }

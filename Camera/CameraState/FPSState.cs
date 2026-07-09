@@ -29,7 +29,7 @@ public class FPSState : CameraState
         //stateMachine.CameraRig.SetTarget(playerHeadCameraPos, -1.0f);
         mouseLook.SyncFromCamera(stateMachine.CameraRig.transform);
 
-        Debug.Log("fps entered");
+        //Debug.Log("fps entered");
     }
 
     public override void Exit()
