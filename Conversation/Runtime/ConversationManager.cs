@@ -14,6 +14,11 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
 
     public bool IsConversationActive => currentRequest != null;
 
+    // Events so other systems can listen
+    public event System.Action ConversationStarted;
+
+    public event System.Action ConversationEnded;
+
     public void StartConversation(ConversationRequest request)
     {
         currentRequest = request;

@@ -9,4 +9,6 @@ public class ConversationRequest
     public ConversationContext Context;
 
     public Action<ConversationResult> OnFinished;   // Raise event when finished.
+
+    public bool CanCancel = false;
 }
