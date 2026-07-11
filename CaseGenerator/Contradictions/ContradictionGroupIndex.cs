@@ -55,4 +55,26 @@ public class ContradictionGroupIndex
 
         Debug.Log(sb);
     }
+
+    public List<ContradictionGroup> GetUnmarked()
+    {
+        List<ContradictionGroup> unmarked = new();
+        foreach (KeyValuePair<string, ContradictionGroup> kvp in index)
+        {
+            if (!kvp.Value.Marked)
+            {
+                unmarked.Add(kvp.Value);
+            }
+        }
+
+        return unmarked;
+    }
+
+    public void ClearMarked()
+    {
+        foreach (KeyValuePair<string, ContradictionGroup> kvp in index)
+        {
+            kvp.Value.Marked = false;
+        }
+    }
 }

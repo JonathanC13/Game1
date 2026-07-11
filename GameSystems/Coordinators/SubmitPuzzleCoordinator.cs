@@ -1,12 +1,16 @@
 using System;
+using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class SubmitPuzzleCoordinator : MonoBehaviour
+public class SubmitPuzzleCoordinator : GameBehaviour
 {
     [SerializeField] private GameServices gameServices;
 
     public static SubmitPuzzleCoordinator Instance { get; private set; }
     public static bool HasInstance => Instance != null;
+
+    private PuzzleResult currentResult;
 
     private void Awake()
     {
@@ -33,8 +37,6 @@ public class SubmitPuzzleCoordinator : MonoBehaviour
 
     private void HandleSubmitInteracted(SubmitPuzzleInteractable submit)
     {
-        Debug.Log("result: " + gameServices.Puzzle.EvaluateSolution());
-
         // Handle Camera state
         TransitionRequest request = BuildTransitionRequestFadeOut(submit);
         gameServices.Camera.CameraTransition.Configure(request);
@@ -81,16 +83,13 @@ public class SubmitPuzzleCoordinator : MonoBehaviour
     {
         gameServices.Gameplay.ChangeState(gameServices.Gameplay.Conversation);
 
-        bool result = gameServices.Puzzle.EvaluateSolution();
-
+        ConversationContext context = new ConversationContext();
+        currentResult = gameServices.Puzzle.EvaluateSolution();
+        context.Set(references.ConversationKeys.PuzzleSolved, currentResult.IsSolved);
 
         ConversationRequest request = new();
-        
+        request.Context = context;
         request.Graph = submit.SubmitDialogue;
-        
-
-        request.Context = new ConversationContext();
-
         request.OnFinished = result =>
         {
             HandleConversationFinished(submit, result);

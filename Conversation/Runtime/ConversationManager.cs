@@ -14,6 +14,12 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
 
     public bool IsConversationActive => currentRequest != null;
 
+    public ConversationContext Context
+    {
+        get;
+        private set;
+    }
+
     // Events so other systems can listen
     public event System.Action ConversationStarted;
 
@@ -26,6 +32,8 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
         currentGraph = request.Graph;
 
         currentGuid = request.Graph.StartGuid;
+
+        Context = request.Context;
 
         dialogueUI.Show();
 
@@ -86,5 +94,17 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
         currentRequest = null;
 
         currentGraph = null;
+    }
+
+    public void EvaluateCondition(ConditionNodeData node)
+    {
+        if (node is not ConditionNodeData)
+            return;
+
+        bool passed = ConditionEvaluator.Evaluate(Context, node);
+
+        currentGuid = passed ? node.TrueGuid : node.FalseGuid;
+
+        ExecuteCurrentNode();
     }
 }

@@ -16,6 +16,8 @@ public class LinkPair
 
     public bool isCorrect { set; get; } = false;
 
+    public LinkPair() { }
+
     public LinkPair(LinkableItem a, LinkableItem b, LinkVisual visual)
     {
         Setup(a, b, visual);
@@ -45,5 +47,10 @@ public class LinkPair
 
         if (linkItemA != null) linkItemA.HideLinkedBox();
         if (linkItemB != null) linkItemB.HideLinkedBox();
+    }
+    public void CreateFactPair(FactItem a, FactItem b)
+    {
+        FactA = a;
+        FactB = b;
     }
 }

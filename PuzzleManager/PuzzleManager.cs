@@ -59,13 +59,18 @@ public class PuzzleManager : MonoBehaviour
     }
 
     // Only run when confirm submission
-    public bool EvaluateSolution()
+    public PuzzleResult EvaluateSolution()
     {
+        PuzzleResult result = new PuzzleResult();
+
         StringBuilder markedPairs = new StringBuilder();
 
         var solutionObj = caseData.ContradictionGroupIndex;
 
-        int currScore = 0;
+        // Clear Marked if somehow marked before
+        solutionObj.ClearMarked();
+
+            int currScore = 0;
         int perfectScore = solutionObj.Index.Count;
         foreach (LinkPair pair in linkPairManager.ConnectedPairs)
         {
@@ -77,32 +82,54 @@ public class PuzzleManager : MonoBehaviour
             {
                 currScore += 1;
                 pair.isCorrect = true;
+                result.CorrectLinks.Add(pair);
                 markedPairs.AppendLine("CORRECT");
             }
             else
             {
                 currScore -= 1;
+                result.IncorrectLinks.Add(pair);
                 markedPairs.AppendLine("WRONG");
             }
+        }
+
+        // Get missed Contradictions
+        List<ContradictionGroup> umarked = solutionObj.GetUnmarked();
+        foreach (ContradictionGroup grp in umarked) {
+            using var enumerator = grp.TrueFacts.GetEnumerator();
+            if (enumerator.MoveNext())
+            {
+                // create partial objects just to hold info.
+                KeyValuePair<string, Fact> firstPair = enumerator.Current;
+                FactItem a = new FactItem();
+                a.Partial(grp.OutlierFact);
+
+                FactItem b = new FactItem();
+                b.Partial(firstPair.Value);
+
+                LinkPair missingPair = new LinkPair();
+                missingPair.CreateFactPair(a, b);
+                result.MissingLinks.Add(missingPair);
+
+                markedPairs.AppendLine(a.FactObj.GetFactInfo());
+                markedPairs.AppendLine(" <-> ");
+                markedPairs.AppendLine(b.FactObj.GetFactInfo());
+                markedPairs.AppendLine("MISSING");
+            } else
+            {
+                Debug.LogError("ContradictionGroup has 0 TrueFacts");
+            }
+            
         }
 
         Debug.Log(markedPairs);
         Debug.Log($"{currScore.ToString()} out of {perfectScore.ToString()}");
 
-        return currScore == perfectScore;
+        return result;
 
         // Later return the card that just prints it onto a paper for the player, I think better than returning to the table to inspect again... Fun thing is 10% chance of jump scare when close paper or gun shot through paper.
-        //public class PuzzleResult
-        //{
-        //    public bool IsSolved;
-
-        //    public int CorrectLinks;
-
-        //    public int IncorrectLinks;
-
-        //    public string FailureReason;
-        //}
-}
+        
+    }
 
     bool EvaluatePairInSolutionKey(ContradictionGroupIndex cGI, Fact outlier, Fact b)
     {
@@ -111,7 +138,7 @@ public class PuzzleManager : MonoBehaviour
             if (!contradictionGroup.Marked)
             {
                 // not scored yet.
-                contradictionGroup.Marked = true; // Only one try, so ok to mark and leave it.
+                contradictionGroup.Marked = true; // To mark which were evaluated.
                 return true;
             }
         }
