@@ -12,7 +12,7 @@ public class ChoiceNodeData : DialogueNodeData
     private string text;
 
     [SerializeField]
-    private List<DialogueChoice> choices = new();
+    private List<DialogueEdgeData> choices = new();
 
     public string Speaker
     {
@@ -26,17 +26,17 @@ public class ChoiceNodeData : DialogueNodeData
         set => text = value;
     }
 
-    public IReadOnlyList<DialogueChoice> Choices => choices;
+    public IReadOnlyList<DialogueEdgeData> Choices => choices;
 
-    public void AddChoice(
-        string text,
-        DialogueNodeData destination)
-    {
-        choices.Add(
-            new DialogueChoice(
-                text,
-                destination.Guid));
-    }
+    //public void AddChoice(
+    //    string text,
+    //    DialogueNodeData destination)
+    //{
+    //    choices.Add(
+    //        new DialogueChoice(
+    //            text,
+    //            destination.Guid));
+    //}
 
     public override void Enter(
         IConversationRunner runner)

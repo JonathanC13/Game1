@@ -10,9 +10,9 @@ public class ConditionNodeData : DialogueNodeData
 
     public ConversationValue CompareValue;
 
-    public string TrueGuid;
+    //public string TrueGuid;
 
-    public string FalseGuid;
+    //public string FalseGuid;
 
     public override void Enter(IConversationRunner runner)
     {

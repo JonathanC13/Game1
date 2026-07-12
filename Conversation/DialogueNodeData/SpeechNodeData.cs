@@ -25,12 +25,12 @@ public class SpeechNodeData : DialogueNodeData
         set => text = value;
     }
 
-    public string NextGuid => nextGuid;
+    //public string NextGuid => nextGuid;
 
-    public void Connect(DialogueNodeData node)
-    {
-        nextGuid = node.Guid;
-    }
+    //public void Connect(DialogueNodeData node)
+    //{
+    //    nextGuid = node.Guid;
+    //}
 
     public override void Enter(IConversationRunner runner)
     {

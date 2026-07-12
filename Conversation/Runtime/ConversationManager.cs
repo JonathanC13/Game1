@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ConversationManager : MonoBehaviour, IConversationRunner
@@ -5,11 +7,7 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
     [SerializeField] private DialogueUI dialogueUI;
 
     private ConversationRequest currentRequest;
-
     private DialogueGraph currentGraph;
-
-    private string currentGuid;
-
     private DialogueNodeData currentNode;
 
     public bool IsConversationActive => currentRequest != null;
@@ -31,7 +29,7 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
 
         currentGraph = request.Graph;
 
-        currentGuid = request.Graph.StartGuid;
+        currentNode = currentGraph.StartNode;
 
         Context = request.Context;
 
@@ -45,24 +43,35 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
         if (currentNode is not SpeechNodeData speechNode)
             return;
 
-        currentGuid = speechNode.NextGuid;
+        RuntimeDialogueEdge edge =
+            currentGraph
+                .GetOutgoingEdge(currentNode, DialogueEdgeType.Next);
+
+        if (edge == null)
+        {
+            Finish(ConversationResult.None);
+            return;
+        }
+
+        currentNode = edge.To;
 
         ExecuteCurrentNode();
     }
 
-    private void HandleChoiceSelected(DialogueChoice choice)
+    private void HandleChoiceSelected(RuntimeDialogueEdge edge)
     {
-        if (currentNode is not ChoiceNodeData)
-            return;
-
-        currentGuid = choice.NextGuid;
+        currentNode = edge.To;
 
         ExecuteCurrentNode();
     }
 
     private void ExecuteCurrentNode()
     {
-        currentNode = currentGraph.GetNode(currentGuid);
+        if (currentNode == null)
+        {
+            Finish(ConversationResult.None);
+            return;
+        }
 
         currentNode.Enter(this);
     }
@@ -78,11 +87,26 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
 
     public void ShowChoices(ChoiceNodeData node)
     {
+        List<DialogueChoiceViewModel> choices = new();
+
+        foreach (RuntimeDialogueEdge edge in currentGraph.GetOutgoingEdges(node))
+        {
+            if (edge.Data.EdgeType != DialogueEdgeType.Choice)
+                continue;
+
+            RuntimeDialogueEdge capturedEdge = edge;
+
+            choices.Add(new DialogueChoiceViewModel
+            {
+                Text = capturedEdge.Data.ChoiceText,
+                OnSelected = () => HandleChoiceSelected(capturedEdge)
+            });
+        }
+
         dialogueUI.ShowChoices(
             node.Speaker,
             node.Text,
-            node.Choices,
-            HandleChoiceSelected);
+            choices);
     }
 
     public void Finish(ConversationResult result)
@@ -94,6 +118,10 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
         currentRequest = null;
 
         currentGraph = null;
+
+        currentNode = null;
+
+        Context = null;
     }
 
     public void EvaluateCondition(ConditionNodeData node)
@@ -103,7 +131,21 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
 
         bool passed = ConditionEvaluator.Evaluate(Context, node);
 
-        currentGuid = passed ? node.TrueGuid : node.FalseGuid;
+        RuntimeDialogueEdge edge =
+            currentGraph.GetOutgoingEdge(
+                node,
+                passed
+                    ? DialogueEdgeType.True
+                    : DialogueEdgeType.False);
+
+        if (edge == null)
+        {
+            Debug.LogError($"Condition node '{node.EditorName}' is missing a {passed} edge.");
+            Finish(ConversationResult.None);
+            return;
+        }
+
+        currentNode = edge.To;
 
         ExecuteCurrentNode();
     }

@@ -53,8 +53,7 @@ public class DialogueUI : MonoBehaviour
     public void ShowChoices(
         string speaker,
         string text,
-        IReadOnlyList<DialogueChoice> choices,
-        Action<DialogueChoice> onSelected)
+        IReadOnlyList<DialogueChoiceViewModel> choices)
     {
         SetSpeaker(speaker);
         SetText(text);
@@ -68,13 +67,11 @@ public class DialogueUI : MonoBehaviour
                 continue;
             }
 
-            DialogueChoice choice = choices[i];
-
-            //choiceButtons[i].Show(choice.Text);
+            DialogueChoiceViewModel choice = choices[i];
 
             choiceButtons[i].Bind(
-                choice.Text,
-                () => onSelected(choice));
+                choice.Text, 
+                choice.OnSelected);
         }
     }
 
