@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Unity.VisualScripting;
 
 [Serializable]
@@ -13,6 +14,33 @@ public class ConditionNodeData : DialogueNodeData
     //public string TrueGuid;
 
     //public string FalseGuid;
+
+    public override void Validate(
+        DialogueGraph graph,
+        DialogueValidationReport report)
+    {
+        int trueCount =
+            graph.GetOutgoingEdges(this)
+                .Count(e =>
+                    e.Data.EdgeType ==
+                    DialogueEdgeType.True);
+
+        int falseCount =
+            graph.GetOutgoingEdges(this)
+                .Count(e =>
+                    e.Data.EdgeType ==
+                    DialogueEdgeType.True);
+
+        if (trueCount != 1)
+        {
+            report.AddError($"Condition node '{this.EditorName}' must have exactly at least one True edge. Currently has {trueCount}.");
+        }
+
+        if (falseCount != 1)
+        {
+            report.AddError($"Condition node '{this.EditorName}' must have exactly at least one False edge. Currently has {falseCount}.");
+        }
+    }
 
     public override void Enter(IConversationRunner runner)
     {

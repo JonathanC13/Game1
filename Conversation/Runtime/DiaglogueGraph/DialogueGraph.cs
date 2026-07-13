@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -20,6 +21,10 @@ public class DialogueGraph : ScriptableObject
     private Dictionary<string, DialogueNodeData> nodeLookup;
     private Dictionary<DialogueNodeData, List<RuntimeDialogueEdge>> outgoingEdges;
     private Dictionary<DialogueNodeData, List<RuntimeDialogueEdge>> incomingEdges;
+
+
+    public IReadOnlyList<DialogueNodeData> Nodes => nodes;
+    public IReadOnlyList<DialogueEdgeData> Edges => edges;
 
     public string StartGuid => startGuid;
 
@@ -229,5 +234,10 @@ public class DialogueGraph : ScriptableObject
 
                 ChoiceText = text
             });
+    }
+
+    public DialogueValidationReport Validate()
+    {
+        return GraphValidator.Validate(this);
     }
 }

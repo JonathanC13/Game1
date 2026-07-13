@@ -18,5 +18,9 @@ public abstract class DialogueNodeData
         set => editorName = value;
     }
 
+    public abstract void Validate(
+        DialogueGraph graph,
+        DialogueValidationReport report);
+
     public abstract void Enter(IConversationRunner runner);
 }
