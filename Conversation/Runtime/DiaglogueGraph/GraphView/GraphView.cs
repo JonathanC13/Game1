@@ -1,17 +1,22 @@
-using UnityEngine;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine.UIElements;
 
-public class GraphView : MonoBehaviour
+// place in Folder Editor so Unity knows how to run it.
+public class GraphView : GraphView
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public MyCustomGraphView()
     {
-        
-    }
+        // Add basic grid background
+        Insert(0, new GridBackground());
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // Add standard manipulators for navigation
+        this.AddManipulator(new ContentZoomer());
+        this.AddManipulator(new ContentDragger());
+        this.AddManipulator(new SelectionDragger());
+        this.AddManipulator(new RectangleSelector());
+
+        // Match standard visual elements styling
+        this.StretchToParentSize();
     }
 }
 
@@ -22,3 +27,32 @@ public class GraphView : MonoBehaviour
 //        edge.From,
 //        edge.To);
 //}
+
+Graph editor window
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class MyGraphEditorWindow : EditorWindow
+{
+    [MenuItem("Window/Custom Node Graph")]
+    public static void OpenWindow()
+    {
+        MyGraphEditorWindow window = GetWindow<MyGraphEditorWindow>();
+        window.titleContent = new GUIContent("Node Graph");
+    }
+
+    private void CreateInitialize()
+    {
+        // Instantiate your custom GraphView
+        MyCustomGraphView graphView = new MyCustomGraphView();
+        
+        // Add it to the window's root container
+        rootVisualElement.Add(graphView);
+    }
+
+    private void OnEnable()
+    {
+        CreateInitialize();
+    }
+}
