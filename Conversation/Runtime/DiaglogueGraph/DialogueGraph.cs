@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 // Collect the nodes and edges in Lists
@@ -129,9 +130,11 @@ public class DialogueGraph : ScriptableObject
 
     public SpeechNodeData CreateSpeechNode()
     {
-        SpeechNodeData node = new SpeechNodeData();
+        SpeechNodeData node = ScriptableObject.CreateInstance<SpeechNodeData>();
 
         node.EditorName = "Speech";
+
+        AssetDatabase.AddObjectToAsset(node, this);
 
         nodes.Add(node);
 
@@ -141,9 +144,11 @@ public class DialogueGraph : ScriptableObject
     public ChoiceNodeData CreateChoiceNode(
         string name)
     {
-        ChoiceNodeData node = new ChoiceNodeData();
+        ChoiceNodeData node = ScriptableObject.CreateInstance<ChoiceNodeData>();
 
         node.EditorName = "Choice";
+
+        AssetDatabase.AddObjectToAsset(node, this);
 
         nodes.Add(node);
 
@@ -153,9 +158,11 @@ public class DialogueGraph : ScriptableObject
     public ResultNodeData CreateResultNode(
         string name)
     {
-        ResultNodeData node = new ResultNodeData();
+        ResultNodeData node = ScriptableObject.CreateInstance<ResultNodeData>();
 
         node.EditorName = "Result";
+
+        AssetDatabase.AddObjectToAsset(node, this);
 
         nodes.Add(node);
 
@@ -165,9 +172,13 @@ public class DialogueGraph : ScriptableObject
     public ConditionNodeData CreateConditionNode(
         string name)
     {
-        ConditionNodeData node = new ConditionNodeData();
+        ConditionNodeData node = ScriptableObject.CreateInstance<ConditionNodeData>();
 
         node.EditorName = "Condition";
+
+        AssetDatabase.AddObjectToAsset(node, this);
+
+        nodes.Add(node);
 
         return node;
     }
@@ -240,4 +251,6 @@ public class DialogueGraph : ScriptableObject
     {
         return GraphValidator.Validate(this);
     }
+
+
 }
