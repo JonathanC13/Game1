@@ -38,6 +38,17 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
         ExecuteCurrentNode();
     }
 
+    private void ExecuteCurrentNode()
+    {
+        if (currentNode == null)
+        {
+            FinishConversation(ConversationResult.None);
+            return;
+        }
+
+        currentNode.Enter(this);
+    }
+
     private void HandleContinue()
     {
         if (currentNode is not SpeechNodeData speechNode)
@@ -45,11 +56,11 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
 
         RuntimeDialogueEdge edge =
             currentGraph
-                .GetOutgoingEdge(currentNode, DialogueEdgeType.Next);
+                .GetOutgoingEdge(currentNode, SpeechPorts.Next);
 
         if (edge == null)
         {
-            Finish(ConversationResult.None);
+            FinishConversation(ConversationResult.None);
             return;
         }
 
@@ -63,17 +74,6 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
         currentNode = edge.To;
 
         ExecuteCurrentNode();
-    }
-
-    private void ExecuteCurrentNode()
-    {
-        if (currentNode == null)
-        {
-            Finish(ConversationResult.None);
-            return;
-        }
-
-        currentNode.Enter(this);
     }
 
     public void ShowSpeech(SpeechNodeData node)
@@ -91,9 +91,6 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
 
         foreach (RuntimeDialogueEdge edge in currentGraph.GetOutgoingEdges(node))
         {
-            if (edge.Data.EdgeType != DialogueEdgeType.Choice)
-                continue;
-
             RuntimeDialogueEdge capturedEdge = edge;
 
             choices.Add(new DialogueChoiceViewModel
@@ -109,7 +106,32 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
             choices);
     }
 
-    public void Finish(ConversationResult result)
+    public void EvaluateCondition(ConditionNodeData node)
+    {
+        if (node is not ConditionNodeData)
+            return;
+
+        bool passed = ConditionEvaluator.Evaluate(Context, node);
+
+        RuntimeDialogueEdge edge =
+            currentGraph.GetOutgoingEdge(
+                node,
+                passed
+                    ? ConditionPorts.True
+                    : ConditionPorts.False);
+
+        if (edge == null)
+        {
+            Debug.LogError($"Condition node '{node.EditorName}' is missing a {passed} edge.");
+            FinishConversation(ConversationResult.None);
+            return;
+        }
+
+        currentNode = edge.To;
+
+        ExecuteCurrentNode();
+    }
+    public void FinishConversation(ConversationResult result)
     {
         dialogueUI.Hide();
 
@@ -122,31 +144,5 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
         currentNode = null;
 
         Context = null;
-    }
-
-    public void EvaluateCondition(ConditionNodeData node)
-    {
-        if (node is not ConditionNodeData)
-            return;
-
-        bool passed = ConditionEvaluator.Evaluate(Context, node);
-
-        RuntimeDialogueEdge edge =
-            currentGraph.GetOutgoingEdge(
-                node,
-                passed
-                    ? DialogueEdgeType.True
-                    : DialogueEdgeType.False);
-
-        if (edge == null)
-        {
-            Debug.LogError($"Condition node '{node.EditorName}' is missing a {passed} edge.");
-            Finish(ConversationResult.None);
-            return;
-        }
-
-        currentNode = edge.To;
-
-        ExecuteCurrentNode();
     }
 }

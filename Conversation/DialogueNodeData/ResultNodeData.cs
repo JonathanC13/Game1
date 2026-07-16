@@ -27,6 +27,12 @@ public class ResultNodeData : DialogueNodeData
     public override void Enter(
         IConversationRunner runner)
     {
-        runner.Finish(result);
+        runner.FinishConversation(result);
     }
+
+    //public override DialogueEdgeType GetEdgeType(
+    //    string portId)
+    //{
+    //    return DialogueEdgeType.;
+    //}
 }

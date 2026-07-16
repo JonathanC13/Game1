@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // The choice and the destination next Dialogue node
@@ -5,10 +6,10 @@ using UnityEngine;
 public class DialogueChoice
 {
     [SerializeField]
-    private string text;
+    private string id = System.Guid.NewGuid().ToString();
 
     [SerializeField]
-    private string nextGuid;
+    private string text;
 
     public string Text
     {
@@ -16,13 +17,14 @@ public class DialogueChoice
         set => text = value;
     }
 
-    public string NextGuid => nextGuid;
+    public string Id
+    {
+        get => id;
+    }
 
     public DialogueChoice(
-        string text,
-        string nextGuid)
+        string text)
     {
         this.text = text;
-        this.nextGuid = nextGuid;
     }
 }

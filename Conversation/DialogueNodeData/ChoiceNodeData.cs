@@ -13,7 +13,7 @@ public class ChoiceNodeData : DialogueNodeData
     private string text;
 
     [SerializeField]
-    private List<DialogueEdgeData> choices = new();
+    private List<DialogueChoice> dialogueChoices = new();
 
     public string Speaker
     {
@@ -27,17 +27,16 @@ public class ChoiceNodeData : DialogueNodeData
         set => text = value;
     }
 
-    public IReadOnlyList<DialogueEdgeData> Choices => choices;
+    public IReadOnlyList<DialogueChoice> DialogueChoices => dialogueChoices;
 
-    //public void AddChoice(
-    //    string text,
-    //    DialogueNodeData destination)
-    //{
-    //    choices.Add(
-    //        new DialogueChoice(
-    //            text,
-    //            destination.Guid));
-    //}
+    public void AddChoice(
+        string text,
+        DialogueNodeData destination)
+    {
+        dialogueChoices.Add(
+            new DialogueChoice(
+                text));
+    }
 
     public override void Validate(
         DialogueGraph graph,
@@ -49,9 +48,9 @@ public class ChoiceNodeData : DialogueNodeData
                     e.Data.EdgeType ==
                     DialogueEdgeType.Choice);
 
-        if (choiceCount < 1)
+        if (choiceCount != dialogueChoices.Count)
         {
-            report.AddError($"Choice node '{this.EditorName}' must have exactly at least one Choice edge. Currently has {choiceCount}.");
+            report.AddError($"Choice node '{this.EditorName}' must have exactly {dialogueChoices.Count} Choice edges.");
         }
     }
 
@@ -60,4 +59,10 @@ public class ChoiceNodeData : DialogueNodeData
     {
         runner.ShowChoices(this);
     }
+
+    //public override DialogueEdgeType GetEdgeType(
+    //    string portId)
+    //{
+    //    return DialogueEdgeType.Choice;
+    //}
 }

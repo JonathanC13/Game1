@@ -50,9 +50,10 @@ public class DialogueGraph : ScriptableObject
 
     public RuntimeDialogueEdge GetOutgoingEdge(
         DialogueNodeData node,
-        DialogueEdgeType edgeType)
+        string fromPortId)
     {
-        return GetOutgoingEdges(node).FirstOrDefault(e => e.Data.EdgeType == edgeType);
+        return GetOutgoingEdges(node).FirstOrDefault(e => e.FromPortId == fromPortId);
+        //return GetOutgoingEdges(node).FirstOrDefault(e => e.Data.EdgeType == edgeType);
     }
 
     public void SetStart(DialogueNodeData node)
@@ -183,51 +184,110 @@ public class DialogueGraph : ScriptableObject
         return node;
     }
 
-    public void Connect(
+    public DialogueEdgeData Connect(
         DialogueNodeData from,
+        string fromPortId,
         DialogueNodeData to,
-        DialogueEdgeType type)
+        string toPortId)
     {
-        edges.Add(
+        DialogueEdgeData edge =
             new DialogueEdgeData
             {
                 FromGuid = from.Guid,
 
                 ToGuid = to.Guid,
 
-                EdgeType = type
-            });
+                FromPortId = fromPortId,
+
+                ToPortId = toPortId
+            };
+
+        edges.Add(edge);
+
+        return edge;
     }
 
     public void ConnectTrue(
         ConditionNodeData node,
-        DialogueNodeData destination)
+        DialogueNodeData destination,
+        string toPortId)
     {
-        edges.Add(
-            new DialogueEdgeData
-            {
-                FromGuid = node.Guid,
-
-                ToGuid = destination.Guid,
-
-                EdgeType = DialogueEdgeType.True
-            });
+        Connect(
+            node,
+            ConditionPorts.True,
+            destination,
+            toPortId);
     }
 
     public void ConnectFalse(
         ConditionNodeData node,
-        DialogueNodeData destination)
+        DialogueNodeData destination,
+        string toPortId)
     {
-        edges.Add(
-            new DialogueEdgeData
-            {
-                FromGuid = node.Guid,
-
-                ToGuid = destination.Guid,
-
-                EdgeType = DialogueEdgeType.False
-            });
+        Connect(
+            node,
+            ConditionPorts.False,
+            destination,
+            toPortId);
     }
+
+    public void ConnectNext(
+        SpeechNodeData node,
+        DialogueNodeData destination,
+        string toPortId)
+    {
+        Connect(
+            node,
+            SpeechPorts.Next,
+            destination,
+            toPortId);
+    }
+
+    //public void Connect(
+    //    DialogueNodeData from,
+    //    DialogueNodeData to,
+    //    DialogueEdgeType type)
+    //{
+    //    edges.Add(
+    //        new DialogueEdgeData
+    //        {
+    //            FromGuid = from.Guid,
+
+    //            ToGuid = to.Guid,
+
+    //            EdgeType = type
+    //        });
+    //}
+
+    //public void ConnectTrue(
+    //    ConditionNodeData node,
+    //    DialogueNodeData destination)
+    //{
+    //    edges.Add(
+    //        new DialogueEdgeData
+    //        {
+    //            FromGuid = node.Guid,
+
+    //            ToGuid = destination.Guid,
+
+    //            EdgeType = DialogueEdgeType.True
+    //        });
+    //}
+
+    //public void ConnectFalse(
+    //    ConditionNodeData node,
+    //    DialogueNodeData destination)
+    //{
+    //    edges.Add(
+    //        new DialogueEdgeData
+    //        {
+    //            FromGuid = node.Guid,
+
+    //            ToGuid = destination.Guid,
+
+    //            EdgeType = DialogueEdgeType.False
+    //        });
+    //}
 
     public void AddChoice(
         ChoiceNodeData node,

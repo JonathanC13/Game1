@@ -46,4 +46,13 @@ public class ConditionNodeData : DialogueNodeData
     {
         runner.EvaluateCondition(this);
     }
+
+    //public override DialogueEdgeType GetEdgeType(
+    //    string portId)
+    //{
+    //    if (portId == ConditionPorts.True)
+    //        return DialogueEdgeType.True;
+
+    //    return DialogueEdgeType.False;
+    //}
 }

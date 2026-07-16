@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -22,6 +24,47 @@ public abstract class DialogueNodeView : Node
             new Rect(
                 node.EditorPosition,
                 GetDefaultSize()));
+
+        // ports
+        BuildPorts();
+
+        
+    }
+
+    protected abstract IEnumerable<PortDefinition> GetPorts();
+
+    private void BuildPorts()
+    {
+        foreach (PortDefinition definition in GetPorts())
+        {
+            Port port = CreatePort(definition);
+
+            if (definition.Direction == Direction.Input)
+                inputContainer.Add(port);
+            else
+                outputContainer.Add(port);
+        }
+
+        RefreshPorts();
+
+        RefreshExpandedState();
+    }
+
+    protected DialoguePort CreatePort(
+        PortDefinition definition)
+    {
+        var port =
+            new DialoguePort(
+                this,
+                definition.Id,
+                Orientation.Horizontal,
+                definition.Direction,
+                definition.Capacity,
+                typeof(bool));
+
+        port.portName = definition.Name;
+
+        return port;
     }
 
     // unexpected removal (switching assets, closing windows, rebuilding the graph
@@ -57,16 +100,34 @@ public abstract class DialogueNodeView : Node
         title = NodeData.EditorName;
     }
 
+    protected DialoguePort CreateOutputPort(
+        string name,
+        string outputGuid)
+    {
+        var port =
+            new DialoguePort(
+                this,
+                outputGuid,
+                Orientation.Horizontal,
+                Direction.Output,
+                Port.Capacity.Single,
+                typeof(bool));
+
+        port.portName = name;
+
+        return port;
+    }
+
     // Context menus
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
     {
-        evt.menu.AppendAction(
-            "Delete",
-            DeleteNode);
+        //evt.menu.AppendAction(
+        //    "Delete",
+        //    DeleteNode);
 
-        evt.menu.AppendAction(
-            "DuplicateNode",
-            DuplicateNode);
+        //evt.menu.AppendAction(
+        //    "DuplicateNode",
+        //    DuplicateNode);
     }
 }
 

@@ -37,4 +37,6 @@ public abstract class DialogueNodeData : ScriptableObject
     }
 
     public abstract void Enter(IConversationRunner runner);
+
+    //public abstract DialogueEdgeType GetEdgeType(string portId);
 }

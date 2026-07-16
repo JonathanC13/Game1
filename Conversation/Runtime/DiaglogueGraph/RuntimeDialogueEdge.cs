@@ -9,10 +9,17 @@ public sealed class RuntimeDialogueEdge
     public RuntimeDialogueEdge(
         DialogueEdgeData data,
         DialogueNodeData from,
-        DialogueNodeData to)
+        DialogueNodeData to
+        )
     {
         Data = data;
         From = from;
         To = to;
     }
+
+    public string FromPortId =>
+        Data.FromPortId;
+
+    public string ToPortId =>
+        Data.ToPortId;
 }

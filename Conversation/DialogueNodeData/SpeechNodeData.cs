@@ -54,4 +54,10 @@ public class SpeechNodeData : DialogueNodeData
         Debug.Log("speech enter");
         runner.ShowSpeech(this);
     }
+
+    //public override DialogueEdgeType GetEdgeType(
+    //    string portId)
+    //{
+    //    return DialogueEdgeType.Next;
+    //}
 }
