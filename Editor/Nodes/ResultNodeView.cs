@@ -11,6 +11,9 @@ public class ResultNodeView : DialogueNodeView
 
     protected override IEnumerable<PortDefinition> GetPorts()
     {
-        yield break;
+        yield return new PortDefinition(
+            ResultPorts.Input,
+            "In",
+            Direction.Input);
     }
 }

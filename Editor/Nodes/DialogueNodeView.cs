@@ -53,18 +53,24 @@ public abstract class DialogueNodeView : Node
     protected DialoguePort CreatePort(
         PortDefinition definition)
     {
-        var port =
-            new DialoguePort(
+        if (definition.Direction == Direction.Input)
+        {
+            return new DialogueInputPort(
                 this,
-                definition.Id,
-                Orientation.Horizontal,
-                definition.Direction,
-                definition.Capacity,
-                typeof(bool));
+                definition.PortId,
+                definition.Capacity)
+            {
+                portName = definition.Name
+            };
+        }
 
-        port.portName = definition.Name;
-
-        return port;
+        return new DialogueOutputPort(
+            this,
+            definition.PortId,
+            definition.Capacity)
+        {
+            portName = definition.Name
+        };
     }
 
     // unexpected removal (switching assets, closing windows, rebuilding the graph
@@ -110,8 +116,7 @@ public abstract class DialogueNodeView : Node
                 outputGuid,
                 Orientation.Horizontal,
                 Direction.Output,
-                Port.Capacity.Single,
-                typeof(bool));
+                Port.Capacity.Single);
 
         port.portName = name;
 

@@ -5,13 +5,13 @@ using UnityEngine;
 public class DialogueEdgeData
 {
     [SerializeField]
-    private string fromGuid;
+    private string fromNodeGuid;
 
     [SerializeField]
     private string fromPortId;
 
     [SerializeField]
-    private string toGuid;
+    private string toNodeGuid;
 
     [SerializeField]
     private string toPortId;
@@ -20,15 +20,12 @@ public class DialogueEdgeData
     private DialogueEdgeType edgeType;
 
     [SerializeField]
-    private string choiceText;
-
-    [SerializeField]
     private string outputPortIndex;
 
-    public string FromGuid
+    public string FromNodeGuid
     {
-        get => fromGuid;
-        set => fromGuid = value;
+        get => fromNodeGuid;
+        set => fromNodeGuid = value;
     }
 
     public string FromPortId
@@ -37,10 +34,10 @@ public class DialogueEdgeData
         set => fromPortId = value;
     }
 
-    public string ToGuid
+    public string ToNodeGuid
     {
-        get => toGuid;
-        set => toGuid = value;
+        get => toNodeGuid;
+        set => toNodeGuid = value;
     }
 
     public string ToPortId
@@ -53,13 +50,6 @@ public class DialogueEdgeData
     {
         get => edgeType;
         set => edgeType = value;
-    }
-
-    // takes from Dialogue choice.
-    public string ChoiceText
-    {
-        get => choiceText;
-        set => choiceText = value;
     }
 
     public string OutputPortIndex

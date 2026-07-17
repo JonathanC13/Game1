@@ -12,6 +12,11 @@ public class SpeechNodeView : DialogueNodeView
     protected override IEnumerable<PortDefinition> GetPorts()
     {
         yield return new PortDefinition(
+            SpeechPorts.Input,
+            "In",
+            Direction.Input);
+
+        yield return new PortDefinition(
             SpeechPorts.Next,
             "Next",
             Direction.Output);

@@ -92,10 +92,14 @@ public class ConversationManager : MonoBehaviour, IConversationRunner
         foreach (RuntimeDialogueEdge edge in currentGraph.GetOutgoingEdges(node))
         {
             RuntimeDialogueEdge capturedEdge = edge;
-
-            choices.Add(new DialogueChoiceViewModel
+            if (edge.From is not ChoiceNodeData fromNode)
             {
-                Text = capturedEdge.Data.ChoiceText,
+                continue;
+            }
+
+                choices.Add(new DialogueChoiceViewModel
+            {
+                Text = fromNode.GetChoiceText(edge.FromPortId),
                 OnSelected = () => HandleChoiceSelected(capturedEdge)
             });
         }

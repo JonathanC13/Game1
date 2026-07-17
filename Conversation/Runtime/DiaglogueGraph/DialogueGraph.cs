@@ -11,14 +11,15 @@ using UnityEngine;
 public class DialogueGraph : ScriptableObject
 {
     [SerializeReference]
-    private List<DialogueNodeData> nodes = new();
+    private List<DialogueNodeData> nodes = new();   // Saved in data, authoritative
 
     [SerializeField]
-    private List<DialogueEdgeData> edges = new();
+    private List<DialogueEdgeData> edges = new();   // Saved in data, authoritative
 
     [SerializeField]
     private string startGuid;
 
+    // runtime
     private Dictionary<string, DialogueNodeData> nodeLookup;
     private Dictionary<DialogueNodeData, List<RuntimeDialogueEdge>> outgoingEdges;
     private Dictionary<DialogueNodeData, List<RuntimeDialogueEdge>> incomingEdges;
@@ -85,9 +86,9 @@ public class DialogueGraph : ScriptableObject
 
         foreach (DialogueEdgeData edge in edges)
         {
-            DialogueNodeData from = nodeLookup[edge.FromGuid];
+            DialogueNodeData from = nodeLookup[edge.FromNodeGuid];
 
-            DialogueNodeData to = nodeLookup[edge.ToGuid];
+            DialogueNodeData to = nodeLookup[edge.ToNodeGuid];
 
             RuntimeDialogueEdge runtime =
                 new RuntimeDialogueEdge(
@@ -190,12 +191,23 @@ public class DialogueGraph : ScriptableObject
         DialogueNodeData to,
         string toPortId)
     {
+
+        bool exists =
+            edges.Any(e =>
+                e.FromNodeGuid == from.Guid &&
+                e.FromPortId == fromPortId &&
+                e.ToNodeGuid == to.Guid &&
+                e.ToPortId == toPortId);
+
+        if (exists)
+            return null;
+
         DialogueEdgeData edge =
             new DialogueEdgeData
             {
-                FromGuid = from.Guid,
+                FromNodeGuid = from.Guid,
 
-                ToGuid = to.Guid,
+                ToNodeGuid = to.Guid,
 
                 FromPortId = fromPortId,
 
@@ -203,6 +215,12 @@ public class DialogueGraph : ScriptableObject
             };
 
         edges.Add(edge);
+
+        BuildRuntimeCache();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+#endif
 
         return edge;
     }
@@ -241,6 +259,18 @@ public class DialogueGraph : ScriptableObject
             SpeechPorts.Next,
             destination,
             toPortId);
+    }
+
+    public void RemoveEdge(
+        DialogueEdgeData edge)
+    {
+        edges.Remove(edge);
+
+        BuildRuntimeCache();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+#endif
     }
 
     //public void Connect(
@@ -289,23 +319,23 @@ public class DialogueGraph : ScriptableObject
     //        });
     //}
 
-    public void AddChoice(
-        ChoiceNodeData node,
-        string text,
-        DialogueNodeData destination)
-    {
-        edges.Add(
-            new DialogueEdgeData
-            {
-                FromGuid = node.Guid,
+    //public void AddChoice(
+    //    ChoiceNodeData node,
+    //    string text,
+    //    DialogueNodeData destination)
+    //{
+    //    edges.Add(
+    //        new DialogueEdgeData
+    //        {
+    //            FromGuid = node.Guid,
 
-                ToGuid = destination.Guid,
+    //            ToGuid = destination.Guid,
 
-                EdgeType = DialogueEdgeType.Choice,
+    //            EdgeType = DialogueEdgeType.Choice,
 
-                ChoiceText = text
-            });
-    }
+    //            ChoiceText = text
+    //        });
+    //}
 
     public DialogueValidationReport Validate()
     {

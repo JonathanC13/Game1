@@ -3,7 +3,7 @@ using UnityEditor.Experimental.GraphView;
 
 public sealed class PortDefinition
 {
-    public string Id { get; }
+    public string PortId { get; }
 
     public string Name { get; }
 
@@ -12,14 +12,14 @@ public sealed class PortDefinition
     public Port.Capacity Capacity { get; }
 
     public PortDefinition(
-        string id,
+        string portId,
         string name,
         Direction direction = default,
         Port.Capacity capacity = Port.Capacity.Single
         )
     {
         Name = name;
-        Id = id;
+        PortId = portId;
         Direction = direction;
         Capacity = capacity;
     }

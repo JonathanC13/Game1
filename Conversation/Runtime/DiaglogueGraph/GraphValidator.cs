@@ -45,14 +45,14 @@ public static class EdgeValidator
         foreach (DialogueEdgeData edge in graph.Edges)
         {
             // use GUIDs since if invalid graph, the cache lookup not complete.
-            if (graph.GetNode(edge.FromGuid) == null)
+            if (graph.GetNode(edge.FromNodeGuid) == null)
             {
-                report.AddError($"Edge references missing source node ({edge.FromGuid}).");
+                report.AddError($"Edge references missing source node ({edge.FromNodeGuid}).");
             }
 
-            if (graph.GetNode(edge.ToGuid) == null)
+            if (graph.GetNode(edge.ToNodeGuid) == null)
             {
-                report.AddError($"Edge references missing destination node ({edge.ToGuid}).");
+                report.AddError($"Edge references missing destination node ({edge.ToNodeGuid}).");
             }
         }
     }

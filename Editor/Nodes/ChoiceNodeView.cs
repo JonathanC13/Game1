@@ -11,6 +11,11 @@ public class ChoiceNodeView : DialogueNodeView
 
     protected override IEnumerable<PortDefinition> GetPorts()
     {
+        yield return new PortDefinition(
+            ChoicePorts.Input,
+            "In",
+            Direction.Input);
+
         ChoiceNodeData node =
             (ChoiceNodeData)NodeData;
 

@@ -12,6 +12,11 @@ public class ConditionNodeView : DialogueNodeView
     protected override IEnumerable<PortDefinition> GetPorts()
     {
         yield return new PortDefinition(
+            ConditionPorts.Input,
+            "In",
+            Direction.Input);
+
+        yield return new PortDefinition(
             "True",
             Guid.NewGuid().ToString(),
             Direction.Output);

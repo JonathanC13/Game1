@@ -12,6 +12,8 @@ public class DialogueGraphView : GraphView
     private Vector2 pendingNodePosition;
     private DialogueSearchWindow searchWindow;
 
+    public GraphView.GraphViewChanged graphViewChanged; // Whenever the user modifies the graph, GraphView calls this delegate
+
     public DialogueGraphView(EditorWindow window)
     {
         // custom graph options and add functionality.
@@ -35,6 +37,15 @@ public class DialogueGraphView : GraphView
             new GridBackground());
 
         InitializeSearchWindow();
+
+        graphViewChanged += OnGraphViewChanged;
+
+        RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
+    }
+    private void OnDetachFromPanel(
+        DetachFromPanelEvent evt)
+    {
+        graphViewChanged -= OnGraphViewChanged;
     }
 
     private void InitializeSearchWindow()
@@ -127,5 +138,65 @@ public class DialogueGraphView : GraphView
         DialogueNodeView node)
     {
         EditorUtility.SetDirty(graph);
+    }
+
+    private GraphViewChange OnGraphViewChanged(
+        GraphViewChange change)
+    {
+        OnEdgesCreated(change);
+
+        OnElementsRemoved(change);
+
+        return change;
+    }
+
+    private void OnEdgesCreated(GraphViewChange change)
+    {
+        if (change.edgesToCreate != null)
+        {
+            foreach (Edge edge in change.edgesToCreate)
+            {
+                CreateEdge(edge);
+            }
+        }
+    }
+
+    private void OnElementsRemoved(GraphViewChange change)
+    {
+        if (change.elementsToRemove != null)
+        {
+            foreach (GraphElement element in change.elementsToRemove)
+            {
+                if (element is Edge edge)
+                {
+                    DeleteEdge(edge);
+                }
+            }
+        }
+    }
+
+    private void CreateEdge(Edge edge)
+    {
+        var output = (DialogueOutputPort)edge.output;
+
+        var input = (DialogueInputPort)edge.input;
+
+        DialogueEdgeData data = 
+            graph.Connect(
+                output.NodeView.NodeData,
+                output.PortId,
+                input.NodeView.NodeData,
+                input.PortId);
+
+        edge.userData = data;
+    }
+
+    private void DeleteEdge(
+    Edge edge)
+    {
+        if (edge.userData is DialogueEdgeData data)
+        {
+            graph.RemoveEdge(data);
+        }
     }
 }

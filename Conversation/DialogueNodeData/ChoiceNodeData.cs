@@ -60,6 +60,11 @@ public class ChoiceNodeData : DialogueNodeData
         runner.ShowChoices(this);
     }
 
+    public string GetChoiceText(string id)
+    {
+        return dialogueChoices.Find(e => e.Id == id).Text;
+    }
+
     //public override DialogueEdgeType GetEdgeType(
     //    string portId)
     //{
