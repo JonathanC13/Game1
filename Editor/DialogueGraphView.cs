@@ -12,8 +12,6 @@ public class DialogueGraphView : GraphView
     private Vector2 pendingNodePosition;
     private DialogueSearchWindow searchWindow;
 
-    public GraphView.GraphViewChanged graphViewChanged; // Whenever the user modifies the graph, GraphView calls this delegate
-
     public DialogueGraphView(EditorWindow window)
     {
         // custom graph options and add functionality.
@@ -38,7 +36,7 @@ public class DialogueGraphView : GraphView
 
         InitializeSearchWindow();
 
-        graphViewChanged += OnGraphViewChanged;
+        graphViewChanged += OnGraphViewChanged; // GraphView calls this delegate
 
         RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
     }
