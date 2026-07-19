@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
+// To dock the GraphView
 public class DialogueGraphEditorWindow : EditorWindow
 {
     private DialogueGraphView graphView;

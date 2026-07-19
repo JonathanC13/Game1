@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 
+// Manage the GraphView, reference to the data in DialogueGraph and manage Graph elements like Node, edges.
 public class DialogueGraphView : GraphView
 {
     private DialogueGraph graph;
