@@ -12,6 +12,10 @@ public abstract class DialogueNodeView : Node
 
     public Action<DialogueNodeView> PositionChanged;
 
+    protected readonly Dictionary<string, DialogueInputPort> inputPorts = new();
+
+    protected readonly Dictionary<string, DialogueOutputPort> outputPorts = new();
+
     public DialogueNodeView(DialogueNodeData node)
     {
         RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
@@ -28,7 +32,8 @@ public abstract class DialogueNodeView : Node
         // ports
         BuildPorts();
 
-        
+        RefreshExpandedState();
+        RefreshPorts();
     }
 
     protected abstract IEnumerable<PortDefinition> GetPorts();
@@ -55,22 +60,32 @@ public abstract class DialogueNodeView : Node
     {
         if (definition.Direction == Direction.Input)
         {
-            return new DialogueInputPort(
+            DialogueInputPort port = new DialogueInputPort(
                 this,
                 definition.PortId,
                 definition.Capacity)
             {
                 portName = definition.Name
             };
-        }
 
-        return new DialogueOutputPort(
-            this,
-            definition.PortId,
-            definition.Capacity)
+            inputPorts[definition.PortId] = port;
+
+            return port;
+        }
+        else
         {
-            portName = definition.Name
-        };
+            DialogueOutputPort port = new DialogueOutputPort(
+                this,
+                definition.PortId,
+                definition.Capacity)
+            {
+                portName = definition.Name
+            };
+
+            outputPorts[definition.PortId] = port;
+
+            return port;
+        }
     }
 
     // unexpected removal (switching assets, closing windows, rebuilding the graph
@@ -133,6 +148,49 @@ public abstract class DialogueNodeView : Node
         //evt.menu.AppendAction(
         //    "DuplicateNode",
         //    DuplicateNode);
+    }
+
+    public DialogueInputPort GetInputPort(string portId)
+    {
+        if (!inputPorts.TryGetValue(portId, out var port))
+        {
+            Debug.LogWarning(
+                $"Input port '{portId}' not found on node '{NodeData.name}'.");
+        }
+
+        return port;
+    }
+    public DialogueOutputPort GetOutputPort(string portId)
+    {
+        if (!outputPorts.TryGetValue(portId, out var port))
+        {
+            Debug.LogWarning(
+                $"Input port '{portId}' not found on node '{NodeData.name}'.");
+        }
+
+        return port;
+    }
+
+    protected void RebuildPorts()
+    {
+        ClearPorts();
+
+        BuildPorts();
+
+        RefreshExpandedState();
+
+        RefreshPorts();
+    }
+
+    private void ClearPorts()
+    {
+        inputContainer.Clear();
+
+        outputContainer.Clear();
+
+        inputPorts.Clear();
+
+        outputPorts.Clear();
     }
 }
 

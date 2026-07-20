@@ -13,6 +13,11 @@ public class DialogueGraphView : GraphView
     private Vector2 pendingNodePosition;
     private DialogueSearchWindow searchWindow;
 
+    // lookup for nodes in the graph
+    private readonly Dictionary<string, DialogueNodeView> nodeViews = new();
+    // lookup for ports
+    private readonly Dictionary<string, DialoguePort> nodePorts = new();
+
     public DialogueGraphView(EditorWindow window)
     {
         // custom graph options and add functionality.
@@ -40,7 +45,53 @@ public class DialogueGraphView : GraphView
         graphViewChanged += OnGraphViewChanged; // GraphView calls this delegate
 
         RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
+
+        // create visuals
+        foreach (DialogueNodeData node in graph.Nodes)
+        {
+            CreateNodeView(node);
+        }
+
+        // build nodes and edge
+        foreach (DialogueEdgeData edges in graph.Edges)
+        {
+            CreateVisualEdge(edges);
+        }
     }
+
+    private void CreateVisualEdge(DialogueEdgeData edgeData)
+    {
+        if (!nodeViews.TryGetValue(edgeData.FromNodeGuid, out DialogueNodeView fromView))
+        {
+            return;
+        }
+
+        if (!nodeViews.TryGetValue(edgeData.ToNodeGuid, out DialogueNodeView toView)) 
+        {
+            return;
+        }
+
+        DialoguePort output = fromView.GetOutputPort(edgeData.FromPortId);
+        DialoguePort input = toView.GetOutputPort(edgeData.ToPortId);
+
+        if (output == null || input == null)
+        {
+            return;
+        }
+
+        Edge edge = new Edge
+        {
+            output = output,
+            input = input,
+            userData = edgeData
+        };
+
+        edge.output.Connect(edge);
+        edge.input.Connect(edge);
+
+        AddElement(edge);
+    }
+
     private void OnDetachFromPanel(
         DetachFromPanelEvent evt)
     {
@@ -105,7 +156,9 @@ public class DialogueGraphView : GraphView
     {
         DialogueNodeView view = DialogueNodeViewFactory.Create(node);
 
-        view.PositionChanged += OnNodeMoved;
+        nodeViews[node.Guid] = view;
+
+        AddNodeView(view);
 
         return view;
     } 
@@ -121,6 +174,8 @@ public class DialogueGraphView : GraphView
 
         DialogueNodeView view =
             DialogueNodeViewFactory.Create(node);
+
+        nodeViews[node.Guid] = view;
 
         AddNodeView(view);
 
@@ -191,11 +246,21 @@ public class DialogueGraphView : GraphView
     }
 
     private void DeleteEdge(
-    Edge edge)
+        Edge edge)
     {
         if (edge.userData is DialogueEdgeData data)
         {
             graph.RemoveEdge(data);
         }
+    }
+
+    public DialoguePort GetPort(
+        string portId)
+    {
+        return nodePorts.TryGetValue(
+            portId, 
+            out DialoguePort port)
+                ? port 
+                : null;
     }
 }

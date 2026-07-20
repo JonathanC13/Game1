@@ -27,4 +27,11 @@ public class ChoiceNodeView : DialogueNodeView
                 Direction.Output);
         }
     }
+
+    public void AddChoice(PortDefinition choice)
+    {
+        //choiceNodeData.AddChoice(...);
+        //RebuildPorts()
+    }
+
 }

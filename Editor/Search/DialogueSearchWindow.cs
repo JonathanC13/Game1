@@ -24,8 +24,7 @@ public class DialogueSearchWindow : ScriptableObject, ISearchWindowProvider
                 new GUIContent("Create Node"),
                 0));
 
-        foreach (DialogueNodeDescriptor descriptor
-                 in DialogueNodeRegistry.Nodes)
+        foreach (DialogueNodeDescriptor descriptor in DialogueNodeRegistry.Nodes)
         {
             tree.Add(
                 new SearchTreeEntry(
