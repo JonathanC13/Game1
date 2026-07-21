@@ -128,6 +128,17 @@ public class DialogueGraph : ScriptableObject
 
         nodeLookup?.Remove(node.Guid);
         nodes.Remove(node);
+
+        edges.RemoveAll(e =>
+            e.FromNodeGuid == node.Guid ||
+            e.ToNodeGuid == node.Guid
+        );
+
+        BuildRuntimeCache();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+#endif
     }
 
     public SpeechNodeData CreateSpeechNode()
@@ -269,7 +280,7 @@ public class DialogueGraph : ScriptableObject
         BuildRuntimeCache();
 
 #if UNITY_EDITOR
-        UnityEditor.EditorUtility.SetDirty(this);
+        UnityEditor.EditorUtility.SetDirty(this);   // so the graphView updates with the built data
 #endif
     }
 

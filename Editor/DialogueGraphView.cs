@@ -225,6 +225,11 @@ public class DialogueGraphView : GraphView
                 {
                     DeleteEdge(edge);
                 }
+
+                if (element is DialogueNodeView nodeView)
+                {
+                    graph.RemoveNode(nodeView.NodeData);
+                }
             }
         }
     }
