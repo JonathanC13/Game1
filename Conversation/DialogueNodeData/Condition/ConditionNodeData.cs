@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 
@@ -15,30 +16,33 @@ public class ConditionNodeData : DialogueNodeData
 
     //public string FalseGuid;
 
-    public override void Validate(
-        DialogueGraph graph,
-        DialogueValidationReport report)
+    public override IEnumerable<ValidationResult> Validate(
+        ValidationContext context)
     {
         int trueCount =
-            graph.GetOutgoingEdges(this)
+            context.Graph.GetOutgoingEdges(this)
                 .Count(e =>
-                    e.Data.EdgeType ==
-                    DialogueEdgeType.True);
+                    e.FromPortId == ConditionPorts.True);
 
         int falseCount =
-            graph.GetOutgoingEdges(this)
+            context.Graph.GetOutgoingEdges(this)
                 .Count(e =>
-                    e.Data.EdgeType ==
-                    DialogueEdgeType.True);
+                    e.FromPortId == ConditionPorts.False);
 
         if (trueCount != 1)
         {
-            report.AddError($"Condition node '{this.EditorName}' must have exactly at least one True edge. Currently has {trueCount}.");
+            yield return new ValidationResult(
+                ValidationSeverity.Error,
+                this,
+                $"Condition node '{this.EditorName}' must have exactly one True edge. Currently has {trueCount} outgoing edges.");
         }
 
         if (falseCount != 1)
         {
-            report.AddError($"Condition node '{this.EditorName}' must have exactly at least one False edge. Currently has {falseCount}.");
+            yield return new ValidationResult(
+                ValidationSeverity.Error,
+                this,
+                $"Condition node '{this.EditorName}' must have exactly one False edge. Currently has {trueCount} outgoing edges.");
         }
     }
 

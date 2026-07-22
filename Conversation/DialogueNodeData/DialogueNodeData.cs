@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -27,9 +28,11 @@ public abstract class DialogueNodeData : ScriptableObject
         set => editorPosition = value;
     }
 
-    public abstract void Validate(
-        DialogueGraph graph,
-        DialogueValidationReport report);
+    public virtual IEnumerable<ValidationResult> Validate(
+        ValidationContext context)
+    {
+        yield break;
+    }
 
     public void InitializeNewGuid()
     {

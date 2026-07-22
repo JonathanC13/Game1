@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -9,6 +10,9 @@ public class DialogueGraphEditorWindow : EditorWindow
     private DialogueGraphView graphView;
 
     private DialogueGraph graph;
+
+    private List<ValidationResult> validationResults;
+
 
     [MenuItem("Tools/Dialogue Graph")]
     public static void Open()
@@ -34,6 +38,8 @@ public class DialogueGraphEditorWindow : EditorWindow
     {
         graphView = new DialogueGraphView(this);
 
+        graphView.GraphStructureChanged += ValidateGraph;
+
         //graphView.StretchToParentSize();
 
         rootVisualElement.Add(graphView);
@@ -47,5 +53,20 @@ public class DialogueGraphEditorWindow : EditorWindow
 
             graphView.Populate(graph);
         }
+    }
+
+
+    private void ValidateGraph()
+    {
+        //run after;
+        //    edge created
+        //    edge removed
+        //    node created
+        //    node removed
+        DialogueGraphValidator validator =
+            new();
+
+        validationResults =
+            validator.Validate(graph);
     }
 }

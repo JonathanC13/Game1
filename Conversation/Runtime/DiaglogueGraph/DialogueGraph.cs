@@ -38,6 +38,18 @@ public class DialogueGraph : ScriptableObject
         }
     }
 
+    public IEnumerable<DialogueEdgeData> GetIncomingEdgeSerial(
+        DialogueNodeData node)
+    {
+        return edges.Where(e => e.ToNodeGuid == node.Guid);
+    }
+
+    public IEnumerable<DialogueEdgeData> GetOutgoingEdgeSerial(
+        DialogueNodeData node)
+    {
+        return edges.Where(e => e.FromNodeGuid == node.Guid);
+    }
+
     public IEnumerable<RuntimeDialogueEdge> GetIncomingEdges(
         DialogueNodeData node)
     {
@@ -347,11 +359,6 @@ public class DialogueGraph : ScriptableObject
     //            ChoiceText = text
     //        });
     //}
-
-    public DialogueValidationReport Validate()
-    {
-        return GraphValidator.Validate(this);
-    }
 
 
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -33,19 +34,21 @@ public class SpeechNodeData : DialogueNodeData
     //    nextGuid = node.Guid;
     //}
 
-    public override void Validate(
-        DialogueGraph graph,
-        DialogueValidationReport report)
+    public override IEnumerable<ValidationResult> Validate(
+        ValidationContext context)
     {
         int nextCount =
-            graph.GetOutgoingEdges(this)
-                .Count(e =>
-                    e.Data.EdgeType ==
-                    DialogueEdgeType.Next);
+            context.Graph.GetOutgoingEdges(this).Count();
+                //e =>
+                //    e.Data.EdgeType ==
+                //    DialogueEdgeType.Next);
 
         if (nextCount != 1)
         {
-            report.AddError($"Speech node '{this.EditorName}' must have exactly one Next edge. Currently has {nextCount}.");
+            yield return new ValidationResult(
+                ValidationSeverity.Error,
+                this,
+                $"Speech node '{this.EditorName}' must have exactly one Next edge. Currently has {nextCount} outgoing edges.");
         }
     }
 

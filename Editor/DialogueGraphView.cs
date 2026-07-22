@@ -1,9 +1,10 @@
-using UnityEngine;
-using UnityEditor.UIElements;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor;
-using UnityEngine.UIElements;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.UIElements;
+using static PlasticGui.Configuration.CloudEdition.Welcome.ValidateEmailAndPassword;
 
 // Manage the GraphView, reference to the data in DialogueGraph and manage Graph elements like Node, edges.
 public class DialogueGraphView : GraphView
@@ -17,6 +18,10 @@ public class DialogueGraphView : GraphView
     private readonly Dictionary<string, DialogueNodeView> nodeViews = new();
     // lookup for ports
     private readonly Dictionary<string, DialoguePort> nodePorts = new();
+
+    public event System.Action GraphStructureChanged;
+
+    public event System.Action GraphLayoutChanged;
 
     public DialogueGraphView(EditorWindow window)
     {
@@ -180,6 +185,8 @@ public class DialogueGraphView : GraphView
         AddNodeView(view);
 
         EditorUtility.SetDirty(graph);
+
+        GraphStructureChanged?.Invoke();    // invoke in CreateNodeViewFromDescriptor due to direct user input. Not in CreateNodeView since it is run for intial build.
     }
 
     private void OnNodeSelected(
@@ -197,39 +204,78 @@ public class DialogueGraphView : GraphView
     private GraphViewChange OnGraphViewChanged(
         GraphViewChange change)
     {
-        OnEdgesCreated(change);
+        // only need validator run when structure change like created edge, remove edge, and remove node.
+        // For create node, it invoke in CreateNodeViewFromDescriptor
+        bool graphStructureChanged =
+            (change.edgesToCreate?.Count ?? 0) > 0 ||
+            (change.elementsToRemove?.Count ?? 0) > 0;
 
-        OnElementsRemoved(change);
+        HandleEdgeCreation(change);
+
+        HandleRemoveElements(change);
+
+        HandleMovedElements(change);
+
+        if (graphStructureChanged)
+        {
+            GraphStructureChanged?.Invoke();
+        }
 
         return change;
     }
 
-    private void OnEdgesCreated(GraphViewChange change)
+    private bool HandleEdgeCreation(
+        GraphViewChange change)
     {
-        if (change.edgesToCreate != null)
+        if (change.edgesToCreate == null)
+            return false;
+
+        foreach (Edge edge in change.edgesToCreate)
         {
-            foreach (Edge edge in change.edgesToCreate)
-            {
-                CreateEdge(edge);
-            }
+            CreateEdge(edge);
         }
+
+        return change.edgesToCreate.Count > 0;
     }
 
-    private void OnElementsRemoved(GraphViewChange change)
+    private bool HandleRemoveElements(
+        GraphViewChange change)
     {
-        if (change.elementsToRemove != null)
-        {
-            foreach (GraphElement element in change.elementsToRemove)
-            {
-                if (element is Edge edge)
-                {
-                    DeleteEdge(edge);
-                }
+        if (change.elementsToRemove == null)
+            return false;
 
-                if (element is DialogueNodeView nodeView)
-                {
-                    graph.RemoveNode(nodeView.NodeData);
-                }
+        foreach (GraphElement element in change.elementsToRemove)
+        {
+            if (element is Edge edge)
+            {
+                DeleteEdge(edge);
+            }
+
+            if (element is DialogueNodeView nodeView)
+            {
+                graph.RemoveNode(nodeView.NodeData);
+            }
+        }
+
+        return change.elementsToRemove.Count > 0;
+    }
+
+    private void HandleMovedElements(GraphViewChange change)
+    {
+        if (change.movedElements == null)
+            return;
+
+        foreach (GraphElement element in change.movedElements)
+        {
+            if (element is DialogueNodeView nodeView)
+            {
+                Rect rect = nodeView.GetPosition();
+
+                nodeView.NodeData.EditorPosition = rect.position;
+
+#if UNITY_EDITOR
+                UnityEditor.EditorUtility.SetDirty(graph);
+#endif
             }
         }
     }
@@ -268,4 +314,5 @@ public class DialogueGraphView : GraphView
                 ? port 
                 : null;
     }
+
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.ProjectAuditor.Editor;
 using UnityEngine;
 
 [Serializable]
@@ -38,20 +39,25 @@ public class ChoiceNodeData : DialogueNodeData
                 text));
     }
 
-    public override void Validate(
-        DialogueGraph graph,
-        DialogueValidationReport report)
+    public override IEnumerable<ValidationResult> Validate(
+        ValidationContext context)
     {
-        int choiceCount =
-            graph.GetOutgoingEdges(this)
-                .Count(e =>
-                    e.Data.EdgeType ==
-                    DialogueEdgeType.Choice);
-
-        if (choiceCount != dialogueChoices.Count)
+        foreach (var choice in dialogueChoices) 
         {
-            report.AddError($"Choice node '{this.EditorName}' must have exactly {dialogueChoices.Count} Choice edges.");
+            int choiceCount =
+                context.Graph.GetOutgoingEdges(this)
+                    .Count(e =>
+                        e.FromPortId == choice.Id);
+
+            if (choiceCount != 1)
+            {
+                yield return new ValidationResult(
+                    ValidationSeverity.Error,
+                    this,
+                    $"Choice '{choice.Text}' must have exactly one True edge. Currently has {choiceCount} outgoing edges.");
+            }
         }
+        
     }
 
     public override void Enter(

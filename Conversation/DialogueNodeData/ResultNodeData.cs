@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -14,13 +15,15 @@ public class ResultNodeData : DialogueNodeData
         set => result = value;
     }
 
-    public override void Validate(
-        DialogueGraph graph,
-        DialogueValidationReport report)
+    public override IEnumerable<ValidationResult> Validate(
+        ValidationContext context)
     {
-        if (graph.GetOutgoingEdges(this).Any())
+        if (context.Graph.GetOutgoingEdges(this).Any())
         {
-            report.AddError($"Result node '{this.EditorName}' cannot have outgoing edges.");
+            yield return new ValidationResult(
+                ValidationSeverity.Error,
+                this,
+                $"Result node '{this.EditorName}' cannot have outgoing edges.");
         }
     }
 
